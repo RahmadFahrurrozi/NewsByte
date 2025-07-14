@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { Button } from "@/components/ui/button";
+import { LinkPreview } from "@/components/ui/link-preview";
 import { getCategoryColor } from "@/lib/categoryColors";
 import { supabase } from "@/lib/supabase";
 import { INews } from "@/types/INews";
