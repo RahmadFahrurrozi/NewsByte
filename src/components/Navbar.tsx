@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { Menu } from "lucide-react";
+import { ModeToggle } from "./ModeToggle";
 
 const Navbar = () => {
   return (
@@ -17,31 +18,31 @@ const Navbar = () => {
         </div>
         <div className="flex gap-5 bg-neutral-800 text-sm text-background p-6 rounded-full">
           <Link
-            className="hover:text-neutral-300 transition-all"
+            className="hover:text-neutral-300 dark:text-foreground dark:hover:text-neutral-300 transition-all"
             href="/technologies"
           >
             Technologies
           </Link>
           <Link
-            className="hover:text-neutral-300 transition-all"
+            className="hover:text-neutral-300 dark:text-foreground dark:hover:text-neutral-300 transition-all"
             href="/crypto"
           >
             Crypto
           </Link>
           <Link
-            className="hover:text-neutral-300 transition-all"
+            className="hover:text-neutral-300 dark:text-foreground dark:hover:text-neutral-300 transition-all"
             href="/finance"
           >
             Finance
           </Link>
           <Link
-            className="hover:text-neutral-300 transition-all"
+            className="hover:text-neutral-300 dark:text-foreground dark:hover:text-neutral-300 transition-all"
             href="/ekonomi"
           >
             Ekonomi
           </Link>
           <Link
-            className="hover:text-neutral-300 transition-all"
+            className="hover:text-neutral-300 dark:text-foreground dark:hover:text-neutral-300 transition-all"
             href="/sports"
           >
             Sports
@@ -54,13 +55,17 @@ const Navbar = () => {
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon">
+              {/* <ModeToggle /> */}
               <Menu className="size-4" />
             </Button>
           </SheetTrigger>
           <SheetContent side="right">
             <div className="flex flex-col gap-6 mt-8 p-4">
               <div className="flex flex-col gap-4">
-                <SheetTitle>Category</SheetTitle>
+                <div className="flex items-center justify-between">
+                  <SheetTitle>Category</SheetTitle>
+                  <ModeToggle />
+                </div>
                 <div className="flex flex-col gap-3">
                   <Link
                     className="hover:text-neutral-300 transition-all"
@@ -95,8 +100,9 @@ const Navbar = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-3">
-                <Link href={"/pricing"}></Link>
-                <Button className="w-full">Subscribe</Button>
+                <Link href={"/pricing"}>
+                  <Button className="w-full">Subscribe</Button>
+                </Link>
                 <Button className="w-full" variant={"ghost"}>
                   SignIn
                 </Button>
@@ -111,18 +117,21 @@ const Navbar = () => {
 
       {/* Desktop Auth Buttons */}
       <div className="hidden md:flex gap-2 items-center">
+        <ModeToggle />
         <Link href={"/pricing"}>
           <Button className="cursor-pointer">Subscribe</Button>
         </Link>
-        <Button
-          className="cursor-pointer dark:text-background"
-          variant={"outline"}
-        >
-          SignIn
-        </Button>
-        <Button className="cursor-pointer" variant={"secondary"}>
-          SignUp
-        </Button>
+
+        <Link href={"/signin"}>
+          <Button className="cursor-pointer" variant={"outline"}>
+            SignIn
+          </Button>
+        </Link>
+        <Link href={"/signup"}>
+          <Button className="cursor-pointer" variant={"secondary"}>
+            SignUp
+          </Button>
+        </Link>
       </div>
     </nav>
   );

@@ -1,7 +1,6 @@
 export const dynamic = "force-dynamic";
 
 import { Button } from "@/components/ui/button";
-import { LinkPreview } from "@/components/ui/link-preview";
 import { getCategoryColor } from "@/lib/categoryColors";
 import { supabase } from "@/lib/supabase";
 import { INews } from "@/types/INews";
@@ -96,7 +95,7 @@ export default async function Home() {
               </div>
 
               {/* Read More Button */}
-              <Button className="mt-6 w-full" variant="outline">
+              <Button className="mt-6 w-full cursor-pointer" variant="outline">
                 Read More
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
