@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase";
 import { INews } from "@/types/INews";
 import { ArrowRight, CalendarDays, User } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default async function Home() {
   const { data: news, error } = await supabase.from("news").select("*");
@@ -95,10 +96,15 @@ export default async function Home() {
               </div>
 
               {/* Read More Button */}
-              <Button className="mt-6 w-full cursor-pointer" variant="outline">
-                Read More
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              <Link href={`/news/${item.slug}`}>
+                <Button
+                  className="mt-6 w-full cursor-pointer"
+                  variant="outline"
+                >
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                  Read More
+                </Button>
+              </Link>
             </div>
           </article>
         ))}
