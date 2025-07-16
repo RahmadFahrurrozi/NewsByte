@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     domains: [
-      "api.microlink.io", // Microlink Image Preview
+      // "api.microlink.io", // Microlink Image Preview
     ],
     remotePatterns: [
       {
