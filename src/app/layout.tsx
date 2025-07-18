@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import NavbarWrapper from "@/components/Navbar/NavbarWrapper";
 import { ThemeProvider } from "@/components/theme-provider";
 
 const poppins = Poppins({
@@ -30,7 +30,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
+          <NavbarWrapper />
           <main className="px-6">{children}</main>
         </ThemeProvider>
       </body>
