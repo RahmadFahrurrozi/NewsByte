@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getCategoryColor } from "@/lib/categoryColors";
 import { supabase } from "@/lib/supabase";
@@ -60,13 +61,14 @@ export default async function Home() {
             <div className="p-6 flex-1 flex flex-col">
               {/* Category Badge */}
               <div className="mb-3">
-                <span
-                  className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${getCategoryColor(
+                <Badge
+                  variant="secondary"
+                  className={`inline-block px-3 py-1 text-xs font-semibold ${getCategoryColor(
                     item.categories
                   )}`}
                 >
                   {item.categories}
-                </span>
+                </Badge>
               </div>
 
               {/* Title */}
