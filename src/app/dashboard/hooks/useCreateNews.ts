@@ -17,7 +17,6 @@ export default function useCreateNews() {
     },
   });
   const onSubmit = async (data: CreateNewsSchema) => {
-    // Handle form submission logic here
     console.log("Form submitted with data:", data);
   };
 
