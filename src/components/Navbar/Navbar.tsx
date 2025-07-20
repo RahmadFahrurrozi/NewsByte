@@ -11,7 +11,7 @@ import { ModeToggle } from "@/components/ModeToggle";
 
 const Navbar = () => {
   return (
-    <nav className="flex items-center justify-between py-4 px-6 sticky top-0 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
+    <nav className="flex items-center justify-between py-4 px-6 sticky top-0 w-full bg-background/60 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
       <Link className="cursor-pointer" href={"/"}>
         <h2 className="font-bold text-3xl">Newsbyte</h2>
       </Link>
