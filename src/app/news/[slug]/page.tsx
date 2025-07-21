@@ -27,16 +27,12 @@ export default async function NewsDetailPage({ params }: PageProps) {
 
   return (
     <>
-      <div className="sticky top-0 z-10 bg-background">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
-        >
-          <div className="rounded-full p-2 border border-background">
-            <ArrowLeft className="w-5 h-5" />
-          </div>
-        </Link>
-      </div>
+      <Link
+        href="/"
+        className="fixed top-20 z-50 rounded-full p-2 border border-border bg-background/80 backdrop-blur-md shadow"
+      >
+        <ArrowLeft className="w-5 h-5 text-foreground" />
+      </Link>
       <section className="max-w-3xl mx-auto px-4">
         <h1 className="text-3xl font-bold mb-4">{data.title}</h1>
         <div className="flex items-center gap-6 text-muted-foreground text-sm mb-6">

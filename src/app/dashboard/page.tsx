@@ -16,9 +16,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { INews } from "@/types/INews";
-import { EllipsisIcon, Eye, PenLine, Trash2 } from "lucide-react";
+import { EllipsisIcon, Eye, PenLine, Plus, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { getCategoryColor } from "@/lib/categoryColors";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function DashboardPage() {
   const { data: news, error } = await supabase.from("news").select("*");
@@ -35,9 +37,17 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <div className="p-6">
-        <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
-        <p>Welcome to your dashboard! [name]</p>
+      <div className="p-6 flex flex-col gap-4 sm:flex-row sm:items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
+          <p>Welcome to your dashboard! [name]</p>
+        </div>
+        <div className="mt-4">
+          <Button variant="default">
+            <Plus className="size-4" />
+            <Link href="/dashboard/create-news">Create News</Link>
+          </Button>
+        </div>
       </div>
       <Table className="w-full border-collapse rounded-2xl border border-muted">
         <TableCaption>A list of your recent invoices.</TableCaption>
