@@ -78,8 +78,8 @@ const DATA_SIDEBAR = {
         },
 
         {
-          title: "Security",
-          url: "/dashboard-user/settings/security",
+          title: "Profile",
+          url: "/dashboard-user/settings/profile",
         },
       ],
     },
