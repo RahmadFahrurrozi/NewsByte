@@ -14,9 +14,8 @@ export default function NavbarWrapper() {
     pathName === "/dashboard-user/notifications" ||
     pathName === "/dashboard-user/settings" ||
     pathName === "/dashboard-user/settings/general" ||
-    pathName === "/dashboard-user/settings/security" ||
+    pathName === "/dashboard-user/settings/profile" ||
     pathName === "/dashboard-admin" ||
-    pathName === "/dashboard/settings" ||
     pathName === "/signin" ||
     pathName === "/signup" ||
     pathName === "/pricing" ||
