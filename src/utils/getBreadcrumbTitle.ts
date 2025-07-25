@@ -8,7 +8,7 @@ const getBreadcrumbTitle = (pathname: string): string => {
     "dashboard-user/notifications": "Notifications",
     "dashboard-user/settings": "Settings",
     "dashboard-user/settings/general": "General Settings",
-    "dashboard-user/settings/security": "Security Settings",
+    "dashboard-user/settings/profile": "Profile Settings",
   };
 
   return titles[key] || "Dashboard";
