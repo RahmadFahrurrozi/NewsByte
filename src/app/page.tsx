@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getCategoryColor } from "@/lib/categoryColors";
+import { getCategoryColor } from "@/constants/categoryColors";
 import { supabase } from "@/lib/supabase";
 import { INews } from "@/types/INews";
 import { ArrowRight, CalendarDays, User } from "lucide-react";
