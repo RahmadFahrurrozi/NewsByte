@@ -8,6 +8,8 @@ export default function NavbarWrapper() {
   const pathName = usePathname();
 
   const hideNavbar =
+    pathName === "/auth/login" ||
+    pathName === "/auth/register" ||
     pathName === "/dashboard-user" ||
     pathName === "/dashboard-user/write-article" ||
     pathName === "/dashboard-user/my-articles" ||
