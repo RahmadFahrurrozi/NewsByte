@@ -1,4 +1,3 @@
-// components/auth/RegisterForm.tsx
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +12,9 @@ import {
 } from "@/components/ui/form";
 import { useRegisterForm } from "@/hooks/useRegisterForm";
 import Link from "next/link";
-import Image from "next/image";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { usePasswordToggle } from "@/hooks/usePasswordToggle";
+import { Eye, EyeOff, Ghost } from "lucide-react";
 
 interface RegisterFormProps extends React.ComponentProps<"div"> {
   onSuccess?: () => void;
@@ -25,6 +26,7 @@ export function RegisterForm({
   ...props
 }: RegisterFormProps) {
   const { form, handleSubmit } = useRegisterForm();
+  const passwordToggle = usePasswordToggle();
 
   return (
     <div
@@ -94,7 +96,26 @@ export function RegisterForm({
                     <FormItem>
                       <Label htmlFor="password">Password</Label>
                       <FormControl>
-                        <Input id="password" type="password" {...field} />
+                        <div className="relative">
+                          <Input
+                            id="password"
+                            type={passwordToggle.type}
+                            placeholder="••••••••"
+                            {...field}
+                          />
+                          <Button
+                            variant={"ghost"}
+                            type="button"
+                            onClick={passwordToggle.toogleVisibility}
+                            className="absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground cursor-pointer"
+                          >
+                            {passwordToggle.showPassword ? (
+                              <Eye className="text-muted-foreground size-4" />
+                            ) : (
+                              <EyeOff className="text-muted-foreground size-4" />
+                            )}
+                          </Button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -108,18 +129,33 @@ export function RegisterForm({
                     <FormItem>
                       <Label htmlFor="confirmPassword">Confirm Password</Label>
                       <FormControl>
-                        <Input
-                          id="confirmPassword"
-                          type="password"
-                          {...field}
-                        />
+                        <div className="relative">
+                          <Input
+                            id="password"
+                            type={passwordToggle.type}
+                            placeholder="••••••••"
+                            {...field}
+                          />
+                          <Button
+                            variant={"ghost"}
+                            type="button"
+                            onClick={passwordToggle.toogleVisibility}
+                            className="absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground cursor-pointer"
+                          >
+                            {passwordToggle.showPassword ? (
+                              <Eye className="text-muted-foreground size-4" />
+                            ) : (
+                              <EyeOff className="text-muted-foreground size-4" />
+                            )}
+                          </Button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full cursor-pointer">
                   Register
                 </Button>
               </form>
@@ -134,13 +170,7 @@ export function RegisterForm({
           </div>
 
           <div className="bg-muted relative hidden md:block">
-            <Image
-              src="/register-image.svg"
-              alt="Register"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-              width={500}
-              height={500}
-            />
+            <DotLottieReact src="/register.lottie" loop autoplay />
           </div>
         </CardContent>
       </Card>
