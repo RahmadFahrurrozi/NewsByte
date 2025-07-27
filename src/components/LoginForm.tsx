@@ -10,9 +10,11 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useLoginForm } from "@/hooks/useLoginForm";
 import Link from "next/link";
-import Image from "next/image";
+import { usePasswordToggle } from "@/hooks/usePasswordToggle";
+import { Eye, EyeOff } from "lucide-react";
 
 interface LoginFormProps extends React.ComponentProps<"div"> {
   onSuccess?: () => void;
@@ -20,6 +22,7 @@ interface LoginFormProps extends React.ComponentProps<"div"> {
 
 export function LoginForm({ className, onSuccess, ...props }: LoginFormProps) {
   const { form, handleSubmit } = useLoginForm();
+  const passwordToggle = usePasswordToggle();
 
   return (
     <div
@@ -71,23 +74,37 @@ export function LoginForm({ className, onSuccess, ...props }: LoginFormProps) {
                     <FormItem>
                       <Label htmlFor="password">Password</Label>
                       <FormControl>
-                        <Input
-                          id="password"
-                          type="password"
-                          {...field}
-                          placeholder="***********"
-                          className="placeholder:text-muted-foreground"
-                        />
+                        <div className="relative">
+                          <Input
+                            id="password"
+                            type={passwordToggle.type}
+                            {...field}
+                            placeholder="***********"
+                            className="placeholder:text-muted-foreground"
+                          />
+                          <Button
+                            variant={"ghost"}
+                            type="button"
+                            className="absolute top-1/2 right-1 -translate-y-1/2 cursor-pointer"
+                            onClick={passwordToggle.toogleVisibility}
+                          >
+                            {passwordToggle.showPassword ? (
+                              <Eye className="text-muted-foreground size-4" />
+                            ) : (
+                              <EyeOff className="text-muted-foreground size-4" />
+                            )}
+                          </Button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full cursor-pointer">
                   Login
                 </Button>
-                <div className="flex items-center justify-end">
+                <div className="flex items-center justify-end cursor-pointer">
                   <Link
                     href="/forgot-password"
                     className="text-sm hover:underline underline-offset-2"
@@ -110,13 +127,7 @@ export function LoginForm({ className, onSuccess, ...props }: LoginFormProps) {
           </div>
 
           <div className="bg-muted relative hidden md:block">
-            <Image
-              src="/login-image.svg"
-              alt="Login"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-              width={500}
-              height={500}
-            />
+            <DotLottieReact src="/login.lottie" loop autoplay />
           </div>
         </CardContent>
       </Card>
