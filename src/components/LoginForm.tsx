@@ -86,7 +86,7 @@ export function LoginForm({ className, onSuccess, ...props }: LoginFormProps) {
                             variant={"ghost"}
                             type="button"
                             className="absolute top-1/2 right-1 -translate-y-1/2 cursor-pointer"
-                            onClick={passwordToggle.toogleVisibility}
+                            onClick={passwordToggle.handleToggleVisibility}
                           >
                             {passwordToggle.showPassword ? (
                               <Eye className="text-muted-foreground size-4" />

@@ -106,7 +106,7 @@ export function RegisterForm({
                           <Button
                             variant={"ghost"}
                             type="button"
-                            onClick={passwordToggle.toogleVisibility}
+                            onClick={passwordToggle.handleToggleVisibility}
                             className="absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground cursor-pointer"
                           >
                             {passwordToggle.showPassword ? (
@@ -139,7 +139,7 @@ export function RegisterForm({
                           <Button
                             variant={"ghost"}
                             type="button"
-                            onClick={passwordToggle.toogleVisibility}
+                            onClick={passwordToggle.handleToggleVisibility}
                             className="absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground cursor-pointer"
                           >
                             {passwordToggle.showPassword ? (
