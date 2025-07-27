@@ -10,6 +10,7 @@ export default function NavbarWrapper() {
   const hideNavbar =
     pathName === "/auth/login" ||
     pathName === "/auth/register" ||
+    pathName === "/forgot-password" ||
     pathName === "/dashboard-user" ||
     pathName === "/dashboard-user/write-article" ||
     pathName === "/dashboard-user/my-articles" ||
@@ -18,8 +19,6 @@ export default function NavbarWrapper() {
     pathName === "/dashboard-user/settings/general" ||
     pathName === "/dashboard-user/settings/profile" ||
     pathName === "/dashboard-admin" ||
-    pathName === "/signin" ||
-    pathName === "/signup" ||
     pathName === "/pricing" ||
     pathName === "/dashboard/create-news";
 
