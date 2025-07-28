@@ -1,5 +1,5 @@
 export const dynamic = "force-dynamic";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabaseClient";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CalendarDays, User } from "lucide-react";
 import Link from "next/link";
