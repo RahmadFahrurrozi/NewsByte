@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getCategoryColor } from "@/constants/categoryColors";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabaseClient";
 import { INews } from "@/types/INews";
 import { ArrowRight, CalendarDays, User } from "lucide-react";
 import Image from "next/image";
@@ -21,7 +21,7 @@ export default async function Home() {
     );
   }
 
-  console.log("data news", news);
+  // console.log("data news", news);
 
   return (
     <section>
