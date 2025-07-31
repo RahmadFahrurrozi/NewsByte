@@ -1,69 +1,73 @@
-import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabaseClient";
-import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
+import { loginSchema } from "@/schemas/auth.schema";
 
-export async function POST(request: Request) {
-  const body = await request.json();
-  const { email, password } = body;
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
 
-  const { data: loginData, error: loginError } =
-    await supabase.auth.signInWithPassword({
-      email,
-      password,
+    // Validasi input with Zod
+    const validatedData = loginSchema.parse(body);
+
+    const supabase = await createClient();
+
+    // Sign in user
+    const { data: authData, error: authError } =
+      await supabase.auth.signInWithPassword({
+        email: validatedData.email,
+        password: validatedData.password,
+      });
+
+    console.log("Auth login result:", {
+      hasUser: !!authData?.user,
+      hasSession: !!authData?.session,
+      userId: authData?.user?.id,
+      userEmail: authData?.user?.email,
+      authError: authError?.message,
     });
+    if (authError) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: authError.message || "Invalid email or password",
+        },
+        { status: 400 }
+      );
+    }
 
-  if (loginError || !loginData) {
+    // Get user role dari profiles table
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", authData.user.id)
+      .single();
+
+    if (profileError) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: profileError.message || "Failed to fetch user role",
+        },
+        { status: 500 }
+      );
+    }
+
+    // Return success
+    return NextResponse.json({
+      success: true,
+      data: {
+        user: authData.user,
+        role: profile.role,
+      },
+    });
+  } catch (error) {
+    console.error("Login API error:", error);
     return NextResponse.json(
-      { error: loginError?.message || "Failed to login" },
-      { status: 400 }
+      {
+        success: false,
+        error: "Internal server error",
+      },
+      { status: 500 }
     );
   }
-
-  const { data: profileData, error: profileError } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", loginData.user?.id)
-    .single();
-
-  if (profileError || !profileData) {
-    return NextResponse.json(
-      { error: profileError?.message || "Profile not found" },
-      { status: 400 }
-    );
-  }
-
-  const cookieStore = await cookies();
-
-  // Set access token cookie
-  cookieStore.set("sb-access-token", loginData.session?.access_token || "", {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-  });
-
-  // Set refresh token cookie
-  cookieStore.set("sb-refresh-token", loginData.session?.refresh_token || "", {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24 * 30, // 30 days
-  });
-
-  // Set role cookie
-  cookieStore.set("role", profileData.role, {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-  });
-
-  return NextResponse.json({
-    message: "Login successful",
-    user: loginData.user,
-    role: profileData.role,
-  });
 }
