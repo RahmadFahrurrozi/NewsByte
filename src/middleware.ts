@@ -1,43 +1,77 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { createServerClient } from "@supabase/ssr";
 
-export function middleware(request: NextRequest) {
-  const pathName = request.nextUrl.pathname;
-  const token = request.cookies.get("sb-access-token")?.value;
-  const role = request.cookies.get("role")?.value;
+export async function middleware(request: NextRequest) {
+  let supabaseResponse = NextResponse.next({
+    request,
+  });
 
-  console.log("Middleware - Path:", pathName);
-  console.log("Middleware - Token exists:", !!token);
-  console.log("Middleware - Role:", role);
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            request.cookies.set(name, value);
+            supabaseResponse.cookies.set(name, value, options);
+          });
+        },
+      },
+    }
+  );
 
-  // Redirect to login if accessing protected routes without token
-  if (
-    (pathName.startsWith("/dashboard-user") ||
-      pathName.startsWith("/dashboard-admin")) &&
-    !token
-  ) {
-    console.log("Redirecting to login - no token");
-    return NextResponse.redirect(new URL("/", request.url));
+  // Refresh session if expired - required for Server Components
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const pathname = request.nextUrl.pathname;
+
+  // Protected routes
+  const protectedPaths = ["/dashboard-user", "/dashboard-admin"];
+  const isProtectedPath = protectedPaths.some((path) =>
+    pathname.startsWith(path)
+  );
+
+  // If accessing protected route without user, redirect to login
+  if (isProtectedPath && !user) {
+    const redirectUrl = new URL("/", request.url);
+    return NextResponse.redirect(redirectUrl);
   }
 
-  // Role-based access control
-  if (pathName.startsWith("/dashboard-user") && role !== "user") {
-    console.log("Redirecting to unauthorized - not user role");
-    return NextResponse.redirect(new URL("/unauthorized", request.url));
+  // If user is authenticated and accessing protected routes, check role
+  if (user && isProtectedPath) {
+    // Get user role
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    const userRole = profile?.role;
+
+    // Role-based access control
+    if (pathname.startsWith("/dashboard-admin") && userRole !== "admin") {
+      const redirectUrl = new URL("/unauthorized", request.url);
+      return NextResponse.redirect(redirectUrl);
+    }
+
+    if (pathname.startsWith("/dashboard-user") && userRole !== "user") {
+      const redirectUrl = new URL("/unauthorized", request.url);
+      return NextResponse.redirect(redirectUrl);
+    }
   }
 
-  if (pathName.startsWith("/dashboard-admin") && role !== "admin") {
-    console.log("Redirecting to unauthorized - not admin role");
-    return NextResponse.redirect(new URL("/unauthorized", request.url));
-  }
-
-  return NextResponse.next();
+  return supabaseResponse;
 }
 
 export const config = {
   matcher: [
-    "/dashboard-user/:path*",
-    "/dashboard-admin/:path*",
-    "/unauthorized",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
