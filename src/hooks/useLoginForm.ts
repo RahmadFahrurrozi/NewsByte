@@ -5,7 +5,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginFormValues } from "@/schemas/auth.schema";
 import { useState } from "react";
 import { toast } from "sonner";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+
+interface ILoginResponse {
+  success: boolean;
+  data?: {
+    user: IUser;
+    role: string;
+  };
+  error?: string;
+}
 
 export function useLoginFormUser() {
   const form = useForm<LoginFormValues>({
@@ -18,13 +27,14 @@ export function useLoginFormUser() {
 
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  // const router = useRouter();
+  const router = useRouter();
 
   const onSubmit = async (values: LoginFormValues) => {
     setLoading(true);
     setErrorMessage("");
 
     try {
+      // Call API route instead of direct Supabase
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
@@ -33,23 +43,32 @@ export function useLoginFormUser() {
         body: JSON.stringify(values),
       });
 
-      const data = await response.json();
+      const result: ILoginResponse = await response.json();
 
-      if (!response.ok) {
-        toast.error(data.error || "Failed to login");
-        setErrorMessage(data.error || "Failed to login");
+      if (!result.success) {
+        toast.error(result.error || "Login failed");
+        setErrorMessage(result.error || "Login failed");
         return;
       }
 
-      toast.success("Login Successfully!");
+      toast.success("Login successful!");
 
-      // Force refresh untuk memastikan cookies terbaca oleh middleware
-      window.location.href =
-        data.role === "admin" ? "/dashboard-admin" : "/dashboard-user";
+      // Redirect based on role
+      const userRole = result.data?.role;
+      if (userRole === "admin") {
+        router.push("/dashboard-admin");
+      } else if (userRole === "user") {
+        router.push("/dashboard-user");
+      } else {
+        router.push("/");
+      }
+
+      // Refresh the page to update auth state
+      router.refresh();
     } catch (error) {
       console.error("Login error:", error);
       const errorMessage =
-        error instanceof Error ? error.message : "An error occurred";
+        error instanceof Error ? error.message : "Network error occurred";
       toast.error(errorMessage);
       setErrorMessage(errorMessage);
     } finally {

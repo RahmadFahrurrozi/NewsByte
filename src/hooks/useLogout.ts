@@ -1,22 +1,47 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient";
 import { toast } from "sonner";
 
-export const useLogoutUser = () => {
+export const useLogout = () => {
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
   const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
+    setLoading(true);
+    setErrorMessage("");
 
-    if (error) {
-      toast.error(`${error.message}`);
-    } else {
-      toast.success("Logout Successfully!");
-      router.push("/auth/login");
+    try {
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        toast.error(result.error || "Logout failed");
+        setErrorMessage(result.error || "Logout failed");
+        setLoading(false);
+        return;
+      }
+      toast.success("Logout successful!");
+      router.push("/");
+      setLoading(false);
+      return;
+    } catch (error) {
+      console.error("Logout API error:", error);
+      toast.error("Logout failed");
+      setErrorMessage("Logout failed");
+      setLoading(false);
+      return;
+    } finally {
+      setLoading(false);
     }
   };
 
-  return { handleLogout };
+  return { loading, errorMessage, handleLogout };
 };
