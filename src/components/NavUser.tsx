@@ -25,8 +25,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useLogoutUser } from "@/hooks/useLogout";
 import { Button } from "./ui/button";
+import { useLogout } from "@/hooks/useLogout";
+import { LoadingSpinner } from "./LoadingSpinner";
 
 export function NavUser({
   user,
@@ -38,7 +39,7 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
-  const { handleLogout } = useLogoutUser();
+  const { handleLogout, loading } = useLogout();
 
   return (
     <SidebarMenu>
@@ -98,14 +99,20 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <Button
-              variant="ghost"
+              variant="destructive"
               onClick={handleLogout}
-              className="cursor-pointer"
+              disabled={loading}
+              className="cursor-pointer my-1"
             >
-              <DropdownMenuItem>
-                <LogOut />
-                Log out
-              </DropdownMenuItem>
+              <LogOut />
+              {loading ? (
+                <>
+                  <LoadingSpinner className="mr-2" />
+                  Logging out...
+                </>
+              ) : (
+                "Log out"
+              )}
             </Button>
           </DropdownMenuContent>
         </DropdownMenu>
