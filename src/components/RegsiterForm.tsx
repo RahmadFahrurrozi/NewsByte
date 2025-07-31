@@ -15,6 +15,7 @@ import Link from "next/link";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { usePasswordToggle } from "@/hooks/usePasswordToggle";
 import { Eye, EyeOff, Ghost } from "lucide-react";
+import { LoadingSpinner } from "./LoadingSpinner";
 
 interface RegisterFormProps extends React.ComponentProps<"div"> {
   onSuccess?: () => void;
@@ -25,7 +26,7 @@ export function RegisterForm({
   onSuccess,
   ...props
 }: RegisterFormProps) {
-  const { form, handleSubmit } = useRegisterForm();
+  const { form, handleSubmit, loading } = useRegisterForm();
   const passwordToggle = usePasswordToggle();
 
   return (
@@ -53,10 +54,10 @@ export function RegisterForm({
               >
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="username"
                   render={({ field }) => (
                     <FormItem>
-                      <Label htmlFor="name">Full Name</Label>
+                      <Label htmlFor="name">Ussername</Label>
                       <FormControl>
                         <Input
                           id="name"
@@ -104,7 +105,7 @@ export function RegisterForm({
                             {...field}
                           />
                           <Button
-                            variant={"ghost"}
+                            variant="ghost"
                             type="button"
                             onClick={passwordToggle.handleToggleVisibility}
                             className="absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground cursor-pointer"
@@ -131,13 +132,13 @@ export function RegisterForm({
                       <FormControl>
                         <div className="relative">
                           <Input
-                            id="password"
+                            id="confirmPassword"
                             type={passwordToggle.type}
                             placeholder="••••••••"
                             {...field}
                           />
                           <Button
-                            variant={"ghost"}
+                            variant="ghost"
                             type="button"
                             onClick={passwordToggle.handleToggleVisibility}
                             className="absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground cursor-pointer"
@@ -155,8 +156,19 @@ export function RegisterForm({
                   )}
                 />
 
-                <Button type="submit" className="w-full cursor-pointer">
-                  Register
+                <Button
+                  type="submit"
+                  className="w-full cursor-pointer"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <LoadingSpinner className="mr-2" />
+                      <span>Loading...</span>
+                    </>
+                  ) : (
+                    "Register"
+                  )}
                 </Button>
               </form>
             </Form>
