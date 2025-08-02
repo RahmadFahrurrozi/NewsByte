@@ -2,7 +2,11 @@ import { LoginFormValues } from "@/schemas/auth.schema";
 
 interface ILoginResponse {
   success: boolean;
-  loginData: IUser;
+  data: {
+    role: string;
+    user: IUser;
+  };
+  message?: string;
   error?: string;
 }
 
@@ -19,6 +23,8 @@ export default async function loginUser(
     });
 
     const result: ILoginResponse = await response.json();
+
+    console.log("Login API result:", result);
 
     if (!response.ok || !result.success) {
       const errorMessage = result.error || "Login failed";
