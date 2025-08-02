@@ -6,24 +6,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { LogOut, Menu, User } from "lucide-react";
+import { Menu } from "lucide-react";
 import { ModeToggle } from "@/components/ModeToggle";
-import { useAuth } from "@/contexts/AuthContextProvider";
-import { useLogout } from "@/hooks/useLogout";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
-  const { user } = useAuth();
-  const { handleLogout, loading } = useLogout();
   return (
     <nav className="flex items-center justify-between py-4 px-6 sticky top-0 w-full bg-background/60 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
       <Link className="cursor-pointer" href={"/"}>
@@ -122,52 +108,14 @@ const Navbar = () => {
                 <Link href={"/pricing"}>
                   <Button className="w-full">Subscribe</Button>
                 </Link>
-                {user ? (
-                  <>
-                    <Link
-                      href={
-                        user.user_metadata?.role === "admin"
-                          ? "/dashboard-admin"
-                          : "/dashboard-user"
-                      }
-                    >
-                      <Button className="w-full" variant={"ghost"}>
-                        Dashboard
-                      </Button>
-                    </Link>
-                    <Button
-                      className="w-full flex items-center gap-2 justify-center"
-                      variant={"destructive"}
-                      onClick={handleLogout}
-                      disabled={loading}
-                    >
-                      {loading ? (
-                        <>
-                          <LoadingSpinner className="h-4 w-4" />
-                          Logging out...
-                        </>
-                      ) : (
-                        <>
-                          <LogOut className="h-4 w-4" />
-                          Logout
-                        </>
-                      )}
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Link href={"/auth/login"}>
-                      <Button className="w-full" variant={"ghost"}>
-                        Login
-                      </Button>
-                    </Link>
-                    <Link href={"/auth/register"}>
-                      <Button className="w-full" variant={"secondary"}>
-                        Register
-                      </Button>
-                    </Link>
-                  </>
-                )}
+                <Button className="w-full" variant={"ghost"}>
+                  Login
+                </Button>
+                <Link href={"/auth/register"}>
+                  <Button className="w-full" variant={"secondary"}>
+                    Register
+                  </Button>
+                </Link>
               </div>
             </div>
           </SheetContent>
@@ -180,70 +128,16 @@ const Navbar = () => {
         <Link href={"/pricing"}>
           <Button className="cursor-pointer">Subscribe</Button>
         </Link>
-
-        {user ? (
-          <>
-            <Link
-              href={
-                user.user_metadata?.role === "admin"
-                  ? "/dashboard-admin"
-                  : "/dashboard-user"
-              }
-            >
-              <Button className="cursor-pointer" variant={"outline"}>
-                Dashboard
-              </Button>
-            </Link>
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Avatar className="cursor-pointer">
-                  <AvatarImage src={user.user_metadata?.avatar_url} />
-                  <AvatarFallback>
-                    {user.email ? (
-                      user.email.charAt(0).toUpperCase()
-                    ) : (
-                      <User className="h-4 w-4" />
-                    )}
-                  </AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Link href="/profile">Profile</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/settings">Settings</Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} disabled={loading}>
-                  <div className="flex items-center gap-2">
-                    {loading ? (
-                      <LoadingSpinner className="h-4 w-4" />
-                    ) : (
-                      <LogOut className="h-4 w-4" />
-                    )}
-                    {loading ? "Logging out..." : "Logout"}
-                  </div>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </>
-        ) : (
-          <>
-            <Link href={"/auth/login"}>
-              <Button className="cursor-pointer" variant={"outline"}>
-                Login
-              </Button>
-            </Link>
-            <Link href={"/auth/register"}>
-              <Button className="cursor-pointer" variant={"secondary"}>
-                Register
-              </Button>
-            </Link>
-          </>
-        )}
+        <Link href={"/auth/login"}>
+          <Button className="cursor-pointer" variant={"outline"}>
+            Login
+          </Button>
+        </Link>
+        <Link href={"/auth/register"}>
+          <Button className="cursor-pointer" variant={"secondary"}>
+            Register
+          </Button>
+        </Link>
       </div>
     </nav>
   );
