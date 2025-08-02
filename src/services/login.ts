@@ -24,8 +24,6 @@ export default async function loginUser(
 
     const result: ILoginResponse = await response.json();
 
-    console.log("Login API result:", result);
-
     if (!response.ok || !result.success) {
       const errorMessage = result.error || "Login failed";
       throw new Error(errorMessage);
