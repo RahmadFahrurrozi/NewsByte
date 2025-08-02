@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { useLoginFormUser } from "@/hooks/useLoginForm";
+import { useLoginForm } from "@/hooks/useLoginForm";
 import Link from "next/link";
 import { usePasswordToggle } from "@/hooks/usePasswordToggle";
 import { Eye, EyeOff } from "lucide-react";
@@ -22,7 +22,7 @@ interface LoginFormProps extends React.ComponentProps<"div"> {
 }
 
 export function LoginForm({ className, onSuccess, ...props }: LoginFormProps) {
-  const { form, onSubmit, loading } = useLoginFormUser();
+  const { form, handleSubmit, loading } = useLoginForm();
   const passwordToggle = usePasswordToggle();
 
   return (
@@ -45,7 +45,7 @@ export function LoginForm({ className, onSuccess, ...props }: LoginFormProps) {
               </div>
 
               <form
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={form.handleSubmit(handleSubmit)}
                 className="space-y-6"
               >
                 <FormField
