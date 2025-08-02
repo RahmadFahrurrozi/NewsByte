@@ -20,6 +20,7 @@ export default function NavbarWrapper() {
     pathName === "/dashboard-user/settings/profile" ||
     pathName === "/dashboard-admin" ||
     pathName === "/pricing" ||
+    pathName === "/unauthorized" ||
     pathName === "/dashboard/create-news";
 
   if (hideNavbar) {

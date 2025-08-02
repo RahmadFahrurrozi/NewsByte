@@ -1,8 +1,18 @@
 "use client";
 
+import { loginSchema, LoginFormValues } from "@/schemas/auth.schema";
+import loginUser from "@/services/login";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, LoginFormValues } from "@/schemas/auth.schema";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
+interface ILoginResponse {
+  success: boolean;
+  loginData: IUser;
+  error?: string;
+}
 
 export function useLoginForm() {
   const form = useForm<LoginFormValues>({
@@ -13,12 +23,37 @@ export function useLoginForm() {
     },
   });
 
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const router = useRouter();
+
   const handleSubmit = async (values: LoginFormValues) => {
-    console.log("Login values:", values);
+    setLoading(true);
+    setErrorMessage("");
+
+    try {
+      const result: ILoginResponse = await loginUser(values);
+
+      if (!result.success) {
+        toast.error(result.error || "Login failed");
+        setErrorMessage(result.error || "Login failed");
+        setLoading(false);
+        return;
+      }
+
+      toast.success("login successful!");
+      router.push("/dashboard-user");
+      router.refresh();
+    } catch (error) {
+      console.error("Login API error:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Login failed";
+      toast.error(errorMessage);
+      setErrorMessage(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  return {
-    form,
-    handleSubmit,
-  };
+  return { form, loading, errorMessage, handleSubmit };
 }

@@ -15,13 +15,14 @@ import { useLoginForm } from "@/hooks/useLoginForm";
 import Link from "next/link";
 import { usePasswordToggle } from "@/hooks/usePasswordToggle";
 import { Eye, EyeOff } from "lucide-react";
+import { LoadingSpinner } from "./LoadingSpinner";
 
 interface LoginFormProps extends React.ComponentProps<"div"> {
   onSuccess?: () => void;
 }
 
 export function LoginForm({ className, onSuccess, ...props }: LoginFormProps) {
-  const { form, handleSubmit } = useLoginForm();
+  const { form, handleSubmit, loading } = useLoginForm();
   const passwordToggle = usePasswordToggle();
 
   return (
@@ -101,9 +102,17 @@ export function LoginForm({ className, onSuccess, ...props }: LoginFormProps) {
                   )}
                 />
 
-                <Button type="submit" className="w-full cursor-pointer">
-                  Login
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? (
+                    <>
+                      <LoadingSpinner className="mr-2" />
+                      <span>Loading...</span>
+                    </>
+                  ) : (
+                    "Login"
+                  )}
                 </Button>
+
                 <div className="flex items-center justify-end cursor-pointer">
                   <Link
                     href="/forgot-password"
@@ -121,7 +130,7 @@ export function LoginForm({ className, onSuccess, ...props }: LoginFormProps) {
                 href="/auth/register"
                 className="underline underline-offset-4"
               >
-                Sign up
+                Register
               </Link>
             </div>
           </div>

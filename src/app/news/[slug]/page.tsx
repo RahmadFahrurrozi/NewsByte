@@ -1,5 +1,5 @@
 export const dynamic = "force-dynamic";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CalendarDays, User } from "lucide-react";
 import Link from "next/link";
@@ -13,6 +13,7 @@ interface PageProps {
 }
 
 export default async function NewsDetailPage({ params }: PageProps) {
+  const supabase = await createClient();
   const { slug } = await params;
 
   const { data, error } = await supabase

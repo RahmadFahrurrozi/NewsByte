@@ -3,14 +3,14 @@ export const dynamic = "force-dynamic";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getCategoryColor } from "@/constants/categoryColors";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 import { INews } from "@/types/INews";
 import { ArrowRight, CalendarDays, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default async function Home() {
-  const { data: news, error } = await supabase.from("news").select("*");
+  const { data: news, error } = await createClient().from("news").select("*");
 
   if (error) {
     console.log("error", error);

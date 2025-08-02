@@ -109,11 +109,13 @@ const Navbar = () => {
                   <Button className="w-full">Subscribe</Button>
                 </Link>
                 <Button className="w-full" variant={"ghost"}>
-                  SignIn
+                  Login
                 </Button>
-                <Button className="w-full" variant={"secondary"}>
-                  SignUp
-                </Button>
+                <Link href={"/auth/register"}>
+                  <Button className="w-full" variant={"secondary"}>
+                    Register
+                  </Button>
+                </Link>
               </div>
             </div>
           </SheetContent>
@@ -126,15 +128,14 @@ const Navbar = () => {
         <Link href={"/pricing"}>
           <Button className="cursor-pointer">Subscribe</Button>
         </Link>
-
-        <Link href={"/signin"}>
+        <Link href={"/auth/login"}>
           <Button className="cursor-pointer" variant={"outline"}>
-            SignIn
+            Login
           </Button>
         </Link>
-        <Link href={"/signup"}>
+        <Link href={"/auth/register"}>
           <Button className="cursor-pointer" variant={"secondary"}>
-            SignUp
+            Register
           </Button>
         </Link>
       </div>
