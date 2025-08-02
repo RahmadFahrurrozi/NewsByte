@@ -2,7 +2,6 @@
 
 import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
-import path from "path";
 
 export default function NavbarWrapper() {
   const pathName = usePathname();
@@ -12,6 +11,7 @@ export default function NavbarWrapper() {
     pathName === "/auth/register" ||
     pathName === "/forgot-password" ||
     pathName === "/dashboard-user" ||
+    pathName === "/admin/dashboard-admin" ||
     pathName === "/dashboard-user/write-article" ||
     pathName === "/dashboard-user/my-articles" ||
     pathName === "/dashboard-user/notifications" ||
