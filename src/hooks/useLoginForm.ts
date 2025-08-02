@@ -7,10 +7,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-
 interface ILoginResponse {
   success: boolean;
-  loginData: IUser;
+  data: {
+    role: string;
+    user: IUser;
+  };
+  message?: string;
   error?: string;
 }
 
@@ -41,8 +44,15 @@ export function useLoginForm() {
         return;
       }
 
-      toast.success("login successful!");
-      router.push("/dashboard-user");
+      toast.success("Login successful!");
+      const role = result.data.role;
+
+      if (role === "admin") {
+        router.push("/dashboard-admin");
+      } else if (role === "user") {
+        router.push("/dashboard-user");
+      }
+
       router.refresh();
     } catch (error) {
       console.error("Login API error:", error);

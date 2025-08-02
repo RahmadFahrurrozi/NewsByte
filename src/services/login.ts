@@ -2,7 +2,11 @@ import { LoginFormValues } from "@/schemas/auth.schema";
 
 interface ILoginResponse {
   success: boolean;
-  loginData: IUser;
+  data: {
+    role: string;
+    user: IUser;
+  };
+  message?: string;
   error?: string;
 }
 
