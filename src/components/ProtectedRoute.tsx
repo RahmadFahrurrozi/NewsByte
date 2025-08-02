@@ -47,7 +47,7 @@ export function ProtectedRoute({
         {Array.from({ length: 5 }).map((_, i) => (
           <div key={i} className="flex items-center gap-2">
             <Skeleton className="h-6 w-6 rounded-md" />
-            <Skeleton className="h-4 w-32 rounded" />
+            <Skeleton className="h-4 w-1/2 rounded" />
           </div>
         ))}
       </div>
