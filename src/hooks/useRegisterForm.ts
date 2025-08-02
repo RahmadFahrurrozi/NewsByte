@@ -1,6 +1,7 @@
 "use client";
 
 import { registerSchema, RegisterFormValues } from "@/schemas/auth.schema";
+import regsiterUser from "@/services/register";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -29,53 +30,29 @@ export function useRegisterForm() {
   const router = useRouter();
 
   const handleSubmit = async (values: RegisterFormValues) => {
-    console.log("=== REGISTRATION START ===");
     setLoading(true);
     setErrorMessage("");
 
     try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: values.username,
-          email: values.email,
-          password: values.password,
-          confirmPassword: values.confirmPassword,
-        }),
-      });
+      const result: IRegisterResponse = await regsiterUser(values);
 
-      const result: IRegisterResponse = await response.json();
-
-      console.log("API Response:", {
-        status: response.status,
-        success: result.profileData,
-        error: result.error,
-      });
-
-      if (!response.ok || !result.success) {
-        const errorMsg = result.error || "Registration failed";
-        toast.error(errorMsg);
-        setErrorMessage(errorMsg);
+      if (!result.success) {
+        toast.error(result.error || "Registration failed");
+        setErrorMessage(result.error || "Registration failed");
+        setLoading(false);
         return;
       }
 
-      console.log("Registration successful");
-      toast.success("Registration successful! Redirecting to dashboard...");
-
-      // Redirect to dashboard since no email verification needed
+      toast.success("Registration successful! Redirecting to Dashboard...");
       router.push("/dashboard-user");
       router.refresh();
     } catch (error) {
-      console.error("Registration error:", error);
-      const errorMsg =
-        error instanceof Error ? error.message : "Network error occurred";
-      toast.error(errorMsg);
-      setErrorMessage(errorMsg);
+      console.error("Registration API errror:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Registeration failed";
+      toast.error(errorMessage);
+      setErrorMessage(errorMessage);
     } finally {
-      console.log("=== REGISTRATION END ===");
       setLoading(false);
     }
   };
