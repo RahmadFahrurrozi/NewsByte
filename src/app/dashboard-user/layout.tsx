@@ -9,11 +9,7 @@ export default function DashboardLayout({
 }) {
   return (
     <SidebarProvider>
-<<<<<<< HEAD
       <AppSidebarUser />
-=======
-      <AppSidebar userRole="user" />
->>>>>>> e2b6909 (feat: menambahkan tampilan dashboard)
       <SidebarInset>
         <DashboardHeader />
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
