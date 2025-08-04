@@ -8,8 +8,11 @@ import {
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { ModeToggle } from "@/components/ModeToggle";
+import { useAuth } from "@/contexts/AuthContextProvider";
+import { LoadingSpinner } from "../LoadingSpinner";
 
 const Navbar = () => {
+  const { user, loading, userRole } = useAuth();
   return (
     <nav className="flex items-center justify-between py-4 px-6 sticky top-0 w-full bg-background/60 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
       <Link className="cursor-pointer" href={"/"}>
@@ -60,7 +63,6 @@ const Navbar = () => {
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon">
-              {/* <ModeToggle /> */}
               <Menu className="size-4" />
             </Button>
           </SheetTrigger>
@@ -108,14 +110,35 @@ const Navbar = () => {
                 <Link href={"/pricing"}>
                   <Button className="w-full">Subscribe</Button>
                 </Link>
-                <Button className="w-full" variant={"ghost"}>
-                  Login
-                </Button>
-                <Link href={"/auth/register"}>
-                  <Button className="w-full" variant={"secondary"}>
-                    Register
-                  </Button>
-                </Link>
+                {loading ? (
+                  // ✅ Show loading state
+                  <div className="flex items-center justify-center p-2">
+                    <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full"></div>
+                  </div>
+                ) : user ? (
+                  <Link
+                    href={
+                      userRole === "user"
+                        ? "/dashboard-user"
+                        : "/dashboard-admin"
+                    }
+                  >
+                    <Button className="w-full">Dashboard</Button>
+                  </Link>
+                ) : (
+                  <>
+                    <Link href={"/auth/login"}>
+                      <Button className="w-full" variant={"ghost"}>
+                        Login
+                      </Button>
+                    </Link>
+                    <Link href={"/auth/register"}>
+                      <Button className="w-full" variant={"secondary"}>
+                        Register
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </SheetContent>
@@ -128,16 +151,30 @@ const Navbar = () => {
         <Link href={"/pricing"}>
           <Button className="cursor-pointer">Subscribe</Button>
         </Link>
-        <Link href={"/auth/login"}>
-          <Button className="cursor-pointer" variant={"outline"}>
-            Login
-          </Button>
-        </Link>
-        <Link href={"/auth/register"}>
-          <Button className="cursor-pointer" variant={"secondary"}>
-            Register
-          </Button>
-        </Link>
+        {loading ? (
+          <div className="flex items-center justify-center p-2">
+            <LoadingSpinner />
+          </div>
+        ) : user ? (
+          <Link
+            href={userRole === "user" ? "/dashboard-user" : "/dasboard-admin"}
+          >
+            <Button className="cursor-pointer">Dashboard</Button>
+          </Link>
+        ) : (
+          <>
+            <Link href={"/auth/login"}>
+              <Button className="cursor-pointer" variant={"ghost"}>
+                Login
+              </Button>
+            </Link>
+            <Link href={"/auth/register"}>
+              <Button className="cursor-pointer" variant={"secondary"}>
+                Register
+              </Button>
+            </Link>
+          </>
+        )}
       </div>
     </nav>
   );
