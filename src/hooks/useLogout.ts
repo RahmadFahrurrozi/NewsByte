@@ -29,7 +29,8 @@ export const useLogout = () => {
         return;
       }
       toast.success("Logout successful!");
-      router.push("/");
+      window.location.href = "/";
+      router.refresh();
       setLoading(false);
       return;
     } catch (error) {
