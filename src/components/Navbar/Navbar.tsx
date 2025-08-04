@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { NeonButton } from "../ui/neon-button";
 import {
   Sheet,
   SheetContent,
@@ -123,7 +124,7 @@ const Navbar = () => {
                         : "/dashboard-admin"
                     }
                   >
-                    <Button className="w-full">Dashboard</Button>
+                    <NeonButton className="w-full">Dashboard</NeonButton>
                   </Link>
                 ) : (
                   <>
@@ -159,7 +160,12 @@ const Navbar = () => {
           <Link
             href={userRole === "user" ? "/dashboard-user" : "/dasboard-admin"}
           >
-            <Button className="cursor-pointer">Dashboard</Button>
+            <NeonButton
+              variant={"default"}
+              className="cursor-pointer rounded-md"
+            >
+              Dashboard
+            </NeonButton>
           </Link>
         ) : (
           <>
