@@ -25,7 +25,7 @@ export function AppSidebarUser(props: React.ComponentProps<typeof Sidebar>) {
           <NavMain items={sidebarUser.nav} />
         </SidebarContent>
         <Link href={"/"}>
-          <div className="p-2 max-w-full">
+          <div className="py-2 px-4 max-w-full">
             <Button className="rounded-md w-full cursor-pointer">
               Back to Home
             </Button>
