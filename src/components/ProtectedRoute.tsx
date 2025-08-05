@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContextProvider";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Skeleton } from "./ui/skeleton";
 
 interface ProtectedRouteProps {
@@ -14,47 +14,44 @@ interface ProtectedRouteProps {
 export function ProtectedRoute({
   children,
   allowedRoles = [],
-  fallbackPath = "/",
+  fallbackPath = "/login",
 }: ProtectedRouteProps) {
-  const { user, userRole, loading } = useAuth();
+  const { user, userRole, username, loading, isInitialized } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading) {
-      if (!user) {
-        router.push(fallbackPath);
-        return;
-      }
+    // Hanya jalankan redirect logic setelah auth benar-benar initialized
+    if (!isInitialized || loading) return;
 
-      if (
-        allowedRoles.length > 0 &&
-        userRole &&
-        !allowedRoles.includes(userRole)
-      ) {
-        router.push("/unauthorized");
-        return;
-      }
+    if (!user) {
+      router.push(fallbackPath);
+      return;
     }
-  }, [user, userRole, loading, router, allowedRoles, fallbackPath]);
 
-  if (loading) {
-    return (
-      <div className="flex flex-col gap-3 p-2 rounded-md pt-10 my-3">
-        <div className="flex gap-3 items-center">
-          <Skeleton className="h-10 w-10 rounded- mb-4" />
-          <Skeleton className="h-4 w-24 rounded-full mb-4" />
-        </div>
-        {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="flex items-center gap-2">
-            <Skeleton className="h-6 w-6 rounded-md" />
-            <Skeleton className="h-4 w-1/2 rounded" />
-          </div>
-        ))}
-      </div>
-    );
+    if (
+      allowedRoles.length > 0 &&
+      userRole &&
+      !allowedRoles.includes(userRole)
+    ) {
+      router.push("/unauthorized");
+      return;
+    }
+  }, [
+    user,
+    userRole,
+    loading,
+    isInitialized,
+    router,
+    allowedRoles,
+    fallbackPath,
+  ]);
+
+  // Tampilkan loading skeleton sampai auth benar-benar siap
+  if (!isInitialized || loading) {
+    return <LoadingSkeleton />;
   }
 
-  // Don't render children if user is not authenticated or doesn't have required role
+  // Jika user null atau role tidak sesuai, jangan render apapun
   if (
     !user ||
     (allowedRoles.length > 0 && userRole && !allowedRoles.includes(userRole))
@@ -62,5 +59,38 @@ export function ProtectedRoute({
     return null;
   }
 
+  // Pastikan username sudah ada sebelum render children (optional)
+  if (user && !username && !loading) {
+    return <LoadingSkeleton />;
+  }
+
   return <>{children}</>;
+}
+
+function LoadingSkeleton() {
+  return (
+    <div className="flex flex-col gap-3 p-6 rounded-md">
+      <div className="flex gap-3 items-center mb-4">
+        <Skeleton className="h-10 w-10 rounded-full" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-3 w-16" />
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={i} className="flex items-center gap-3">
+            <Skeleton className="h-6 w-6 rounded-md" />
+            <Skeleton className="h-4 w-full max-w-[200px]" />
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-6 space-y-2">
+        <Skeleton className="h-8 w-full" />
+        <Skeleton className="h-8 w-3/4" />
+      </div>
+    </div>
+  );
 }

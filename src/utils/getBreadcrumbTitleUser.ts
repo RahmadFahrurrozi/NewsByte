@@ -1,4 +1,4 @@
-const getBreadcrumbTitle = (pathname: string): string => {
+const getBreadcrumbTitleUser = (pathname: string): string => {
   const segments = pathname.split("/").filter(Boolean);
   const key = segments.join("/");
   const titles: Record<string, string> = {
@@ -14,4 +14,4 @@ const getBreadcrumbTitle = (pathname: string): string => {
   return titles[key] || "Dashboard";
 };
 
-export default getBreadcrumbTitle;
+export default getBreadcrumbTitleUser;

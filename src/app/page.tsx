@@ -21,7 +21,7 @@ export default async function Home() {
     );
   }
 
-  console.log("data news", news);
+  // console.log("data news", news);
 
   return (
     <section>

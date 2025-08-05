@@ -31,10 +31,7 @@ export function RegisterForm({
 
   return (
     <div
-      className={cn(
-        "flex flex-col gap-4 max-w-2xl w-full mx-4 md:mx-0",
-        className
-      )}
+      className={cn("flex flex-col gap-4 max-w-2xl w-full md:mx-0", className)}
       {...props}
     >
       <Card className="overflow-hidden p-0">
@@ -187,7 +184,7 @@ export function RegisterForm({
         </CardContent>
       </Card>
 
-      <p className="text-muted-foreground text-center text-xs">
+      <p className="text-muted-foreground text-center text-xs leading-6">
         By continuing, you agree to our{" "}
         <Link href="#" className="underline underline-offset-4">
           Terms of Service

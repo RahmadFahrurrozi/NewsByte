@@ -44,7 +44,7 @@ export function useRegisterForm() {
       }
 
       toast.success("Registration successful! Redirecting to Dashboard...");
-      router.push("/dashboard-user");
+      window.location.href = "/dashboard-user";
       router.refresh();
     } catch (error) {
       console.error("Registration API errror:", error);

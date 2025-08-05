@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import getBreadcrumbTitle from "@/utils/getBreadcrumbTitle";
+import getBreadcrumbTitle from "@/utils/getBreadcrumbTitleUser";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,10 +11,11 @@ import {
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { ModeToggle } from "./ModeToggle";
+import getBreadcrumbTitleUser from "@/utils/getBreadcrumbTitleUser";
 
-export default function DashboardHeader() {
+export default function DashboardHeaderUser() {
   const pathname = usePathname();
-  const titlePage = getBreadcrumbTitle(pathname);
+  const titlePage = getBreadcrumbTitleUser(pathname);
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 px-4">
