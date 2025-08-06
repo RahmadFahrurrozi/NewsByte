@@ -44,24 +44,112 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       try {
+        // Coba dapatkan data user dari auth.users terlebih dahulu untuk memastikan memiliki data terbaru
+        const { data: authUserData, error: authError } =
+          await supabase.auth.getUser();
+        const authUser = authUserData?.user;
+
+        if (authError) {
+          console.error("Error fetching auth user:", authError);
+        }
+
+        // Coba ambil profil dari database
         const { data: profile, error } = await supabase
           .from("profiles")
           .select("role, username")
           .eq("id", userId)
           .single();
 
-        if (error) throw error;
+        // Jika profil ditemukan, gunakan data tersebut
+        if (!error && profile) {
+          const userData = {
+            role: profile.role,
+            username: profile.username,
+          };
+          userDataCache.set(userId, userData); // Cache the result
+          return userData;
+        }
 
-        const userData = {
-          role: profile?.role ?? null,
-          username: profile?.username ?? null,
+        // Jika profil tidak ditemukan (PGRST116) atau error lainnya
+        if (error) {
+          // Jika kita memiliki data auth user, coba buat profil baru
+          if (
+            authUser &&
+            (error.code === "PGRST116" ||
+              error.message.includes("does not exist"))
+          ) {
+            try {
+              // Ekstrak data dari user_metadata
+              const username =
+                authUser.user_metadata?.name ||
+                authUser.user_metadata?.full_name ||
+                authUser.email?.split("@")[0] ||
+                `user_${userId.substring(0, 8)}`;
+
+              const role = authUser.user_metadata?.role || "user";
+
+              // create new profile
+              const { data: newProfile, error: insertError } = await supabase
+                .from("profiles")
+                .insert({
+                  id: userId,
+                  username: username,
+                  role: role,
+                  created_at: new Date().toISOString(),
+                })
+                .select("role, username")
+                .single();
+
+              if (!insertError && newProfile) {
+                const userData = {
+                  role: newProfile.role,
+                  username: newProfile.username,
+                };
+                userDataCache.set(userId, userData);
+                return userData;
+              }
+
+              if (insertError) {
+                console.error("Error creating new profile:", insertError);
+              }
+            } catch (insertErr) {
+              console.error("Exception during profile creation:", insertErr);
+            }
+          }
+
+          // Fallback ke user_metadata jika tersedia
+          if (authUser?.user_metadata) {
+            const userData = {
+              role: authUser.user_metadata.role || "user",
+              username:
+                authUser.user_metadata.name ||
+                authUser.user_metadata.full_name ||
+                authUser.email?.split("@")[0] ||
+                `user_${userId.substring(0, 8)}`,
+            };
+            userDataCache.set(userId, userData);
+            return userData;
+          }
+        }
+
+        // Fallback jika semua cara gagal
+        const fallbackData = {
+          role: "user",
+          username: `user_${userId.substring(0, 8)}`,
         };
-
-        userDataCache.set(userId, userData); // Cache the result
-        return userData;
+        userDataCache.set(userId, fallbackData); // Cache the fallback result
+        return fallbackData;
       } catch (error) {
-        console.error("Error fetching user data:", error);
-        return { role: null, username: null };
+        // Tampilkan informasi error yang lebih detail
+        console.error(
+          "Error fetching user data:",
+          JSON.stringify(error, null, 2)
+        );
+
+        // Pastikan selalu mengembalikan nilai yang valid meskipun terjadi error
+        const fallbackData = { role: "user", username: null };
+        userDataCache.set(userId, fallbackData); // Cache fallback data untuk menghindari error berulang
+        return fallbackData;
       }
     },
     [supabase]

@@ -3,11 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function POST(request: Request) {
   try {
-    console.log("=== LOGOUT API START ===");
-
     const supabase = await createClient();
 
-    // Sign out user
     const { error } = await supabase.auth.signOut();
 
     if (error) {
@@ -20,9 +17,6 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-
-    console.log("User logged out successfully");
-    console.log("=== LOGOUT API END ===");
 
     return NextResponse.json({
       success: true,

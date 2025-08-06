@@ -47,16 +47,13 @@ export function useLoginForm() {
       toast.success("Login successful!");
       const role = result.data.role;
 
-      router.refresh();
-
       if (role === "admin") {
         window.location.href = "/dashboard-admin";
       } else if (role === "user") {
         window.location.href = "/dashboard-user";
       }
 
-      setLoading(false);
-      return;
+      router.refresh();
     } catch (error) {
       console.error("Login API error:", error);
       const errorMessage =

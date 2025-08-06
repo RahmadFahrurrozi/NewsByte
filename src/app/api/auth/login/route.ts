@@ -15,7 +15,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: "Login failed email or password incorrect",
+          error: error.message || "Login failed",
           message: error.message || "Login failed",
         },
         {

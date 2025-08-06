@@ -14,7 +14,7 @@ interface ProtectedRouteProps {
 export function ProtectedRoute({
   children,
   allowedRoles = [],
-  fallbackPath = "/login",
+  fallbackPath = "/",
 }: ProtectedRouteProps) {
   const { user, userRole, username, loading, isInitialized } = useAuth();
   const router = useRouter();
@@ -59,7 +59,7 @@ export function ProtectedRoute({
     return null;
   }
 
-  // Pastikan username sudah ada sebelum render children (optional)
+  // Jika username sudah ada sebelum render children
   if (user && !username && !loading) {
     return <LoadingSkeleton />;
   }
@@ -67,7 +67,7 @@ export function ProtectedRoute({
   return <>{children}</>;
 }
 
-function LoadingSkeleton() {
+const LoadingSkeleton = () => {
   return (
     <div className="flex flex-col gap-3 p-6 rounded-md">
       <div className="flex gap-3 items-center mb-4">
@@ -93,4 +93,4 @@ function LoadingSkeleton() {
       </div>
     </div>
   );
-}
+};
