@@ -1,6 +1,7 @@
 import { AppSidebarUser } from "@/components/AppSidebarUser";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import DashboardHeaderUser from "@/components/DashboardHeaderUser";
+import { LoginSuccessToast } from "@/components/LoginSuccessToast";
 
 export default function DashboardLayout({
   children,
@@ -9,6 +10,7 @@ export default function DashboardLayout({
 }) {
   return (
     <SidebarProvider>
+      <LoginSuccessToast />
       <AppSidebarUser />
       <SidebarInset>
         <DashboardHeaderUser />
