@@ -16,6 +16,8 @@ import Link from "next/link";
 import { usePasswordToggle } from "@/hooks/usePasswordToggle";
 import { Eye, EyeOff } from "lucide-react";
 import { LoadingSpinner } from "./LoadingSpinner";
+import { FcGoogle } from "react-icons/fc";
+import { useSocialLogin } from "@/hooks/useLoginSocial";
 
 interface LoginFormProps extends React.ComponentProps<"div"> {
   onSuccess?: () => void;
@@ -23,6 +25,7 @@ interface LoginFormProps extends React.ComponentProps<"div"> {
 
 export function LoginForm({ className, onSuccess, ...props }: LoginFormProps) {
   const { form, handleSubmit, loading } = useLoginForm();
+  const { hadnleLoginGoogle, socialLoading } = useSocialLogin();
   const passwordToggle = usePasswordToggle();
 
   return (
@@ -107,6 +110,37 @@ export function LoginForm({ className, onSuccess, ...props }: LoginFormProps) {
                     </>
                   ) : (
                     "Login"
+                  )}
+                </Button>
+
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="px-2 text-muted-foreground">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
+
+                <Button
+                  type="button"
+                  variant={"outline"}
+                  className="w-full cursor-pointer"
+                  onClick={hadnleLoginGoogle}
+                  disabled={socialLoading}
+                >
+                  {socialLoading ? (
+                    <>
+                      <LoadingSpinner className="mr-2" />
+                      <span>Loading...</span>
+                    </>
+                  ) : (
+                    <>
+                      <FcGoogle className="mr-2" />
+                      <span>Google</span>
+                    </>
                   )}
                 </Button>
 
