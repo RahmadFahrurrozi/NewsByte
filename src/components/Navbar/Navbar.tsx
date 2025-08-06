@@ -158,7 +158,7 @@ const Navbar = () => {
           </div>
         ) : user ? (
           <Link
-            href={userRole === "user" ? "/dashboard-user" : "/dasboard-admin"}
+            href={userRole === "user" ? "/dashboard-user" : "/dashboard-admin"}
           >
             <NeonButton
               variant={"default"}
@@ -170,7 +170,7 @@ const Navbar = () => {
         ) : (
           <>
             <Link href={"/auth/login"}>
-              <Button className="cursor-pointer" variant={"ghost"}>
+              <Button className="cursor-pointer" variant={"outline"}>
                 Login
               </Button>
             </Link>
