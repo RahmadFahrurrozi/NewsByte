@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 
-import EmptyNewsClient from "@/components/EmptyNewsClient";
+import EmptyArticleClient from "@/components/EmptyArticleClient";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getCategoryColor } from "@/constants/categoryColors";
@@ -27,7 +27,7 @@ export default async function Home() {
   }
 
   if (isEmpty) {
-    return <EmptyNewsClient />;
+    return <EmptyArticleClient />;
   }
 
   return (
