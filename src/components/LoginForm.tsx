@@ -102,7 +102,11 @@ export function LoginForm({ className, onSuccess, ...props }: LoginFormProps) {
                   )}
                 />
 
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button
+                  type="submit"
+                  className="w-full cursor-pointer"
+                  disabled={loading}
+                >
                   {loading ? (
                     <>
                       <LoadingSpinner className="mr-2" />
