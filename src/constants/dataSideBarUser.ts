@@ -58,5 +58,3 @@ export const sidebarUser = {
     },
   ],
 };
-
-export const sidebarAdmin = {};

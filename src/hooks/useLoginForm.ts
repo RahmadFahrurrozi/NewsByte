@@ -48,9 +48,9 @@ export function useLoginForm() {
       const role = result.data.role;
 
       if (role === "admin") {
-        window.location.href = "/dashboard-admin";
+        window.location.replace("/dashboard-admin");
       } else if (role === "user") {
-        window.location.href = "/dashboard-user";
+        window.location.replace("/dashboard-user");
       }
 
       router.refresh();

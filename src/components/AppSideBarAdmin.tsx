@@ -11,8 +11,8 @@ import {
 import { NavMain } from "@/components/NavMain";
 import { NavUser } from "@/components/NavUser";
 import { TeamSwitcher } from "@/components/team-switcher";
-import { sidebarUser } from "@/constants/dataSideBar";
-import { ProtectedRoute } from "./ProtectedRoute";
+import { sidebarUser } from "@/constants/dataSideBarUser";
+import { ProtectedRoute } from "@/contexts/ProtectedRoute";
 
 export function AppSidebarAdmin(props: React.ComponentProps<typeof Sidebar>) {
   return (
