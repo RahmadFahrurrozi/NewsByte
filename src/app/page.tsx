@@ -1,16 +1,21 @@
 export const dynamic = "force-dynamic";
 
+import EmptyNewsClient from "@/components/EmptyNewsClient";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getCategoryColor } from "@/constants/categoryColors";
 import { createClient } from "@/lib/supabase/client";
-import { INews } from "@/types/INews";
+import { IArticles } from "@/types/IArticles";
 import { ArrowRight, CalendarDays, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default async function Home() {
-  const { data: news, error } = await createClient().from("news").select("*");
+  const { data: articles, error } = await createClient()
+    .from("articles")
+    .select("*");
+
+  const isEmpty = !articles || articles.length === 0;
 
   if (error) {
     console.log("error", error);
@@ -21,7 +26,9 @@ export default async function Home() {
     );
   }
 
-  // console.log("data news", news);
+  if (isEmpty) {
+    return <EmptyNewsClient />;
+  }
 
   return (
     <section>
@@ -33,7 +40,7 @@ export default async function Home() {
 
       {/* News Grid */}
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-        {news?.map((item: INews) => (
+        {articles?.map((item: IArticles) => (
           <article
             key={item.id}
             className="flex flex-col overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 bg-card"
@@ -86,7 +93,7 @@ export default async function Home() {
                 <div className="flex items-center justify-between text-sm text-muted-foreground">
                   <div className="flex items-center gap-2">
                     <User className="h-4 w-4" />
-                    <span>{item.author}</span>
+                    <span>{item.author_id}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CalendarDays className="h-4 w-4" />
