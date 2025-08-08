@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, CalendarDays, User } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { INews } from "@/types/INews";
+import { IArticles } from "@/types/IArticles";
 
 interface PageProps {
   params: Promise<{
@@ -20,7 +20,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
     .from("news")
     .select("*")
     .eq("slug", slug)
-    .single<INews>();
+    .single<IArticles>();
 
   if (!data || error) {
     return notFound();
@@ -39,7 +39,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
         <div className="flex items-center gap-6 text-muted-foreground text-sm mb-6">
           <div className="flex items-center gap-2">
             <User className="w-4 h-4" />
-            {data.author}
+            {data.author_id}
           </div>
           <div className="flex items-center gap-2">
             <CalendarDays className="w-4 h-4" />
