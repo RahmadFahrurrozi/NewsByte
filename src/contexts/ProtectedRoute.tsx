@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContextProvider";
-import { useEffect, useState } from "react";
-import { Skeleton } from "./ui/skeleton";
+import { useEffect } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
