@@ -1,4 +1,4 @@
-interface IUserProfile {
+export interface IUserProfile {
   id: string;
   name: string;
   username: string;

@@ -4,16 +4,14 @@ import EmptyArticleClient from "@/components/EmptyArticleClient";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getCategoryColor } from "@/constants/categoryColors";
-import { createClient } from "@/lib/supabase/client";
+import { getApprovedArticles } from "@/lib/article/getApprovedArticles";
 import { IArticles } from "@/types/IArticles";
 import { ArrowRight, CalendarDays, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default async function Home() {
-  const { data: articles, error } = await createClient()
-    .from("articles")
-    .select("*");
+  const { data: articles, error } = await getApprovedArticles();
 
   const isEmpty = !articles || articles.length === 0;
 
@@ -30,6 +28,7 @@ export default async function Home() {
     return <EmptyArticleClient />;
   }
 
+  console.log("articles", articles);
   return (
     <section>
       {/* Section Header */}
@@ -40,17 +39,17 @@ export default async function Home() {
 
       {/* News Grid */}
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-        {articles?.map((item: IArticles) => (
+        {articles?.map((article: IArticles) => (
           <article
-            key={item.id}
+            key={article.id}
             className="flex flex-col overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 bg-card"
           >
             {/* Image */}
-            {item.thumbnile ? (
+            {article.thumbnile ? (
               <div className="relative aspect-video overflow-hidden">
                 <Image
-                  src={item.thumbnile}
-                  alt={item.title}
+                  src={article.thumbnile}
+                  alt={article.title}
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -71,21 +70,21 @@ export default async function Home() {
                 <Badge
                   variant="secondary"
                   className={`inline-block px-3 py-1 text-xs font-semibold ${getCategoryColor(
-                    item.categories
+                    article.categories
                   )}`}
                 >
-                  {item.categories}
+                  {article.categories}
                 </Badge>
               </div>
 
               {/* Title */}
               <h3 className="text-xl font-bold mb-2 line-clamp-2">
-                {item.title}
+                {article.title}
               </h3>
 
               {/* Excerpt */}
               <p className="text-muted-foreground mb-4 line-clamp-3">
-                {item.content}
+                {article.content}
               </p>
 
               {/* Metadata */}
@@ -93,19 +92,19 @@ export default async function Home() {
                 <div className="flex items-center justify-between text-sm text-muted-foreground">
                   <div className="flex items-center gap-2">
                     <User className="h-4 w-4" />
-                    <span>{item.author_id}</span>
+                    <span>{article.profiles?.username}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CalendarDays className="h-4 w-4" />
                     <span>
-                      {new Date(item.created_at).toLocaleDateString()}
+                      {new Date(article.created_at).toLocaleDateString()}
                     </span>
                   </div>
                 </div>
               </div>
 
               {/* Read More Button */}
-              <Link href={`/news/${item.slug}`}>
+              <Link href={`/article/${article.slug}`}>
                 <Button
                   className="mt-6 w-full cursor-pointer"
                   variant="outline"

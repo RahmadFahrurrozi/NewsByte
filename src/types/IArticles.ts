@@ -1,3 +1,4 @@
+import { IUserProfile } from "./IUserProfile";
 export type IArticlesStatus = "published" | "pending" | "rejected";
 
 export interface IArticles {
@@ -10,6 +11,7 @@ export interface IArticles {
   thumbnile: string;
   article_status: IArticlesStatus;
   review_notes: string;
+  profiles: IUserProfile;
   created_at: string;
   updated_at: string;
 }
