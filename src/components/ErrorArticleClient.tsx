@@ -2,19 +2,14 @@
 
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
-export default function EmptyArticleClient() {
+export default function ErrorArticleClient() {
   return (
     <div className="flex items-center flex-col justify-center min-h-[80vh]">
-      <DotLottieReact
-        src="/notFound.lottie"
-        loop
-        autoplay
-        className="w-[500px]"
-      />
+      <DotLottieReact src="/error.lottie" loop autoplay className="w-[500px]" />
       <h1 className="text-2xl font-bold">Upps!</h1>
       <p className="text-foreground">
-        <span className="font-bold text-red-500">No news found!</span> waiting
-        for new aricles
+        <span className="font-bold text-red-500">Shometing went wrong!</span>{" "}
+        please try again later.
       </p>
     </div>
   );

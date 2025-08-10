@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import EmptyArticleClient from "@/components/EmptyArticleClient";
+import ErrorArticleClient from "@/components/ErrorArticleClient";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getCategoryColor } from "@/constants/categoryColors";
@@ -18,9 +19,7 @@ export default async function Home() {
   if (error) {
     console.log("error", error);
     return (
-      <div className="text-red-500 p-4">
-        Error loading news: {error.message}
-      </div>
+      console.error("Error loading news:", error), (<ErrorArticleClient />)
     );
   }
 
