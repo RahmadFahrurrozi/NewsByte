@@ -11,8 +11,15 @@ import { ArrowRight, CalendarDays, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-export default async function Home() {
-  const { data: articles, error } = await getApprovedArticles();
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: { page?: string; perPage?: string };
+}) {
+  const params = await searchParams;
+  const page = Number(params.page) || 1;
+  const perPage = Number(params.perPage) || 5;
+  const { data: articles, error } = await getApprovedArticles(page, perPage);
 
   const isEmpty = !articles || articles.length === 0;
 
@@ -27,7 +34,7 @@ export default async function Home() {
     return <EmptyArticleClient />;
   }
 
-  console.log("articles", articles);
+  console.table(articles);
   return (
     <section>
       {/* Section Header */}
