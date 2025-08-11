@@ -56,7 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Coba ambil profil dari database
         const { data: profile, error } = await supabase
           .from("profiles")
-          .select("role, username")
+          .select("*")
           .eq("id", userId)
           .single();
 

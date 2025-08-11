@@ -1,6 +1,6 @@
-const getBadgeColorStatus = (status: string) => {
-  switch (status.toLowerCase()) {
-    case "published":
+const getBadgeColorStatus = (article_status: string) => {
+  switch (article_status.toLowerCase()) {
+    case "approved":
       return "bg-green-100 text-green-600";
     case "pending":
       return "bg-orange-100 text-orange-600";

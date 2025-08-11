@@ -12,15 +12,19 @@ import {
   ArrowUpDown,
   Calendar,
   FilterIcon,
+  Edit,
+  Trash2,
+  Eye,
+  Settings,
 } from "lucide-react";
 import {
   IoAnalyticsSharp,
   IoDocumentOutline,
   IoDocumentTextOutline,
 } from "react-icons/io5";
+import { BiErrorAlt } from "react-icons/bi";
 import PaginationComponent from "@/components/PaginationComponent";
 import getBadgeColorStatus from "@/utils/getColorStstus";
-import articlesData from "@/constants/dataDummyArticles";
 import {
   Select,
   SelectContent,
@@ -28,8 +32,49 @@ import {
   SelectValue,
   SelectItem,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useArticleByAuthor } from "@/hooks/useArticleByAuthor";
+import { useAuth } from "@/contexts/AuthContextProvider";
+import { useState } from "react";
+import { formatDateWithTime } from "@/utils/formatedDate";
+import ArticleListSkeleton from "@/components/ArticleSkeleton";
+import { IArticles } from "@/types/IArticles";
 
 export default function MyarticlesPage() {
+  const authorId = useAuth()?.user?.id ?? "";
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+
+  const {
+    data: articles,
+    isLoading,
+    isError,
+  } = useArticleByAuthor(authorId, page, perPage);
+
+  const stats = {
+    approved:
+      articles?.data?.filter(
+        (approved) => approved.article_status === "approved"
+      ).length ?? 0,
+    pending:
+      articles?.data?.filter((pending) => pending.article_status === "pending")
+        .length ?? 0,
+    rejected:
+      articles?.data?.filter(
+        (rejected) => rejected.article_status === "rejected"
+      ).length ?? 0,
+  };
+
+  if (isError) return <div>Error</div>;
+
   return (
     <section className="container mx-auto py-5">
       <div className="flex flex-col lg:flex-row items-start gap-6">
@@ -54,33 +99,28 @@ export default function MyarticlesPage() {
             <CardContent className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Total article:</span>
-                <span>{articlesData.length}</span>
+                <span>{articles?.total}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground flex items-center gap-2">
                   Published
                   <CheckCircle2 className="text-green-500 size-4" />
                 </span>
-                <span className="font-medium">
-                  {
-                    articlesData.filter(
-                      (article) => article.status === "published"
-                    ).length
-                  }
-                </span>
+                <span className="font-medium">{stats.approved}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground flex items-center gap-2">
-                  Drafts
+                  Pending
                   <IoDocumentTextOutline className="size-4 text-orange-300" />
                 </span>
-                <span className="font-medium">
-                  {
-                    articlesData.filter(
-                      (article) => article.status === "pending"
-                    ).length
-                  }
+                <span className="font-medium">{stats.pending}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground flex items-center gap-2">
+                  Rejected
+                  <BiErrorAlt className="size-4 text-red-500" />
                 </span>
+                <span className="font-medium">{stats.rejected}</span>
               </div>
               <div className="pt-2 border-t">
                 <div className="flex items-center">
@@ -106,6 +146,7 @@ export default function MyarticlesPage() {
                 <Plus className="w-4 h-4" />
                 <span>Create New Article</span>
               </Button>
+
               <Button
                 variant="outline"
                 className="w-full justify-start gap-3 cursor-pointer p-6"
@@ -130,12 +171,7 @@ export default function MyarticlesPage() {
                   <h3 className="font-semibold">Unpublished Article</h3>
                 </div>
                 <p className="text-sm text-muted-foreground mb-3">
-                  {
-                    articlesData.filter(
-                      (article) => article.status === "pending"
-                    ).length
-                  }{" "}
-                  unpublished Article waiting for review
+                  {stats.pending} unpublished Article waiting for review
                 </p>
                 <Button variant="link" className="p-0 h-auto cursor-pointer">
                   View all articles <ArrowRight className="w-4 h-4 ml-1" />
@@ -219,46 +255,94 @@ export default function MyarticlesPage() {
                 </Select>
               </div>
             </div>
-
             {/* article list */}
-            <div className="space-y-4">
-              {articlesData.map((article) => (
-                <Card key={article.id}>
-                  <CardContent className="px-6 py-3">
-                    <div className="flex justify-between items-center">
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-medium">{article.title}</h3>
-                          <Badge
-                            className={getBadgeColorStatus(article.status)}
-                          >
-                            {article.status}
-                          </Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          {article.status} on {article.publishDate}
-                        </p>
-                        <div className="mt-2 flex gap-2">
-                          {article.tags.map((tag, index) => (
-                            <Badge key={index} variant="secondary">
-                              {tag}
+            {isLoading ? (
+              <ArticleListSkeleton />
+            ) : (
+              <div className="space-y-4">
+                {articles?.data?.map((article: IArticles) => (
+                  <Card key={article.id}>
+                    <CardContent className="px-6 py-3">
+                      <div className="flex justify-between items-center">
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-medium truncate">
+                              {article.title}
+                            </h3>
+                            <Badge
+                              className={getBadgeColorStatus(
+                                article.article_status
+                              )}
+                            >
+                              {article.article_status}
                             </Badge>
-                          ))}
+                          </div>
+                          <p className="text-sm text-muted-foreground">
+                            {article.article_status} on{" "}
+                            {formatDateWithTime(article.created_at)}
+                          </p>
+                          <Badge variant="outline">{article.categories}</Badge>
                         </div>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        className="bg-blue-500 cursor-pointer text-white border-foreground hover:border-foreground/50 transition-all duration-200 ease-in-out"
-                        size="sm"
-                      >
-                        Manage
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
 
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              className="bg-blue-500/90 hover:bg-blue-600 text-white rounded-lg px-4 py-2 transition-all duration-200 ease-in-out shadow-sm hover:shadow-md"
+                              size="sm"
+                            >
+                              Manage
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-md rounded-xl">
+                            <DialogHeader>
+                              <DialogTitle className="text-lg font-semibold">
+                                Choose what you want to do
+                              </DialogTitle>
+                              <DialogDescription className="text-sm text-muted-foreground">
+                                You can edit this article before publishing
+                              </DialogDescription>
+                            </DialogHeader>
+
+                            <div className="flex gap-3">
+                              {/* Edit Button */}
+                              <Button
+                                variant="ghost"
+                                className="flex items-center gap-2 bg-violet-500 rounded-lg px-4 py-2 transition-all duration-150 "
+                                size="sm"
+                              >
+                                <Edit className="w-4 h-4" />
+                                Edit
+                              </Button>
+
+                              {/* View Button */}
+                              <Button
+                                variant="ghost"
+                                className="flex items-center gap-2 bg-teal-500 rounded-lg px-4 py-2 transition-all duration-150 "
+                                size="sm"
+                              >
+                                <Eye className="w-4 h-4" />
+                                View
+                              </Button>
+
+                              {/* Delete Button */}
+                              <Button
+                                variant="ghost"
+                                className="flex items-center gap-2 bg-red-500 rounded-lg px-4 py-2 transition-all duration-150 "
+                                size="sm"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                                Delete
+                              </Button>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
             {/* Pagination */}
             <div className="mt-8 flex justify-center">
               <PaginationComponent />

@@ -5,6 +5,7 @@ import NavbarWrapper from "@/components/Navbar/NavbarWrapper";
 import { ThemeProvider } from "@/contexts/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContextProvider";
+import ReactQueryProvider from "@/providers/ReactQueryProvider";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -27,16 +28,18 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.className} antialiased min-h-screen`}>
         <AuthProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <NavbarWrapper />
-            <main className="px-6">{children}</main>
-          </ThemeProvider>
-          <Toaster position="top-right" richColors />
+          <ReactQueryProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <NavbarWrapper />
+              <main className="px-6">{children}</main>
+            </ThemeProvider>
+            <Toaster position="top-right" richColors />
+          </ReactQueryProvider>
         </AuthProvider>
       </body>
     </html>

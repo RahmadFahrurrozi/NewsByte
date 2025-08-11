@@ -1,5 +1,5 @@
 import { IUserProfile } from "./IUserProfile";
-export type IArticlesStatus = "published" | "pending" | "rejected";
+export type IArticlesStatus = "approved" | "pending" | "rejected";
 
 export interface IArticles {
   id: string;
