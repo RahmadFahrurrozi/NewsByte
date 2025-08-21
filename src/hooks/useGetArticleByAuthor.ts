@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getArticleByAuthor } from "@/lib/article/getArticleByAuthor";
 
 export function useArticleByAuthor(
@@ -9,5 +9,6 @@ export function useArticleByAuthor(
   return useQuery({
     queryKey: ["articles", authorId, page, perPage],
     queryFn: () => getArticleByAuthor(authorId, page, perPage),
+    placeholderData: keepPreviousData,
   });
 }
