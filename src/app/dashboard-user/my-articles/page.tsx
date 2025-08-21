@@ -12,10 +12,9 @@ import {
   ArrowUpDown,
   Calendar,
   FilterIcon,
-  Edit,
   Trash2,
   Eye,
-  Settings,
+  PencilLine,
 } from "lucide-react";
 import {
   IoAnalyticsSharp,
@@ -36,12 +35,11 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useArticleByAuthor } from "@/hooks/useArticleByAuthor";
+import { useArticleByAuthor } from "@/hooks/useGetArticleByAuthor";
 import { useAuth } from "@/contexts/AuthContextProvider";
 import { useState } from "react";
 import { formatDateWithTime } from "@/utils/formatedDate";
@@ -288,7 +286,7 @@ export default function MyarticlesPage() {
                           <DialogTrigger asChild>
                             <Button
                               variant="ghost"
-                              className="bg-blue-500/90 hover:bg-blue-600 text-white rounded-lg px-4 py-2 transition-all duration-200 ease-in-out shadow-sm hover:shadow-md"
+                              className="bg-blue-500/90 hover:bg-blue-600 text-white rounded-lg px-4 py-2 transition-all duration-200 ease-in-out shadow-sm hover:shadow-md cursor-pointer"
                               size="sm"
                             >
                               Manage
@@ -308,31 +306,31 @@ export default function MyarticlesPage() {
                               {/* Edit Button */}
                               <Button
                                 variant="ghost"
-                                className="flex items-center gap-2 bg-violet-500 rounded-lg px-4 py-2 transition-all duration-150 "
+                                className="flex items-center gap-2 bg-violet-500 rounded-lg px-4 py-2 transition-all duration-150 cursor-pointer"
                                 size="sm"
                               >
-                                <Edit className="w-4 h-4" />
-                                Edit
+                                <PencilLine className="size-4" />
+                                <span>Edit</span>
                               </Button>
 
                               {/* View Button */}
                               <Button
                                 variant="ghost"
-                                className="flex items-center gap-2 bg-teal-500 rounded-lg px-4 py-2 transition-all duration-150 "
+                                className="flex items-center gap-2 bg-teal-500 rounded-lg px-4 py-2 transition-all duration-150 cursor-pointer"
                                 size="sm"
                               >
-                                <Eye className="w-4 h-4" />
-                                View
+                                <Eye className="size-4" />
+                                <span>View</span>
                               </Button>
 
                               {/* Delete Button */}
                               <Button
                                 variant="ghost"
-                                className="flex items-center gap-2 bg-red-500 rounded-lg px-4 py-2 transition-all duration-150 "
+                                className="flex items-center gap-2 bg-red-500 rounded-lg px-4 py-2 transition-all duration-150 cursor-pointer"
                                 size="sm"
                               >
-                                <Trash2 className="w-4 h-4" />
-                                Delete
+                                <Trash2 className="size-4" />
+                                <span>Delete</span>
                               </Button>
                             </div>
                           </DialogContent>
