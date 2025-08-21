@@ -58,5 +58,10 @@ export async function getArticleByAuthor(
     rejected: rejectedCount ?? 0,
   };
 
-  return { data, error, total: count ?? 0, stats };
+  return {
+    data,
+    error,
+    total: count ?? 0,
+    stats,
+  };
 }
