@@ -34,7 +34,6 @@ export default async function Home({
     return <EmptyArticleClient />;
   }
 
-  console.table(articles);
   return (
     <section>
       {/* Section Header */}
