@@ -286,7 +286,7 @@ export default function MyarticlesPage() {
                           <DialogTrigger asChild>
                             <Button
                               variant="ghost"
-                              className="bg-blue-500/90 hover:bg-blue-600 text-white rounded-lg px-4 py-2 transition-all duration-200 ease-in-out shadow-sm hover:shadow-md cursor-pointer"
+                              className="bg-blue-500/90 hover:bg-blue-600 text-white rounded-lg px-4 py-2 transition-all duration-200 ease-in-out shadow-sm hover:shadow-md hover:text-neutral-50 cursor-pointer"
                               size="sm"
                             >
                               Manage
@@ -306,7 +306,7 @@ export default function MyarticlesPage() {
                               {/* Edit Button */}
                               <Button
                                 variant="ghost"
-                                className="flex items-center gap-2 bg-violet-500 rounded-lg px-4 py-2 transition-all duration-150 cursor-pointer"
+                                className="flex items-center gap-2 bg-violet-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all duration-150 cursor-pointer"
                                 size="sm"
                               >
                                 <PencilLine className="size-4" />
@@ -316,7 +316,7 @@ export default function MyarticlesPage() {
                               {/* View Button */}
                               <Button
                                 variant="ghost"
-                                className="flex items-center gap-2 bg-teal-500 rounded-lg px-4 py-2 transition-all duration-150 cursor-pointer"
+                                className="flex items-center gap-2 bg-teal-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all duration-150 cursor-pointer"
                                 size="sm"
                               >
                                 <Eye className="size-4" />
@@ -326,7 +326,7 @@ export default function MyarticlesPage() {
                               {/* Delete Button */}
                               <Button
                                 variant="ghost"
-                                className="flex items-center gap-2 bg-red-500 rounded-lg px-4 py-2 transition-all duration-150 cursor-pointer"
+                                className="flex items-center gap-2 bg-red-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all duration-150 cursor-pointer"
                                 size="sm"
                               >
                                 <Trash2 className="size-4" />
