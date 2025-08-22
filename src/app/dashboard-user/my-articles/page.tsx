@@ -74,7 +74,7 @@ export default function MyarticlesPage() {
   if (isError) return <div>Error</div>;
 
   return (
-    <section className="container mx-auto py-5">
+    <section className="py-5">
       <div className="flex flex-col lg:flex-row items-start gap-6">
         {/* Left area -  ticky */}
         <div className="lg:sticky lg:top-6 lg:w-1/3 space-y-6">
