@@ -45,6 +45,7 @@ import { useState } from "react";
 import { formatDateWithTime } from "@/utils/formatedDate";
 import ArticleListSkeleton from "@/components/ArticleSkeleton";
 import { IArticles } from "@/types/IArticles";
+import Link from "next/link";
 
 export default function MyarticlesPage() {
   const authorId = useAuth()?.user?.id ?? "";
@@ -137,13 +138,15 @@ export default function MyarticlesPage() {
               Quick Actions
             </h3>
             <div className="space-y-2">
-              <Button
-                variant="outline"
-                className="w-full justify-start gap-3 cursor-pointer border border-dashed p-6"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Create New Article</span>
-              </Button>
+              <Link href={"/dashboard-user/write-article"}>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start gap-3 cursor-pointer border border-dashed p-6"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Create New Article</span>
+                </Button>
+              </Link>
 
               <Button
                 variant="outline"
