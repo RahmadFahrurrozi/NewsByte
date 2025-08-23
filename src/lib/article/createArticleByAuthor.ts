@@ -1,8 +1,8 @@
 import { createClient } from "../supabase/client";
 import { slugify } from "@/utils/slugify";
-import { IArticles } from "@/types/IArticles";
+import ICreateArticle from "@/types/ICreateArticle";
 
-export async function createArticleByAuthor(articleData: IArticles) {
+export async function createArticleByAuthor(articleData: ICreateArticle) {
   const supabase = await createClient();
 
   let slug = slugify(articleData.title);
