@@ -93,7 +93,11 @@ export default async function NewsDetailPage({ params }: PageProps) {
         )}
 
         {/* Content */}
-        <div className="prose dark:prose-invert max-w-none">{data.content}</div>
+        <div
+          className="prose dark:prose-invert max-w-none"
+          //need improve security
+          dangerouslySetInnerHTML={{ __html: data.content }}
+        />
       </section>
     </>
   );
