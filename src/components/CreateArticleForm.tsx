@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import useCreateArticle from "@/hooks/useCreateArticle";
-import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { LoadingSpinner } from "./LoadingSpinner";
+import { RichEditor } from "./tiptap-templates/simple/RichEditor";
 
 export default function CreateArticleForm() {
   const { form, handleSubmit, isLoading } = useCreateArticle();
@@ -59,7 +59,7 @@ export default function CreateArticleForm() {
             <FormItem>
               <FormLabel>Content</FormLabel>
               <FormControl>
-                <Textarea placeholder="Content" {...field} />
+                <RichEditor value={field.value} onChange={field.onChange} />
               </FormControl>
               <FormDescription>
                 The main content of your article.
