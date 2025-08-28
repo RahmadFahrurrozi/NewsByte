@@ -18,7 +18,7 @@ export default function DashboardHeaderUser() {
   const titlePage = getBreadcrumbTitleUser(pathname);
 
   return (
-    <header className="flex h-16 shrink-0 items-center gap-2">
+    <header className="flex h-16 shrink-0 items-center gap-2 px-6">
       <SidebarTrigger className="-ml-1 cursor-pointer" />
       <Separator
         orientation="vertical"

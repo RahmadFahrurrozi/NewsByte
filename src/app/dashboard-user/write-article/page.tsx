@@ -15,7 +15,7 @@ import { FileText } from "lucide-react";
 
 export default function WriteArticlePage() {
   return (
-    <section className="min-h-screen pb-5">
+    <section className="min-h-screen pb-5 px-6">
       <div className="mx-auto flex flex-col md:flex-row gap-5">
         {/* Left Side - Illustration and Info */}
         <div className="w-full md:w-2/5">
