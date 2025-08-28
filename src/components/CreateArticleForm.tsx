@@ -9,11 +9,19 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import useCreateArticle from "@/hooks/useCreateArticle";
 import { Button } from "./ui/button";
 import { LoadingSpinner } from "./LoadingSpinner";
-import { RichEditor } from "./tiptap-templates/simple/RichEditor";
+import { RichEditor } from "./tiptap/simple/RichEditor";
+import { Building2, Code, HeartHandshake, Landmark } from "lucide-react";
 
 export default function CreateArticleForm() {
   const { form, handleSubmit, isLoading } = useCreateArticle();
@@ -74,9 +82,39 @@ export default function CreateArticleForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Categories</FormLabel>
-              <FormControl>
-                <Input placeholder="Categories" {...field} />
-              </FormControl>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl className="w-full cursor-pointer">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select categories" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="Business">
+                    <div className="flex items-center gap-2">
+                      <Building2 className="size-4" />
+                      <p>Business</p>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="Technology">
+                    <div className="flex items-center gap-2">
+                      <Code className="size-4" />
+                      <p>Technology</p>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="Health">
+                    <div className="flex items-center gap-2">
+                      <HeartHandshake className="size-4" />
+                      <p>Health</p>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="Politics">
+                    <div className="flex items-center gap-2">
+                      <Landmark className="size-4" />
+                      <p>Politics</p>
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
               <FormDescription>
                 Categories related to your article.
               </FormDescription>
