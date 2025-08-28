@@ -67,9 +67,9 @@ import { useCursorVisibility } from "@/hooks/use-cursor-visibility";
 import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils";
 
 // --- Styles ---
-import "@/components/tiptap-templates/simple/rich-editor.scss";
+import "@/components/tiptap/simple/rich-editor.scss";
 
-import content from "@/components/tiptap-templates/simple/data/content.json";
+// import content from "@/components/tiptap-templates/simple/data/content.json";
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -248,6 +248,9 @@ export function RichEditor({ value, onChange }: IRichEditorProps) {
             ...(isMobile
               ? {
                   bottom: `calc(100% - ${height - rect.y}px)`,
+                  left: rect.x,
+                  right: "auto",
+                  top: "auto",
                 }
               : {}),
           }}
