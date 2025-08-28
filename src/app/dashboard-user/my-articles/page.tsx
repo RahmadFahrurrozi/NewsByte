@@ -75,7 +75,7 @@ export default function MyarticlesPage() {
   if (isError) return <div>Error</div>;
 
   return (
-    <section className="py-5">
+    <section className="py-5 px-6">
       <div className="flex flex-col lg:flex-row items-start gap-6">
         {/* Left area -  ticky */}
         <div className="lg:sticky lg:top-6 lg:w-1/3 space-y-6">
@@ -137,7 +137,7 @@ export default function MyarticlesPage() {
             <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
               Quick Actions
             </h3>
-            <div className="space-y-2">
+            <div className="flex flex-col gap-2">
               <Link href={"/dashboard-user/write-article"}>
                 <Button
                   variant="outline"
@@ -200,74 +200,66 @@ export default function MyarticlesPage() {
 
           {/* Main article Display */}
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">All Article</h2>
-              <div className="flex items-center gap-2">
+            {/* Header & Filter */}
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <h2 className="text-lg md:text-xl font-semibold">All Article</h2>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 md:gap-2">
+                {/* Category Filter */}
                 <Select>
-                  <SelectTrigger className="cursor-pointer">
+                  <SelectTrigger className="cursor-pointer w-full sm:w-40">
                     <Filter className="w-4 h-4" />
                     <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
                   <SelectContent className="cursor-pointer">
-                    <SelectItem className="cursor-pointer" value="all">
-                      All
-                    </SelectItem>
-                    <SelectItem className="cursor-pointer" value="category1">
-                      Tech
-                    </SelectItem>
-                    <SelectItem className="cursor-pointer" value="sp">
-                      Sport
-                    </SelectItem>
-                    <SelectItem className="cursor-pointer" value="health">
-                      Health
-                    </SelectItem>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="tech">Tech</SelectItem>
+                    <SelectItem value="sport">Sport</SelectItem>
+                    <SelectItem value="health">Health</SelectItem>
+                    <SelectItem value="politics">Politics</SelectItem>
                   </SelectContent>
                 </Select>
+
+                {/* Status Filter */}
                 <Select>
-                  <SelectTrigger className="cursor-pointer">
+                  <SelectTrigger className="cursor-pointer w-full sm:w-40">
                     <FilterIcon className="w-4 h-4" />
                     <SelectValue placeholder="Select a status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem className="cursor-pointer" value="all">
-                      All
-                    </SelectItem>
-                    <SelectItem className="cursor-pointer" value="published">
-                      Published
-                    </SelectItem>
-                    <SelectItem className="cursor-pointer" value="draft">
-                      Pending
-                    </SelectItem>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="published">Published</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="rejected">Rejected</SelectItem>
                   </SelectContent>
                 </Select>
+
+                {/* Sort Filter */}
                 <Select>
-                  <SelectTrigger className="cursor-pointer">
+                  <SelectTrigger className="cursor-pointer w-full sm:w-40">
                     <ArrowUpDown className="w-4 h-4" />
-                    <SelectValue placeholder="Short by" />
+                    <SelectValue placeholder="Sort by" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem className="cursor-pointer" value="asc">
-                      Ascending
-                    </SelectItem>
-                    <SelectItem className="cursor-pointer" value="desc">
-                      Descending
-                    </SelectItem>
+                    <SelectItem value="asc">Ascending</SelectItem>
+                    <SelectItem value="desc">Descending</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
-            {/* article list */}
+
+            {/* Article List */}
             {isLoading ? (
               <ArticleListSkeleton />
             ) : (
               <div className="space-y-4">
                 {articles?.data?.map((article: IArticles) => (
-                  <Card key={article.id}>
-                    <CardContent className="px-6 py-3">
-                      <div className="flex justify-between items-center">
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2">
-                            <h3 className="font-medium truncate">
+                  <Card key={article.id} className="w-full">
+                    <CardContent className="px-4 md:px-6 py-3">
+                      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3">
+                        {/* Left Content */}
+                        <div className="space-y-2 flex-1 min-w-0">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h3 className="font-medium truncate max-w-[200px] md:max-w-[400px]">
                               {article.title}
                             </h3>
                             <Badge
@@ -278,26 +270,29 @@ export default function MyarticlesPage() {
                               {article.article_status}
                             </Badge>
                           </div>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-xs md:text-sm text-muted-foreground">
                             {article.article_status} on{" "}
                             {formatDateWithTime(article.created_at)}
                           </p>
                           <Badge variant="outline">{article.categories}</Badge>
                         </div>
 
+                        {/* Right Content - Manage */}
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              className="bg-blue-500/90 hover:bg-blue-600 text-white rounded-lg px-4 py-2 transition-all duration-200 ease-in-out shadow-sm hover:shadow-md hover:text-neutral-50 cursor-pointer"
-                              size="sm"
-                            >
-                              Manage
-                            </Button>
+                            <div className="flex justify-end">
+                              <Button
+                                variant="ghost"
+                                className="bg-blue-500/90 hover:bg-blue-600 text-white rounded-lg px-4 py-2 transition-all duration-200 ease-in-out shadow-sm hover:shadow-md hover:text-neutral-50 cursor-pointer"
+                                size="sm"
+                              >
+                                Manage
+                              </Button>
+                            </div>
                           </DialogTrigger>
-                          <DialogContent className="max-w-md rounded-xl">
+                          <DialogContent className="rounded-xl">
                             <DialogHeader>
-                              <DialogTitle className="text-lg font-semibold">
+                              <DialogTitle className="text-base pt-2 sm:pt-0 sm:text-lg font-semibold">
                                 Choose what you want to do
                               </DialogTitle>
                               <DialogDescription className="text-sm text-muted-foreground">
@@ -305,11 +300,11 @@ export default function MyarticlesPage() {
                               </DialogDescription>
                             </DialogHeader>
 
-                            <div className="flex gap-3">
+                            <div className="flex flex-col sm:flex-row gap-3">
                               {/* Edit Button */}
                               <Button
                                 variant="ghost"
-                                className="flex items-center gap-2 bg-violet-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all duration-150 cursor-pointer"
+                                className="flex items-center justify-center gap-2 bg-violet-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all duration-150 cursor-pointer flex-1"
                                 size="sm"
                               >
                                 <PencilLine className="size-4" />
@@ -319,7 +314,7 @@ export default function MyarticlesPage() {
                               {/* View Button */}
                               <Button
                                 variant="ghost"
-                                className="flex items-center gap-2 bg-teal-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all duration-150 cursor-pointer"
+                                className="flex items-center justify-center gap-2 bg-teal-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all duration-150 cursor-pointer flex-1"
                                 size="sm"
                               >
                                 <Eye className="size-4" />
@@ -329,7 +324,7 @@ export default function MyarticlesPage() {
                               {/* Delete Button */}
                               <Button
                                 variant="ghost"
-                                className="flex items-center gap-2 bg-red-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all duration-150 cursor-pointer"
+                                className="flex items-center justify-center gap-2 bg-red-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all duration-150 cursor-pointer flex-1"
                                 size="sm"
                               >
                                 <Trash2 className="size-4" />
@@ -344,6 +339,7 @@ export default function MyarticlesPage() {
                 ))}
               </div>
             )}
+
             {/* Pagination */}
             <div className="mt-8 flex justify-center">
               <PaginationComponent />
