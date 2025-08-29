@@ -46,6 +46,7 @@ import { formatDateWithTime } from "@/utils/formatedDate";
 import ArticleListSkeleton from "@/components/ArticleSkeleton";
 import { IArticles } from "@/types/IArticles";
 import Link from "next/link";
+import EmptyArticleAuthor from "@/components/EmptyArticleAuthor";
 
 export default function MyarticlesPage() {
   const authorId = useAuth()?.user?.id ?? "";
@@ -57,6 +58,8 @@ export default function MyarticlesPage() {
     isLoading,
     isError,
   } = useArticleByAuthor(authorId, page, perPage);
+
+  const isEmpty = !isLoading && articles?.data && articles.data.length === 0;
 
   const stats = {
     approved:
@@ -208,7 +211,7 @@ export default function MyarticlesPage() {
                 <Select>
                   <SelectTrigger className="cursor-pointer w-full sm:w-40">
                     <Filter className="w-4 h-4" />
-                    <SelectValue placeholder="Select a category" />
+                    <SelectValue placeholder="category" />
                   </SelectTrigger>
                   <SelectContent className="cursor-pointer">
                     <SelectItem value="all">All</SelectItem>
@@ -223,7 +226,7 @@ export default function MyarticlesPage() {
                 <Select>
                   <SelectTrigger className="cursor-pointer w-full sm:w-40">
                     <FilterIcon className="w-4 h-4" />
-                    <SelectValue placeholder="Select a status" />
+                    <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All</SelectItem>
@@ -250,6 +253,8 @@ export default function MyarticlesPage() {
             {/* Article List */}
             {isLoading ? (
               <ArticleListSkeleton />
+            ) : isEmpty ? (
+              <EmptyArticleAuthor />
             ) : (
               <div className="space-y-4">
                 {articles?.data?.map((article: IArticles) => (
@@ -304,7 +309,7 @@ export default function MyarticlesPage() {
                               {/* Edit Button */}
                               <Button
                                 variant="ghost"
-                                className="flex items-center justify-center gap-2 bg-violet-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all duration-150 cursor-pointer flex-1"
+                                className="flex items-center justify-center gap-2 bg-violet-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all cursor-pointer flex-1"
                                 size="sm"
                               >
                                 <PencilLine className="size-4" />
@@ -314,7 +319,7 @@ export default function MyarticlesPage() {
                               {/* View Button */}
                               <Button
                                 variant="ghost"
-                                className="flex items-center justify-center gap-2 bg-teal-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all duration-150 cursor-pointer flex-1"
+                                className="flex items-center justify-center gap-2 bg-teal-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all cursor-pointer flex-1"
                                 size="sm"
                               >
                                 <Eye className="size-4" />
@@ -324,7 +329,7 @@ export default function MyarticlesPage() {
                               {/* Delete Button */}
                               <Button
                                 variant="ghost"
-                                className="flex items-center justify-center gap-2 bg-red-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all duration-150 cursor-pointer flex-1"
+                                className="flex items-center justify-center gap-2 bg-red-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all cursor-pointer flex-1"
                                 size="sm"
                               >
                                 <Trash2 className="size-4" />
@@ -340,10 +345,11 @@ export default function MyarticlesPage() {
               </div>
             )}
 
-            {/* Pagination */}
+            {/* {isEmpty && ( */}
             <div className="mt-8 flex justify-center">
               <PaginationComponent />
             </div>
+            {/* )} */}
           </div>
         </div>
       </div>
