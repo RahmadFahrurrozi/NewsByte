@@ -10,6 +10,7 @@ import { IArticles } from "@/types/IArticles";
 import { ArrowRight, CalendarDays, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { stripHtml } from "@/utils/sanitizeContent";
 
 export default async function Home({
   searchParams,
@@ -89,7 +90,7 @@ export default async function Home({
 
               {/* Excerpt */}
               <p className="text-muted-foreground mb-4 line-clamp-3">
-                {article.content}
+                {stripHtml(article.content)}
               </p>
 
               {/* Metadata */}
