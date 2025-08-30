@@ -2,9 +2,9 @@ export const dynamic = "force-dynamic";
 import { createClient } from "@/lib/supabase/client";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CalendarDays, User, Shield } from "lucide-react";
-import { sanitizeContent } from "@/utils/sanitizeContent";
 import Link from "next/link";
 import Image from "next/image";
+import { SafeArticle } from "@/components/SaveArticles";
 
 interface PageProps {
   params: Promise<{
@@ -33,8 +33,6 @@ export default async function NewsDetailPage({ params }: PageProps) {
   if (!data || error) {
     return notFound();
   }
-
-  const safeContent = sanitizeContent(data?.content || "");
 
   return (
     <>
@@ -98,18 +96,16 @@ export default async function NewsDetailPage({ params }: PageProps) {
         )}
 
         {/* Content */}
-        <article
-          className="prose dark:prose-invert max-w-none prose-headings:font-semibold prose-img:rounded-lg prose-blockquote:border-primary prose-blockquote:bg-muted/50 prose-pre:bg-muted prose-code:bg-muted prose-code:px-1 prose-code:rounded"
-          dangerouslySetInnerHTML={{ __html: safeContent }}
-        />
+        <SafeArticle content={data.content || ""} />
 
         {/* Security Badge */}
         <div className="mt-8 p-4 bg-muted/50 rounded-lg text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <Shield className="w-4 h-4 text-green-600" />
             <span>
-              Konten telah disanitasi dengan DOMPurify untuk keamanan. Editor:
-              Tiptap
+              Content has been verified by our team |{" "}
+              <span className="font-bold">NewsByte</span>
+              Team.
             </span>
           </div>
         </div>
