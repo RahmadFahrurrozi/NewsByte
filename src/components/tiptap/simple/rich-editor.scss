@@ -67,6 +67,11 @@ body,
   flex: 1;
 }
 
+.simple-editor-content img {
+  width: 100%;
+  height: auto;
+}
+
 .simple-editor-content .tiptap.ProseMirror.simple-editor {
   flex: 1;
   margin-top: 12px;
