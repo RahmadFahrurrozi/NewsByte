@@ -35,7 +35,6 @@ export default function useCreateArticle() {
     },
     onError: (error) => {
       console.error("Error creating article", error);
-      console.log(`Error creating article: ${error}`);
       const errorMessage =
         error instanceof Error ? error.message : "Failed to create article";
       toast.error(errorMessage);
