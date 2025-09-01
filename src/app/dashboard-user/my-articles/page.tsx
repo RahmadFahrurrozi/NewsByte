@@ -47,6 +47,8 @@ import ArticleListSkeleton from "@/components/ArticleSkeleton";
 import { IArticles } from "@/types/IArticles";
 import Link from "next/link";
 import EmptyArticleAuthor from "@/components/EmptyArticleAuthor";
+import useDeleteDialogConfirmation from "@/hooks/useDeleteDialogConfirmation";
+import DeleteDialog from "@/components/DeleteDialogConfirmation";
 
 export default function MyarticlesPage() {
   const authorId = useAuth()?.user?.id ?? "";
@@ -74,6 +76,16 @@ export default function MyarticlesPage() {
         (rejected) => rejected.article_status === "rejected"
       ).length ?? 0,
   };
+
+  const {
+    isOpenDeleteDialog,
+    setIsOpenDeleteDialog,
+    openDialog,
+    selectedArticle,
+    closeDialog,
+    confirmDelete,
+    isLoadingDelete,
+  } = useDeleteDialogConfirmation();
 
   if (isError) return <div>Error</div>;
 
@@ -331,6 +343,7 @@ export default function MyarticlesPage() {
                                 variant="ghost"
                                 className="flex items-center justify-center gap-2 bg-red-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all cursor-pointer flex-1"
                                 size="sm"
+                                onClick={() => openDialog(article)}
                               >
                                 <Trash2 className="size-4" />
                                 <span>Delete</span>
@@ -353,6 +366,16 @@ export default function MyarticlesPage() {
           </div>
         </div>
       </div>
+
+      {/* delete confirmation dialog */}
+      <DeleteDialog
+        isOpen={isOpenDeleteDialog}
+        onOpenChange={setIsOpenDeleteDialog}
+        article={selectedArticle}
+        onCancel={closeDialog}
+        onConfirm={confirmDelete}
+        isLoading={isLoadingDelete}
+      />
     </section>
   );
 }
