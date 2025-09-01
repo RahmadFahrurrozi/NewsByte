@@ -16,7 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import useCreateArticle from "@/hooks/useCreateArticle";
 import { Button } from "./ui/button";
@@ -26,11 +25,11 @@ import {
   Building2,
   Code,
   HeartHandshake,
+  ImageIcon,
   Landmark,
   Trash2,
 } from "lucide-react";
-import Image from "next/image";
-import { useRef, useState } from "react";
+import { ThumbnailUpload } from "./ThumbnailUpload";
 
 export default function CreateArticleForm() {
   const { form, handleSubmit, isLoading } = useCreateArticle();
@@ -56,63 +55,21 @@ export default function CreateArticleForm() {
         <FormField
           control={form.control}
           name="thumbnile"
-          render={({ field }) => {
-            const [preview, setPreview] = useState<string | null>(null);
-            const inputRef = useRef<HTMLInputElement | null>(null);
-            return (
-              <FormItem>
-                <FormLabel>Thumbnail</FormLabel>
-                <FormControl>
-                  <Input
-                    ref={inputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        field.onChange(file);
-                        setPreview(URL.createObjectURL(file));
-                      }
-                    }}
-                  />
-                </FormControl>
-
-                {preview && (
-                  <div className="flex flex-col gap-2 mt-2">
-                    <div className="relative w-40 h-40 border rounded-lg overflow-hidden">
-                      <Image
-                        src={preview}
-                        alt="Preview"
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="w-fit cursor-pointer"
-                      onClick={() => {
-                        field.onChange(null);
-                        setPreview(null);
-                        if (inputRef.current) {
-                          inputRef.current.value = "";
-                        }
-                      }}
-                    >
-                      <Trash2 className="size-4" />
-                      <span>Remove Thumbnail</span>
-                    </Button>
-                  </div>
-                )}
-
-                <FormDescription>
-                  Upload thumbnail image for your article.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            );
-          }}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Thumbnail</FormLabel>
+              <FormControl>
+                <ThumbnailUpload
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              </FormControl>
+              <FormDescription>
+                Upload a thumbnail image for your article.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
         />
 
         <FormField
