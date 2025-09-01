@@ -132,11 +132,10 @@ const MainToolbarContent = ({
         <TextAlignButton align="justify" />
       </ToolbarGroup>
 
-      <ToolbarSeparator />
-
-      <ToolbarGroup>
+      {/* // TODO: Add image upload next release */}
+      {/* <ToolbarGroup>
         <ImageUploadButton text="Add" />
-      </ToolbarGroup>
+      </ToolbarGroup> */}
 
       {isMobile && <ToolbarSeparator />}
     </>
