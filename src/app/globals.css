@@ -195,12 +195,14 @@
 
 /* Blockquote */
 .tiptap blockquote {
-  border-left: 3px solid #eb5757;
+  border-left: 3px solid #0e0f13;
   padding-left: 1rem;
   margin: 1.25em 0;
   font-style: italic;
   color: hsl(var(--muted-foreground));
-  background-color: hsl(var(--muted));
+  background-color: var(--accent);
+  padding: 4px;
+  border-radius: 4px;
 }
 
 /* Links */
