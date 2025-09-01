@@ -1,6 +1,6 @@
 export default interface ICreateArticle {
   title: string;
-  thumbnile?: string;
+  thumbnile?: File | string;
   content: string;
   categories: string;
   author_id: string;
