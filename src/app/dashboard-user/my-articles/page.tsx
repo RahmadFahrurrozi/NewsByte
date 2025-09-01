@@ -63,6 +63,13 @@ export default function MyarticlesPage() {
 
   const isEmpty = !isLoading && articles?.data && articles.data.length === 0;
 
+  const latestUpdatedArticle = articles?.data
+    ?.slice()
+    ?.sort(
+      (a, b) =>
+        new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+    )[0];
+
   const stats = {
     approved:
       articles?.data?.filter(
@@ -140,7 +147,11 @@ export default function MyarticlesPage() {
                 <div className="flex items-center">
                   <div className="text-sm text-muted-foreground flex items-center gap-2">
                     <Calendar className="size-4" /> <p>Last Updated:</p>
-                    <p>2 days ago</p>
+                    <p>
+                      {latestUpdatedArticle
+                        ? formatDateWithTime(latestUpdatedArticle.updated_at)
+                        : "-"}
+                    </p>
                   </div>
                 </div>
               </div>

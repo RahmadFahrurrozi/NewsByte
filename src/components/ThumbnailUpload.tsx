@@ -155,7 +155,7 @@ export function ThumbnailUpload({ value, onChange }: ThumbnailUploadProps) {
               )}
             </div>
             <div className="text-xs text-muted-foreground">
-              PNG, JPG, GIF up to 5MB
+              PNG, JPG, Webp up to 5MB
             </div>
           </div>
         </div>
