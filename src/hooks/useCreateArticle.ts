@@ -4,11 +4,11 @@ import {
   createArticleSchema,
   createArticleValues,
 } from "@/schemas/createArticle.schema";
-import { createArticleByAuthor } from "@/lib/article/createArticleByAuthor";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContextProvider";
+import { createArticleByAuthor } from "@/lib/article/createArticleByAuthor";
 
 export default function useCreateArticle() {
   const queryClient = useQueryClient();
@@ -19,7 +19,7 @@ export default function useCreateArticle() {
     resolver: zodResolver(createArticleSchema),
     defaultValues: {
       title: "",
-      thumbnile: "",
+      thumbnile: undefined,
       content: "",
       categories: "",
     },
@@ -35,6 +35,7 @@ export default function useCreateArticle() {
     },
     onError: (error) => {
       console.error("Error creating article", error);
+      console.log(`Error creating article: ${error}`);
       const errorMessage =
         error instanceof Error ? error.message : "Failed to create article";
       toast.error(errorMessage);
