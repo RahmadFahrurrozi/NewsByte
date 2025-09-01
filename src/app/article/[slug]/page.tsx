@@ -96,7 +96,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
         )}
 
         {/* Content */}
-        <SafeArticle content={data.content || ""} />
+        <SafeArticle className="tiptap" content={data.content || ""} />
 
         {/* Security Badge */}
         <div className="mt-8 p-4 bg-muted/50 rounded-lg text-sm text-muted-foreground">
