@@ -5,7 +5,7 @@ export const createArticleSchema = z.object({
     .string()
     .min(1, "Title is required")
     .max(255, "Title must be less than 255 characters"),
-  thumbnile: z.string().min(1, "Thumbnile is required").optional(),
+  thumbnile: z.file({ message: "Thumbnail is required" }),
   content: z.string().min(1, "Content is required"),
   categories: z.string().min(1, "Categories are required"),
 });
