@@ -64,6 +64,7 @@ import { useWindowSize } from "@/hooks/use-window-size";
 import { useCursorVisibility } from "@/hooks/use-cursor-visibility";
 
 // --- Lib ---
+
 import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils";
 
 // --- Styles ---
@@ -187,7 +188,7 @@ export function RichEditor({ value, onChange }: IRichEditorProps) {
   const editor = useEditor({
     immediatelyRender: false,
     shouldRerenderOnTransaction: false,
-    content: value || "",
+    content: value,
     editorProps: {
       attributes: {
         autocomplete: "on",
@@ -227,7 +228,6 @@ export function RichEditor({ value, onChange }: IRichEditorProps) {
       onChange?.(editor.getHTML());
     },
   });
-
   const rect = useCursorVisibility({
     editor,
     overlayHeight: toolbarRef.current?.getBoundingClientRect().height ?? 0,
