@@ -36,7 +36,7 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <NavbarWrapper />
-              <main className="px-6">{children}</main>
+              <main>{children}</main>
             </ThemeProvider>
             <Toaster position="top-right" richColors />
           </ReactQueryProvider>

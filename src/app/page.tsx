@@ -10,6 +10,7 @@ import { IArticles } from "@/types/IArticles";
 import { ArrowRight, CalendarDays, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { stripHtml } from "@/utils/sanitizeContent";
 
 export default async function Home({
   searchParams,
@@ -37,13 +38,13 @@ export default async function Home({
   return (
     <section>
       {/* Section Header */}
-      <div className="flex items-center gap-2 mb-3">
+      <div className="flex items-center gap-2 mb-3 px-6">
         <h2 className="text-2xl font-semibold">Recent News</h2>
         <ArrowRight className="size-6 text-primary" />
       </div>
 
       {/* News Grid */}
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 px-6">
         {articles?.map((article: IArticles) => (
           <article
             key={article.id}
@@ -89,7 +90,7 @@ export default async function Home({
 
               {/* Excerpt */}
               <p className="text-muted-foreground mb-4 line-clamp-3">
-                {article.content}
+                {stripHtml(article.content)}
               </p>
 
               {/* Metadata */}

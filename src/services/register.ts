@@ -1,4 +1,5 @@
 import { RegisterFormValues } from "@/schemas/auth.schema";
+import { IUserProfile } from "@/types/IUserProfile";
 
 interface IRegisterResponse {
   success: boolean;
