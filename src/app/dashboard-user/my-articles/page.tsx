@@ -63,6 +63,7 @@ export default function MyarticlesPage() {
 
   const isEmpty = !isLoading && articles?.data && articles.data.length === 0;
 
+  // get latest updated article
   const latestUpdatedArticle = articles?.data
     ?.slice()
     ?.sort(
@@ -70,6 +71,7 @@ export default function MyarticlesPage() {
         new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
     )[0];
 
+  // get stats
   const stats = {
     approved:
       articles?.data?.filter(
@@ -84,6 +86,7 @@ export default function MyarticlesPage() {
       ).length ?? 0,
   };
 
+  //delete action
   const {
     isOpenDeleteDialog,
     setIsOpenDeleteDialog,
@@ -328,31 +331,36 @@ export default function MyarticlesPage() {
                               </DialogDescription>
                             </DialogHeader>
 
-                            <div className="flex flex-col sm:flex-row gap-3">
-                              {/* Edit Button */}
-                              <Button
-                                variant="ghost"
-                                className="flex items-center justify-center gap-2 bg-violet-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all cursor-pointer flex-1"
-                                size="sm"
+                            <div className="flex flex-col sm:flex-row w-full gap-2">
+                              <Link
+                                href={`/dashboard-user/my-articles/${article.id}/edit`}
                               >
-                                <PencilLine className="size-4" />
-                                <span>Edit</span>
-                              </Button>
+                                <Button
+                                  variant="ghost"
+                                  className="flex items-center justify-center gap-2 bg-violet-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all cursor-pointer"
+                                  size="sm"
+                                >
+                                  <PencilLine className="size-4" />
+                                  Edit
+                                </Button>
+                              </Link>
 
                               {/* View Button */}
-                              <Button
-                                variant="ghost"
-                                className="flex items-center justify-center gap-2 bg-teal-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all cursor-pointer flex-1"
-                                size="sm"
-                              >
-                                <Eye className="size-4" />
-                                <span>View</span>
-                              </Button>
+                              <Link href={`/article/${article.slug}`}>
+                                <Button
+                                  variant="ghost"
+                                  className="flex items-center justify-center gap-2 bg-teal-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all cursor-pointer"
+                                  size="sm"
+                                >
+                                  <Eye className="size-4" />
+                                  <span>View</span>
+                                </Button>
+                              </Link>
 
                               {/* Delete Button */}
                               <Button
                                 variant="ghost"
-                                className="flex items-center justify-center gap-2 bg-red-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all cursor-pointer flex-1"
+                                className="flex items-center justify-center gap-2 bg-red-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all cursor-pointer"
                                 size="sm"
                                 onClick={() => openDialog(article)}
                               >
