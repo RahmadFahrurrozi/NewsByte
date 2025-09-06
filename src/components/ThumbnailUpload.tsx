@@ -9,14 +9,19 @@ import { toast } from "sonner";
 import { ImageIcon, Trash2 } from "lucide-react";
 
 interface ThumbnailUploadProps {
-  value?: File | null;
+  value?: File | string | null;
   onChange: (file: File | null) => void;
 }
 
 export function ThumbnailUpload({ value, onChange }: ThumbnailUploadProps) {
   const [preview, setPreview] = useState<string | null>(
-    value ? URL.createObjectURL(value) : null
+    value
+      ? typeof value === "string"
+        ? value // kalau string → langsung pakai URL
+        : URL.createObjectURL(value) // kalau File → bikin object URL
+      : null
   );
+
   const [isDragOver, setIsDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -26,7 +31,6 @@ export function ThumbnailUpload({ value, onChange }: ThumbnailUploadProps) {
         toast.error("File size must be less than 5MB");
         return;
       }
-
       onChange(file);
       setPreview(URL.createObjectURL(file));
     }
