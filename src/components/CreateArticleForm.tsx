@@ -9,27 +9,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import useCreateArticle from "@/hooks/useCreateArticle";
 import { Button } from "./ui/button";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { RichEditor } from "./tiptap/simple/RichEditor";
-import {
-  Building2,
-  Code,
-  HeartHandshake,
-  ImageIcon,
-  Landmark,
-  Trash2,
-} from "lucide-react";
 import { ThumbnailUpload } from "./ThumbnailUpload";
+import CategoriesSelect from "./CategoriesSelect";
 
 export default function CreateArticleForm() {
   const { form, handleSubmit, isLoading } = useCreateArticle();
@@ -94,39 +80,13 @@ export default function CreateArticleForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Categories</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl className="w-full cursor-pointer">
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select categories" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="Business">
-                    <div className="flex items-center gap-2">
-                      <Building2 className="size-4" />
-                      <p>Business</p>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="Technology">
-                    <div className="flex items-center gap-2">
-                      <Code className="size-4" />
-                      <p>Technology</p>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="Health">
-                    <div className="flex items-center gap-2">
-                      <HeartHandshake className="size-4" />
-                      <p>Health</p>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="Politics">
-                    <div className="flex items-center gap-2">
-                      <Landmark className="size-4" />
-                      <p>Politics</p>
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+              <FormControl>
+                <CategoriesSelect
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              </FormControl>
+
               <FormDescription>
                 Categories related to your article.
               </FormDescription>
