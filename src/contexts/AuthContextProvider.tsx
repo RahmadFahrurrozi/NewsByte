@@ -165,7 +165,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           data: { session },
           error,
         } = await supabase.auth.getSession();
-
         if (error) throw error;
 
         if (!isMounted) return;
@@ -173,6 +172,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null);
 
         if (session?.user) {
+          // Panggil fetchUserData di sini dan pastikan state di-update
           const { role, username } = await fetchUserData(session.user.id);
           if (isMounted) {
             setUserRole(role);
@@ -184,9 +184,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       } catch (error) {
         console.error("Error getting initial session:", error);
+        // Handle error, tetapi tetap set state agar tidak stuck
+        setUser(null);
+        setUserRole(null);
+        setUsername(null);
       } finally {
         if (isMounted) {
-          setLoading(false);
+          setLoading(false); // Pastikan ini hanya di akhir
           setIsInitialized(true);
         }
       }

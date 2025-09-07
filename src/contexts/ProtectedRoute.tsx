@@ -16,11 +16,11 @@ export function ProtectedRoute({
   allowedRoles = [],
   fallbackPath = "/",
 }: ProtectedRouteProps) {
-  const { user, userRole, username, loading, isInitialized } = useAuth();
+  const { user, userRole, loading, isInitialized } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    // Hanya jalankan redirect logic setelah auth benar-benar initialized
+    // Hanya jalankan redirect logic setelah auth benar-benar initialized dan tidak dalam state loading
     if (!isInitialized || loading) return;
 
     if (!user) {
@@ -46,12 +46,14 @@ export function ProtectedRoute({
     fallbackPath,
   ]);
 
-  // Tampilkan loading skeleton sampai auth benar-benar siap
+  // Tampilkan loading skeleton sampai auth benar-benar siap dan tidak lagi loading
   if (!isInitialized || loading) {
     return <LoadingSkeleton />;
   }
 
   // Jika user null atau role tidak sesuai, jangan render apapun
+  // useEffect di atas akan menangani redirect, jadi komponen ini cukup mengembalikan null
+  // agar tidak ada flash of content sebelum redirect
   if (
     !user ||
     (allowedRoles.length > 0 && userRole && !allowedRoles.includes(userRole))
@@ -59,14 +61,11 @@ export function ProtectedRoute({
     return null;
   }
 
-  // Jika username sudah ada sebelum render children
-  if (user && !username && !loading) {
-    return <LoadingSkeleton />;
-  }
-
+  // Jika semua kondisi terpenuhi, render children
   return <>{children}</>;
 }
 
+// ... LoadingSkeleton tetap sama
 const LoadingSkeleton = () => {
   return (
     <div className="flex flex-col gap-3 p-6 rounded-md">
