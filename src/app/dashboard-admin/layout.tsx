@@ -1,6 +1,6 @@
+import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import DashboardHeader from "@/components/DashboardHeaderUser";
-import { AppSidebarAdmin } from "@/components/AppSideBarAdmin";
 
 export default function DashboardLayout({
   children,

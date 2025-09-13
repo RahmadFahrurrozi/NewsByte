@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { IUser } from "@/types/IUser";
 interface ILoginResponse {
   success: boolean;
   data: {
@@ -15,6 +16,7 @@ interface ILoginResponse {
   };
   message?: string;
   error?: string;
+  role: string;
 }
 
 export function useLoginForm() {

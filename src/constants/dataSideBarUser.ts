@@ -66,3 +66,30 @@ export const sidebarUser = {
     },
   ],
 };
+
+export const sidebarAdmin = {
+  user: {
+    name: "Admin",
+    email: "admin@example.com",
+    avatar: "/avatars/admin.jpg",
+  },
+  teams: [
+    {
+      name: "Admin",
+      logo: GalleryVerticalEnd,
+      role: "Admin",
+    },
+  ],
+  nav: [
+    {
+      title: "Dashboard",
+      url: "/dashboard-admin",
+      icon: Activity,
+    },
+    {
+      title: "Profile Admin",
+      url: "/dashboard-admin/profile-admin",
+      icon: PencilLine,
+    },
+  ],
+};
