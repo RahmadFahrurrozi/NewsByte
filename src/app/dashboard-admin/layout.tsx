@@ -1,4 +1,4 @@
-import { AppSidebar } from "@/components/AppSidebar";
+import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import DashboardHeader from "@/components/DashboardHeader";
 
@@ -9,7 +9,7 @@ export default function DashboardLayout({
 }) {
   return (
     <SidebarProvider>
-      <AppSidebar userRole="admin" />
+      <AppSidebarAdmin />
       <SidebarInset>
         <DashboardHeader />
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>

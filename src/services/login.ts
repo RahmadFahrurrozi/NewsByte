@@ -4,6 +4,7 @@ interface ILoginResponse {
   success: boolean;
   loginData: IUser;
   error?: string;
+  role: string;
 }
 
 export default async function loginUser(

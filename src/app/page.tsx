@@ -10,7 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default async function Home() {
-  const { data: news, error } = await createClient().from("news").select("*");
+  const { data: news, error } = await createClient().from("articles").select("*");
 
   if (error) {
     console.log("error", error);

@@ -11,7 +11,6 @@ export default function NavbarWrapper() {
     pathName === "/auth/register" ||
     pathName === "/forgot-password" ||
     pathName === "/dashboard-user" ||
-    pathName === "/admin/dashboard-admin" ||
     pathName === "/dashboard-user/write-article" ||
     pathName === "/dashboard-user/my-articles" ||
     pathName === "/dashboard-user/notifications" ||
@@ -19,6 +18,7 @@ export default function NavbarWrapper() {
     pathName === "/dashboard-user/settings/general" ||
     pathName === "/dashboard-user/settings/profile" ||
     pathName === "/dashboard-admin" ||
+    pathName === "/dashboard-admin/profile-admin" ||
     pathName === "/pricing" ||
     pathName === "/unauthorized" ||
     pathName === "/dashboard/create-news";

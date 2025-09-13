@@ -12,6 +12,7 @@ interface ILoginResponse {
   success: boolean;
   loginData: IUser;
   error?: string;
+  role: string;
 }
 
 export function useLoginForm() {
@@ -42,7 +43,11 @@ export function useLoginForm() {
       }
 
       toast.success("login successful!");
-      router.push("/dashboard-user");
+      if (result.role == "admin") {
+        router.push("/dashboard-admin");
+      } else if (result.role == "user") {
+        router.push("/dashboard-user");
+      }
       router.refresh();
     } catch (error) {
       console.error("Login API error:", error);

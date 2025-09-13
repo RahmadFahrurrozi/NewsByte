@@ -1,8 +1,7 @@
-interface IUser {
-  id: string;
-  username: string;
-  email: string;
-  role: string;
-  created_at: string;
-  updated_at: string;
+export interface IUser {
+  id: string | undefined;
+  username: string | undefined;
+  photo: string | undefined;
+  email: string | undefined;
+  role: string | undefined;
 }
