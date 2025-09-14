@@ -49,6 +49,7 @@ import Link from "next/link";
 import EmptyArticleAuthor from "@/components/EmptyArticleAuthor";
 import useDeleteDialogConfirmation from "@/hooks/useDeleteDialogConfirmation";
 import DeleteDialog from "@/components/DeleteDialogConfirmation";
+import QuickAction from "@/components/MyArticle/QuicAction";
 
 export default function MyarticlesPage() {
   const authorId = useAuth()?.user?.id ?? "";
@@ -162,30 +163,7 @@ export default function MyarticlesPage() {
           </Card>
 
           {/* Quick Actions */}
-          <div className="space-y-3">
-            <h3 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
-              Quick Actions
-            </h3>
-            <div className="flex flex-col gap-2">
-              <Link href={"/dashboard-user/write-article"}>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start gap-3 cursor-pointer border border-dashed p-6"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Create New Article</span>
-                </Button>
-              </Link>
-
-              <Button
-                variant="outline"
-                className="w-full justify-start gap-3 cursor-pointer p-6"
-              >
-                <Tags className="w-4 h-4" />
-                <span>Manage Categories</span>
-              </Button>
-            </div>
-          </div>
+          <QuickAction />
         </div>
 
         {/* Right content area */}
