@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { getArticleById } from "@/lib/article/getArticleById";
 import {
   editArticleSchema,
@@ -10,6 +15,7 @@ import { toast } from "sonner";
 import { editArticleByAuthor } from "@/lib/article/editArticleByAuthor";
 import { useAuth } from "@/contexts/AuthContextProvider";
 import { useRouter } from "next/navigation";
+import IEditArticle from "@/types/IEditArticle";
 
 interface UseEditArticleProps {
   articleId: string;
@@ -28,22 +34,21 @@ export default function useEditArticle({
     data: article,
     isLoading: isArticleLoading,
     isError: isArticleError,
-  } = useQuery({
+  } = useQuery<IEditArticle>({
     queryKey: ["article", articleId],
     queryFn: () => getArticleById(articleId),
     enabled: !!articleId,
+    placeholderData: keepPreviousData,
   });
 
   const form = useForm<editArticleValues>({
     resolver: zodResolver(editArticleSchema),
-    defaultValues: article
-      ? {
-          title: article.title,
-          content: article.content,
-          categories: article.categories,
-          thumbnile: article.thumbnile,
-        }
-      : undefined,
+    defaultValues: {
+      title: article?.title,
+      thumbnile: article?.thumbnile,
+      content: article?.content,
+      categories: article?.categories,
+    },
   });
 
   const mutation = useMutation({
