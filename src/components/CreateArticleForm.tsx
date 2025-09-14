@@ -45,10 +45,12 @@ export default function CreateArticleForm() {
             <FormItem>
               <FormLabel>Thumbnail</FormLabel>
               <FormControl>
-                <ThumbnailUpload
-                  value={field.value}
-                  onChange={field.onChange}
-                />
+                <div className="max-w-lg w-full">
+                  <ThumbnailUpload
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                </div>
               </FormControl>
               <FormDescription>
                 Upload a thumbnail image for your article.
