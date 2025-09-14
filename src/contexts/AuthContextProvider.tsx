@@ -6,6 +6,7 @@ import {
   useEffect,
   useState,
   useCallback,
+  useRef,
 } from "react";
 import { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
@@ -29,34 +30,62 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const supabase = createClient();
 
-  // Cache untuk user data
-  const userDataCache = new Map<
-    string,
-    { role: string | null; username: string | null }
-  >();
+  // Ref untuk tracking mounted state dan prevent race conditions
+  const isMountedRef = useRef(true);
+  const initializingRef = useRef(false);
+  const currentUserIdRef = useRef<string | null>(null);
 
-  // Helper function to fetch user data dengan caching
+  // Cache untuk user data - pindah ke ref agar persistent
+  const userDataCacheRef = useRef(
+    new Map<string, { role: string | null; username: string | null }>()
+  );
+
+  // Helper function to update user data atomically
+  const updateUserData = useCallback(
+    (
+      newUser: User | null,
+      newRole: string | null = null,
+      newUsername: string | null = null
+    ) => {
+      if (!isMountedRef.current) return;
+
+      // Batch state updates to prevent multiple re-renders
+      setUser((prevUser) => {
+        // Only update if actually different
+        if (prevUser?.id !== newUser?.id) {
+          setUserRole(newRole);
+          setUsername(newUsername);
+          return newUser;
+        }
+
+        // Update role/username even if user is same (might be updated data)
+        if (newRole !== null || newUsername !== null) {
+          if (newRole !== null) setUserRole(newRole);
+          if (newUsername !== null) setUsername(newUsername);
+        }
+
+        return prevUser;
+      });
+    },
+    []
+  );
+
+  // Helper function to fetch user data dengan improved caching dan error handling
   const fetchUserData = useCallback(
     async (userId: string) => {
-      // Check cache first
-      if (userDataCache.has(userId)) {
-        return userDataCache.get(userId)!;
+      // Prevent fetching for same user multiple times
+      if (
+        currentUserIdRef.current === userId &&
+        userDataCacheRef.current.has(userId)
+      ) {
+        return userDataCacheRef.current.get(userId)!;
       }
 
       try {
-        // Coba dapatkan data user dari auth.users terlebih dahulu untuk memastikan memiliki data terbaru
-        const { data: authUserData, error: authError } =
-          await supabase.auth.getUser();
-        const authUser = authUserData?.user;
-
-        if (authError) {
-          console.error("Error fetching auth user:", authError);
-        }
-
         // Coba ambil profil dari database
         const { data: profile, error } = await supabase
           .from("profiles")
-          .select("*")
+          .select("role, username")
           .eq("id", userId)
           .single();
 
@@ -66,180 +95,189 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             role: profile.role,
             username: profile.username,
           };
-          userDataCache.set(userId, userData); // Cache the result
+          userDataCacheRef.current.set(userId, userData);
           return userData;
         }
 
-        // Jika profil tidak ditemukan (PGRST116) atau error lainnya
-        if (error) {
-          // Jika kita memiliki data auth user, coba buat profil baru
-          if (
-            authUser &&
-            (error.code === "PGRST116" ||
-              error.message.includes("does not exist"))
-          ) {
-            try {
-              // Ekstrak data dari user_metadata
-              const username =
-                authUser.user_metadata?.name ||
-                authUser.user_metadata?.full_name ||
-                authUser.email?.split("@")[0] ||
-                `user_${userId.substring(0, 8)}`;
+        // Jika profil tidak ditemukan, coba buat yang baru
+        if (
+          error &&
+          (error.code === "PGRST116" ||
+            error.message.includes("does not exist"))
+        ) {
+          // Get fresh auth user data
+          const { data: authUserData } = await supabase.auth.getUser();
+          const authUser = authUserData?.user;
 
-              const role = authUser.user_metadata?.role || "user";
+          if (authUser && authUser.id === userId) {
+            const username =
+              authUser.user_metadata?.name ||
+              authUser.user_metadata?.full_name ||
+              authUser.email?.split("@")[0] ||
+              `user_${userId.substring(0, 8)}`;
 
-              // create new profile
-              const { data: newProfile, error: insertError } = await supabase
-                .from("profiles")
-                .insert({
-                  id: userId,
-                  username: username,
-                  role: role,
-                  created_at: new Date().toISOString(),
-                })
-                .select("role, username")
-                .single();
+            const role = authUser.user_metadata?.role || "user";
 
-              if (!insertError && newProfile) {
-                const userData = {
-                  role: newProfile.role,
-                  username: newProfile.username,
-                };
-                userDataCache.set(userId, userData);
-                return userData;
-              }
+            // Try to create new profile
+            const { data: newProfile, error: insertError } = await supabase
+              .from("profiles")
+              .insert({
+                id: userId,
+                username: username,
+                role: role,
+                created_at: new Date().toISOString(),
+              })
+              .select("role, username")
+              .single();
 
-              if (insertError) {
-                console.error("Error creating new profile:", insertError);
-              }
-            } catch (insertErr) {
-              console.error("Exception during profile creation:", insertErr);
+            if (!insertError && newProfile) {
+              const userData = {
+                role: newProfile.role,
+                username: newProfile.username,
+              };
+              userDataCacheRef.current.set(userId, userData);
+              return userData;
             }
-          }
 
-          // Fallback ke user_metadata jika tersedia
-          if (authUser?.user_metadata) {
+            // If insert failed, fallback to metadata
             const userData = {
-              role: authUser.user_metadata.role || "user",
-              username:
-                authUser.user_metadata.name ||
-                authUser.user_metadata.full_name ||
-                authUser.email?.split("@")[0] ||
-                `user_${userId.substring(0, 8)}`,
+              role: role,
+              username: username,
             };
-            userDataCache.set(userId, userData);
+            userDataCacheRef.current.set(userId, userData);
             return userData;
           }
         }
 
-        // Fallback jika semua cara gagal
+        // Final fallback
         const fallbackData = {
           role: "user",
           username: `user_${userId.substring(0, 8)}`,
         };
-        userDataCache.set(userId, fallbackData); // Cache the fallback result
+        userDataCacheRef.current.set(userId, fallbackData);
         return fallbackData;
       } catch (error) {
-        // Tampilkan informasi error yang lebih detail
-        console.error(
-          "Error fetching user data:",
-          JSON.stringify(error, null, 2)
-        );
+        console.error("Error fetching user data:", error);
 
-        // Pastikan selalu mengembalikan nilai yang valid meskipun terjadi error
-        const fallbackData = { role: "user", username: null };
-        userDataCache.set(userId, fallbackData); // Cache fallback data untuk menghindari error berulang
+        const fallbackData = {
+          role: "user",
+          username: `user_${userId.substring(0, 8)}`,
+        };
+        userDataCacheRef.current.set(userId, fallbackData);
         return fallbackData;
       }
     },
     [supabase]
   );
 
+  // Single initialization effect
   useEffect(() => {
-    let isMounted = true;
+    // Prevent multiple initialization
+    if (initializingRef.current) return;
+
+    initializingRef.current = true;
+    isMountedRef.current = true;
 
     const initializeAuth = async () => {
       try {
-        setLoading(true);
         const {
           data: { session },
           error,
         } = await supabase.auth.getSession();
-        if (error) throw error;
 
-        if (!isMounted) return;
+        if (error) {
+          console.error("Error getting initial session:", error);
+          throw error;
+        }
 
-        setUser(session?.user ?? null);
+        if (!isMountedRef.current) return;
 
         if (session?.user) {
-          // Panggil fetchUserData di sini dan pastikan state di-update
+          currentUserIdRef.current = session.user.id;
           const { role, username } = await fetchUserData(session.user.id);
-          if (isMounted) {
-            setUserRole(role);
-            setUsername(username);
+
+          if (isMountedRef.current) {
+            updateUserData(session.user, role, username);
           }
         } else {
-          setUserRole(null);
-          setUsername(null);
+          currentUserIdRef.current = null;
+          if (isMountedRef.current) {
+            updateUserData(null, null, null);
+          }
         }
       } catch (error) {
-        console.error("Error getting initial session:", error);
-        // Handle error, tetapi tetap set state agar tidak stuck
-        setUser(null);
-        setUserRole(null);
-        setUsername(null);
+        console.error("Error initializing auth:", error);
+        if (isMountedRef.current) {
+          updateUserData(null, null, null);
+        }
       } finally {
-        if (isMounted) {
-          setLoading(false); // Pastikan ini hanya di akhir
+        if (isMountedRef.current) {
+          setLoading(false);
           setIsInitialized(true);
+          initializingRef.current = false;
         }
       }
     };
 
     initializeAuth();
 
-    // Listen for auth changes
+    // Auth state change listener
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (!isMounted) return;
+      // Skip if still initializing to prevent race condition
+      if (initializingRef.current) return;
 
-      if (
-        event === "SIGNED_IN" ||
-        event === "SIGNED_OUT" ||
-        event === "TOKEN_REFRESHED"
-      ) {
-        setLoading(true);
-      }
+      console.log("Auth state change:", event);
 
       try {
-        setUser(session?.user ?? null);
-
         if (session?.user) {
-          const { role, username } = await fetchUserData(session.user.id);
-          if (isMounted) {
-            setUserRole(role);
-            setUsername(username);
+          // Only fetch data if user actually changed
+          if (currentUserIdRef.current !== session.user.id) {
+            currentUserIdRef.current = session.user.id;
+            setLoading(true);
+
+            const { role, username } = await fetchUserData(session.user.id);
+
+            if (isMountedRef.current) {
+              updateUserData(session.user, role, username);
+            }
+          } else {
+            // Same user, just update user object
+            if (isMountedRef.current) {
+              setUser(session.user);
+            }
           }
         } else {
-          setUserRole(null);
-          setUsername(null);
-          userDataCache.clear();
+          currentUserIdRef.current = null;
+          userDataCacheRef.current.clear();
+
+          if (isMountedRef.current) {
+            updateUserData(null, null, null);
+          }
         }
       } catch (error) {
         console.error("Error handling auth state change:", error);
+        if (isMountedRef.current) {
+          updateUserData(null, null, null);
+        }
       } finally {
-        if (isMounted) {
+        if (
+          isMountedRef.current &&
+          session?.user &&
+          currentUserIdRef.current === session.user.id
+        ) {
           setLoading(false);
         }
       }
     });
 
+    // Cleanup function
     return () => {
-      isMounted = false;
+      isMountedRef.current = false;
       subscription.unsubscribe();
     };
-  }, [supabase, fetchUserData]);
+  }, []); // Empty dependency array - hanya run sekali
 
   const value = {
     user,
