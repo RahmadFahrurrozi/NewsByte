@@ -10,16 +10,14 @@ export async function editArticleByAuthor(
   if (articleDataEdit.thumbnile instanceof File) {
     const file = articleDataEdit.thumbnile;
     const fileExt = file.name.split(".").pop();
-    const fileName = `${Date.now()}.${fileExt}`;
+    const fileName = `article_${articleDataEdit.article_id}.${fileExt}`;
 
     const { error: uploadError } = await supabase.storage
       .from("articles")
-      .upload(fileName, file, {
-        upsert: true,
-      });
+      .upload(fileName, file, { upsert: true });
 
     if (uploadError) {
-      throw new Error(`Gagal mengunggah thumbnail: ${uploadError.message}`);
+      throw new Error(`Failed to upload thumbnail: ${uploadError.message}`);
     }
 
     const { data: publicUrl } = supabase.storage
