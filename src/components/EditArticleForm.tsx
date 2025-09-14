@@ -16,9 +16,25 @@ import { RichEditor } from "./tiptap/simple/RichEditor";
 import { ThumbnailUpload } from "./ThumbnailUpload";
 import useEditArticle from "@/hooks/useEditArticle";
 import CategoriesSelect from "./CategoriesSelect";
+import { Card, CardContent } from "./ui/card";
 
 export default function EditArticleForm({ articleId }: { articleId: string }) {
-  const { form, onSubmit, isLoading } = useEditArticle({ articleId });
+  const { form, onSubmit, isLoading, isError } = useEditArticle({ articleId });
+
+  if (isError) {
+    return (
+      <div className="p-6">
+        <Card>
+          <CardContent className="p-6 text-center">
+            <p className="text-red-500">Failed to load article data</p>
+            <Button onClick={() => window.location.reload()} className="mt-4">
+              Retry
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <Form {...form}>
