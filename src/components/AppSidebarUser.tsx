@@ -11,8 +11,7 @@ import { NavUser } from "@/components/NavUser";
 import { TeamSwitcher } from "@/components/team-switcher";
 import { sidebarUser } from "@/constants/dataSideBarUser";
 import { ProtectedRoute } from "@/contexts/ProtectedRoute";
-import Link from "next/link";
-import { Button } from "./ui/button";
+import { NavFooter } from "./NavFooter";
 
 export function AppSidebarUser(props: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -22,15 +21,11 @@ export function AppSidebarUser(props: React.ComponentProps<typeof Sidebar>) {
           <TeamSwitcher teams={sidebarUser.teams} />
         </SidebarHeader>
         <SidebarContent>
-          <NavMain items={sidebarUser.nav} />
-        </SidebarContent>
-        <Link href={"/"}>
-          <div className="p-2 max-w-full">
-            <Button className="rounded-md w-full cursor-pointer">
-              Back to Home
-            </Button>
+          <div className="flex flex-col justify-between h-full">
+            <NavMain items={sidebarUser.nav} />
+            <NavFooter items={sidebarUser.navFooter} />
           </div>
-        </Link>
+        </SidebarContent>
         <SidebarFooter>
           <NavUser user={sidebarUser.user} />
         </SidebarFooter>

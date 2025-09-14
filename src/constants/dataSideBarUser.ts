@@ -3,6 +3,7 @@ import {
   BellDot,
   BookOpen,
   GalleryVerticalEnd,
+  Home,
   PencilLine,
   Settings,
 } from "lucide-react";
@@ -55,6 +56,13 @@ export const sidebarUser = {
           url: "/dashboard-user/settings/profile",
         },
       ],
+    },
+  ],
+  navFooter: [
+    {
+      title: "Back to Home",
+      url: "/",
+      icon: Home,
     },
   ],
 };
