@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
     const { data: { user } } = await supabase.auth.getUser();
 
-    if(!user) {
+    if (!user) {
         return NextResponse.json({
             error: "Unauthorized"
         }, { status: 401 })
@@ -30,15 +30,17 @@ export async function POST(request: Request) {
 
     const { data: oldPhoto, error: fetchError } = await supabase.from("profiles").select("photo").eq("id", user.id).single();
     let oldImageUrl = null;
-    if(fetchError || !oldPhoto) {
-        console.error("Gagal mengambil gambar lama", fetchError);
-    } else if(oldPhoto.photo) {
+    if (fetchError || !oldPhoto) {
+        return NextResponse.json({
+            error: fetchError.message
+        }, { status: 500 })
+    } else if (oldPhoto.photo) {
         const publicUrlParts = oldPhoto.photo.split("/");
         const oldPhotoName = publicUrlParts[publicUrlParts.length - 1]
         oldImageUrl = `${user.id}/${oldPhotoName}`;
     }
 
-    if(photo) {
+    if (photo) {
         const fileExtension = photo.name.split(".").pop();
         const fileName = `${uuidv4()}.${fileExtension}`;
         const filePath = `${user.id}/${fileName}`;
@@ -48,18 +50,19 @@ export async function POST(request: Request) {
             upsert: false
         });
 
-        if(uploadError) {
-            console.log("upload error", uploadError.message);
-            return NextResponse.json({error: uploadError.message}, {status: 500});
+        if (uploadError) {
+            return NextResponse.json({ error: uploadError.message }, { status: 500 });
         }
 
-        const {data: publicUrlData} = supabase.storage.from("profile-picture").getPublicUrl(filePath);
+        const { data: publicUrlData } = supabase.storage.from("profile-picture").getPublicUrl(filePath);
         imageUrl = publicUrlData.publicUrl;
-        
-        if(oldImageUrl) {
+
+        if (oldImageUrl) {
             const { error: deleteError } = await supabase.storage.from("profile-picture").remove([oldImageUrl]);
-            if(deleteError) {
-                console.log("Gagal menghapus gambar lama", deleteError);
+            if (deleteError) {
+                return NextResponse.json({
+                    error: deleteError.message
+                }, { status: 500 })
             }
         }
     }
@@ -67,12 +70,12 @@ export async function POST(request: Request) {
     const { data, error } = await supabase.from("profiles").update({
         username: username,
         photo: imageUrl
-    }).eq("id", user.id); 
+    }).eq("id", user.id);
 
-    if(error) {
+    if (error) {
         return NextResponse.json({
             error: error.message
-        }, { status: 500 })
+        }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, data });

@@ -45,8 +45,7 @@ export default function AdminProfile({ dataUser }: AdminProfileClientProps) {
 
   const handleUpdateProfile = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Logic untuk mengupdate data profil ke backend
-    console.log("Update profile:", profile);
+   
     // Tambahkan logika untuk mengirim data ke API
     try {
       const formData = new FormData();
@@ -66,14 +65,13 @@ export default function AdminProfile({ dataUser }: AdminProfileClientProps) {
       }
 
       const result = await response.json();
-      console.log("Profile berhasil di update", result);
     } catch (error: unknown) {
       if (error !== null && typeof error === "object" && "message" in error) {
         // Gunakan as untuk memberi tahu TypeScript tentang tipe error
         const errorMessage = (error as { message: string }).message;
-        console.log("Error mengupdate profile", errorMessage);
+        console.error("Error mengupdate profile", errorMessage);
       } else {
-        console.log("Error mengupdate profile", "An unknown error occurred.");
+        console.error("Error mengupdate profile", "An unknown error occurred.");
       }
     }
   };
@@ -94,15 +92,15 @@ export default function AdminProfile({ dataUser }: AdminProfileClientProps) {
         </div>
         <Card className="border-none shadow-none bg-black">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold">Ubah Data Diri</CardTitle>
+            <CardTitle className="text-2xl font-bold">Update Your Personal Information</CardTitle>
             <CardDescription>
-              Ubah nama dan foto profil Anda. Email tidak bisa diubah.
+              You can change your username and profile photo. You cannot change your email address yet.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <form onSubmit={handleUpdateProfile} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Nama</Label>
+                <Label htmlFor="name">Username</Label>
                 <Input
                   id="name"
                   value={profile.name}
@@ -117,7 +115,7 @@ export default function AdminProfile({ dataUser }: AdminProfileClientProps) {
                 <Input id="email" value={profile.email} disabled />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="image">Foto Profil</Label>
+                <Label htmlFor="image">Profile Picture</Label>
                 <Input
                   id="image"
                   type="file"
@@ -126,7 +124,7 @@ export default function AdminProfile({ dataUser }: AdminProfileClientProps) {
                 />
                 {previewImage && (
                   <div className="mt-4">
-                    <Label>Preview Foto</Label>
+                    <Label>Preview Picture</Label>
                     <img
                       src={previewImage}
                       alt="Preview"
@@ -136,7 +134,7 @@ export default function AdminProfile({ dataUser }: AdminProfileClientProps) {
                 )}
               </div>
               <Button type="submit" className="w-full">
-                Simpan Perubahan
+                Update Personal Information
               </Button>
             </form>
           </CardContent>
