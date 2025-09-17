@@ -1,27 +1,16 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  ArrowRight,
-  CheckCircle2,
-  Plus,
-  Tags,
   Filter,
   ArrowUpDown,
-  Calendar,
   FilterIcon,
   Trash2,
   Eye,
   PencilLine,
 } from "lucide-react";
-import {
-  IoAnalyticsSharp,
-  IoDocumentOutline,
-  IoDocumentTextOutline,
-} from "react-icons/io5";
-import { BiErrorAlt } from "react-icons/bi";
 import PaginationComponent from "@/components/PaginationComponent";
 import getBadgeColorStatus from "@/utils/getColorStstus";
 import {
@@ -50,6 +39,8 @@ import EmptyArticleAuthor from "@/components/EmptyArticleAuthor";
 import useDeleteDialogConfirmation from "@/hooks/useDeleteDialogConfirmation";
 import DeleteDialog from "@/components/DeleteDialogConfirmation";
 import QuickAction from "@/components/MyArticle/QuicAction";
+import ArticleStats from "@/components/MyArticle/ArticleStats";
+import QuickInfoCard from "@/components/MyArticle/QuickInfoCard";
 
 export default function MyarticlesPage() {
   const authorId = useAuth()?.user?.id ?? "";
@@ -114,53 +105,11 @@ export default function MyarticlesPage() {
           </div>
 
           {/* article stats card */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <IoAnalyticsSharp className="w-5 h-5" />
-                Article Statistics
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Total article:</span>
-                <span>{articles?.total}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-muted-foreground flex items-center gap-2">
-                  Published
-                  <CheckCircle2 className="text-green-500 size-4" />
-                </span>
-                <span className="font-medium">{stats.approved}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-muted-foreground flex items-center gap-2">
-                  Pending
-                  <IoDocumentTextOutline className="size-4 text-orange-300" />
-                </span>
-                <span className="font-medium">{stats.pending}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-muted-foreground flex items-center gap-2">
-                  Rejected
-                  <BiErrorAlt className="size-4 text-red-500" />
-                </span>
-                <span className="font-medium">{stats.rejected}</span>
-              </div>
-              <div className="pt-2 border-t">
-                <div className="flex items-center">
-                  <div className="text-sm text-muted-foreground flex items-center gap-2">
-                    <Calendar className="size-4" /> <p>Last Updated:</p>
-                    <p>
-                      {latestUpdatedArticle
-                        ? formatDateWithTime(latestUpdatedArticle.updated_at)
-                        : "-"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <ArticleStats
+            total={articles?.total}
+            stats={stats}
+            latestUpdatedArticle={latestUpdatedArticle}
+          />
 
           {/* Quick Actions */}
           <QuickAction />
@@ -170,39 +119,7 @@ export default function MyarticlesPage() {
         <div className="lg:w-2/3 w-full">
           {/* Quick Info Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-            <Card className="hover:shadow-md transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center">
-                    <IoDocumentOutline className="w-4 h-4 text-orange-600" />
-                  </div>
-                  <h3 className="font-semibold">Unpublished Article</h3>
-                </div>
-                <p className="text-sm text-muted-foreground mb-3">
-                  {stats.pending} unpublished Article waiting for review
-                </p>
-                <Button variant="link" className="p-0 h-auto cursor-pointer">
-                  View all articles <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-md transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                    <IoAnalyticsSharp className="w-4 h-4 text-blue-600" />
-                  </div>
-                  <h3 className="font-semibold">Analytics Overview</h3>
-                </div>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Track performance and engagement metrics
-                </p>
-                <Button variant="link" className="p-0 h-auto cursor-pointer">
-                  View analytics <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              </CardContent>
-            </Card>
+            <QuickInfoCard stats={stats} />
           </div>
 
           {/* Main article Display */}
