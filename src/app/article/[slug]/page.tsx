@@ -39,7 +39,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
       {/* Back Button */}
       <Link
         href="/"
-        className="fixed top-20 z-50 rounded-full p-2 border border-border bg-background/80 backdrop-blur-md shadow"
+        className="fixed top-20 left-5 z-50 rounded-full p-2 border border-border bg-background/80 backdrop-blur-md shadow"
       >
         <ArrowLeft className="w-5 h-5 text-foreground" />
       </Link>

@@ -7,24 +7,14 @@ export default function NavbarWrapper() {
   const pathName = usePathname();
 
   const hideNavbar =
-    pathName === "/auth/login" ||
-    pathName === "/auth/register" ||
-    pathName === "/forgot-password" ||
-    pathName === "/dashboard-user" ||
-    pathName === "/admin/dashboard-admin" ||
-    pathName === "/dashboard-user/write-article" ||
-    pathName === "/dashboard-user/my-articles" ||
-    pathName === "/dashboard-user/notifications" ||
-    pathName === "/dashboard-user/settings" ||
-    pathName === "/dashboard-user/settings/general" ||
-    pathName === "/dashboard-user/settings/profile" ||
-    pathName === "/dashboard-admin" ||
-    pathName === "/pricing" ||
-    pathName === "/unauthorized" ||
-    pathName === "/dashboard/create-news";
+    pathName.startsWith("/auth") ||
+    pathName.startsWith("/dashboard-user") ||
+    pathName.startsWith("/dashboard-admin") ||
+    pathName.startsWith("/dashboard");
 
   if (hideNavbar) {
     return null;
   }
+
   return <Navbar />;
 }

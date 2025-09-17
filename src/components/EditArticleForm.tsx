@@ -10,18 +10,35 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import useCreateArticle from "@/hooks/useCreateArticle";
 import { Button } from "./ui/button";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { RichEditor } from "./tiptap/simple/RichEditor";
 import { ThumbnailUpload } from "./ThumbnailUpload";
+import useEditArticle from "@/hooks/useEditArticle";
 import CategoriesSelect from "./CategoriesSelect";
+import { Card, CardContent } from "./ui/card";
 
-export default function CreateArticleForm() {
-  const { form, handleSubmit, isLoading } = useCreateArticle();
+export default function EditArticleForm({ articleId }: { articleId: string }) {
+  const { form, onSubmit, isLoading, isError } = useEditArticle({ articleId });
+
+  if (isError) {
+    return (
+      <div className="p-6">
+        <Card>
+          <CardContent className="p-6 text-center">
+            <p className="text-red-500">Failed to load article data</p>
+            <Button onClick={() => window.location.reload()} className="mt-4">
+              Retry
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="title"
@@ -45,7 +62,7 @@ export default function CreateArticleForm() {
             <FormItem>
               <FormLabel>Thumbnail</FormLabel>
               <FormControl>
-                <div className="max-w-lg w-full">
+                <div className="max-w-md w-full">
                   <ThumbnailUpload
                     value={field.value}
                     onChange={field.onChange}
@@ -53,13 +70,12 @@ export default function CreateArticleForm() {
                 </div>
               </FormControl>
               <FormDescription>
-                Upload a thumbnail image for your article.
+                This is the thumbnail of your article.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="content"
@@ -67,12 +83,14 @@ export default function CreateArticleForm() {
             <FormItem>
               <FormLabel>Content</FormLabel>
               <FormControl>
-                <RichEditor value={field.value} onChange={field.onChange} />
+                <RichEditor
+                  value={field.value || ""}
+                  onChange={field.onChange}
+                />
               </FormControl>
               <FormDescription>
-                The main content of your article.
+                This is the content of your article.
               </FormDescription>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -88,15 +106,13 @@ export default function CreateArticleForm() {
                   onChange={field.onChange}
                 />
               </FormControl>
-
               <FormDescription>
-                Categories related to your article.
+                This is the categories of your article.
               </FormDescription>
-              <FormMessage />
             </FormItem>
           )}
         />
-        <div className="flex justify-end">
+        <div className="flex justify-end items-center">
           <Button
             type="submit"
             variant={"outline"}
@@ -105,11 +121,11 @@ export default function CreateArticleForm() {
           >
             {isLoading ? (
               <>
-                <LoadingSpinner className="mr-2" />
-                Submitting...
+                <LoadingSpinner />
+                <span>Saving...</span>
               </>
             ) : (
-              "Submit"
+              "Save Changes"
             )}
           </Button>
         </div>

@@ -12,7 +12,7 @@ export default async function loginUser(payload: LoginFormValues) {
     });
 
   if (loginError) {
-    throw new Error(loginError.message || "Invalid email or password");
+    throw new Error("Email or password is incorrect");
   }
 
   // === Get user role ===
