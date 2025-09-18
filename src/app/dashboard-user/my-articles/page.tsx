@@ -51,8 +51,6 @@ export default function MyarticlesPage() {
   const initialPage = Number(searchParams.get("page")) || 1;
   const [page, setPage] = useState(initialPage);
   const [perPage, setPerPage] = useState(5);
-  const [categoryFilter, setCategoryFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
 
   const {
     data: articles,
