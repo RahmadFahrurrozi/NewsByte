@@ -41,19 +41,34 @@ import DeleteDialog from "@/components/DeleteDialogConfirmation";
 import QuickAction from "@/components/MyArticle/QuicAction";
 import ArticleStats from "@/components/MyArticle/ArticleStats";
 import QuickInfoCard from "@/components/MyArticle/QuickInfoCard";
+import { useSearchParams, useRouter } from "next/navigation";
+import ErrorState from "@/components/ErrorState";
 
 export default function MyarticlesPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const authorId = useAuth()?.user?.id ?? "";
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
+  const initialPage = Number(searchParams.get("page")) || 1;
+  const [page, setPage] = useState(initialPage);
+  const [perPage, setPerPage] = useState(5);
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const {
     data: articles,
     isLoading,
     isError,
+    isFetching,
   } = useArticleByAuthor(authorId, page, perPage);
 
   const isEmpty = !isLoading && articles?.data && articles.data.length === 0;
+
+  const handlePageChange = (newPage: number) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("page", newPage.toString());
+    router.push(`?${newParams.toString()}`, { scroll: false });
+    setPage(newPage);
+  };
 
   // get latest updated article
   const latestUpdatedArticle = articles?.data
@@ -63,20 +78,7 @@ export default function MyarticlesPage() {
         new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
     )[0];
 
-  // get stats
-  const stats = {
-    approved:
-      articles?.data?.filter(
-        (approved) => approved.article_status === "approved"
-      ).length ?? 0,
-    pending:
-      articles?.data?.filter((pending) => pending.article_status === "pending")
-        .length ?? 0,
-    rejected:
-      articles?.data?.filter(
-        (rejected) => rejected.article_status === "rejected"
-      ).length ?? 0,
-  };
+  const stats = articles?.stats || { approved: 0, pending: 0, rejected: 0 };
 
   //delete action
   const {
@@ -89,7 +91,12 @@ export default function MyarticlesPage() {
     isLoadingDelete,
   } = useDeleteDialogConfirmation();
 
-  if (isError) return <div>Error</div>;
+  if (isError)
+    return (
+      <section className="py-5 px-6 flex items-center justify-center min-h-[60vh]">
+        <ErrorState onRetry={() => router.refresh()} />
+      </section>
+    );
 
   return (
     <section className="py-5 px-6">
@@ -172,7 +179,7 @@ export default function MyarticlesPage() {
             </div>
 
             {/* Article List */}
-            {isLoading ? (
+            {isLoading || isFetching ? (
               <ArticleListSkeleton />
             ) : isEmpty ? (
               <EmptyArticleAuthor />
@@ -274,9 +281,13 @@ export default function MyarticlesPage() {
 
             {/* {isEmpty && ( */}
             <div className="mt-8 flex justify-center">
-              <PaginationComponent />
+              <PaginationComponent
+                currentPage={page}
+                totalItems={articles?.total ?? 0}
+                itemsPerPage={perPage}
+                onPageChange={handlePageChange}
+              />
             </div>
-            {/* )} */}
           </div>
         </div>
       </div>
