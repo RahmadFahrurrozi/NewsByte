@@ -10,6 +10,7 @@ import {
   Trash2,
   Eye,
   PencilLine,
+  Repeat,
 } from "lucide-react";
 import PaginationComponent from "@/components/PaginationComponent";
 import getBadgeColorStatus from "@/utils/getColorStstus";
@@ -30,7 +31,7 @@ import {
 } from "@/components/ui/dialog";
 import { useArticleByAuthor } from "@/hooks/useGetArticleByAuthor";
 import { useAuth } from "@/contexts/AuthContextProvider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatDateWithTime } from "@/utils/formatedDate";
 import ArticleListSkeleton from "@/components/ArticleSkeleton";
 import { IArticles } from "@/types/IArticles";
@@ -43,32 +44,47 @@ import ArticleStats from "@/components/MyArticle/ArticleStats";
 import QuickInfoCard from "@/components/MyArticle/QuickInfoCard";
 import { useSearchParams, useRouter } from "next/navigation";
 import ErrorState from "@/components/ErrorState";
+import { useMyArticlesFilters } from "@/hooks/useMyArticlesFilters";
 
 export default function MyarticlesPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const authorId = useAuth()?.user?.id ?? "";
-  const initialPage = Number(searchParams.get("page")) || 1;
-  const [page, setPage] = useState(initialPage);
-  const [perPage, setPerPage] = useState(5);
+
+  const { filters, setFilters, page, setPage, perPage, resetFilters } =
+    useMyArticlesFilters();
 
   const {
     data: articles,
     isLoading,
     isError,
     isFetching,
-  } = useArticleByAuthor(authorId, page, perPage);
+  } = useArticleByAuthor(authorId, page, perPage, filters);
 
   const isEmpty = !isLoading && articles?.data && articles.data.length === 0;
 
   const handlePageChange = (newPage: number) => {
-    const newParams = new URLSearchParams(searchParams);
+    const newParams = new URLSearchParams(searchParams.toString());
     newParams.set("page", newPage.toString());
     router.push(`?${newParams.toString()}`, { scroll: false });
     setPage(newPage);
   };
 
-  // get latest updated article
+  const handleFilterChange = (key: string, value: string) => {
+    const newFilters = { ...filters, [key]: value };
+    setFilters(newFilters);
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set(key, value);
+    newParams.set("page", "1");
+    router.push(`?${newParams.toString()}`, { scroll: false });
+    setPage(1);
+  };
+
+  const handleResetFilters = () => {
+    resetFilters();
+    router.push("?", { scroll: false });
+  };
+
   const latestUpdatedArticle = articles?.data
     ?.slice()
     ?.sort(
@@ -134,28 +150,36 @@ export default function MyarticlesPage() {
               <h2 className="text-lg md:text-xl font-semibold">All Article</h2>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 md:gap-2">
                 {/* Category Filter */}
-                <Select>
+                <Select
+                  value={filters.category}
+                  onValueChange={(value) =>
+                    handleFilterChange("category", value)
+                  }
+                >
                   <SelectTrigger className="cursor-pointer w-full sm:w-40">
                     <Filter className="w-4 h-4" />
                     <SelectValue placeholder="category" />
                   </SelectTrigger>
                   <SelectContent className="cursor-pointer">
-                    <SelectItem value="all">All</SelectItem>
-                    <SelectItem value="tech">Tech</SelectItem>
-                    <SelectItem value="sport">Sport</SelectItem>
-                    <SelectItem value="health">Health</SelectItem>
-                    <SelectItem value="politics">Politics</SelectItem>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="Thechnology">Technology</SelectItem>
+                    <SelectItem value="Business">Business</SelectItem>
+                    <SelectItem value="Health">Health</SelectItem>
+                    <SelectItem value="Politics">Politics</SelectItem>
                   </SelectContent>
                 </Select>
 
                 {/* Status Filter */}
-                <Select>
+                <Select
+                  value={filters.status}
+                  onValueChange={(value) => handleFilterChange("status", value)}
+                >
                   <SelectTrigger className="cursor-pointer w-full sm:w-40">
                     <FilterIcon className="w-4 h-4" />
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="all">All Status</SelectItem>
                     <SelectItem value="published">Published</SelectItem>
                     <SelectItem value="pending">Pending</SelectItem>
                     <SelectItem value="rejected">Rejected</SelectItem>
@@ -163,7 +187,10 @@ export default function MyarticlesPage() {
                 </Select>
 
                 {/* Sort Filter */}
-                <Select>
+                <Select
+                  value={filters.sort}
+                  onValueChange={(value) => handleFilterChange("sort", value)}
+                >
                   <SelectTrigger className="cursor-pointer w-full sm:w-40">
                     <ArrowUpDown className="w-4 h-4" />
                     <SelectValue placeholder="Sort by" />
@@ -173,6 +200,15 @@ export default function MyarticlesPage() {
                     <SelectItem value="desc">Descending</SelectItem>
                   </SelectContent>
                 </Select>
+                <Button
+                  variant={"default"}
+                  size="sm"
+                  className="cursor-pointer"
+                  onClick={handleResetFilters}
+                >
+                  <Repeat className="size-4" />
+                  <span>Reset Filter</span>
+                </Button>
               </div>
             </div>
 
@@ -246,7 +282,9 @@ export default function MyarticlesPage() {
                               </Link>
 
                               {/* View Button */}
-                              <Link href={`/article/${article.slug}`}>
+                              <Link
+                                href={`/dashboard-user/my-articles/preview/${article.id}`}
+                              >
                                 <Button
                                   variant="ghost"
                                   className="flex items-center justify-center gap-2 bg-teal-500 hover:text-neutral-800 text-white dark:hover:text-neutral-50 rounded-lg px-4 py-2 transition-all cursor-pointer"

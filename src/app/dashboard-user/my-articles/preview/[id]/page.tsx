@@ -1,18 +1,20 @@
 export const dynamic = "force-dynamic";
 
 import { createClient } from "@/lib/supabase/client";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import ArticleDetail from "@/components/ArticleDetail";
+import { getCurrentUser } from "@/lib/supabase/supabaseHelperServer";
 
 interface PageProps {
   params: Promise<{
-    slug: string;
+    id: string;
   }>;
 }
 
-export default async function NewsDetailPage({ params }: PageProps) {
+export default async function PreviewArticlePage({ params }: PageProps) {
   const supabase = createClient();
-  const { slug } = await params;
+  const user = await getCurrentUser();
+  const { id } = await params;
 
   const { data: article, error } = await supabase
     .from("articles")
@@ -25,13 +27,16 @@ export default async function NewsDetailPage({ params }: PageProps) {
       )
     `
     )
-    .eq("slug", slug)
-    .eq("article_status", "approved")
+    .eq("id", id)
     .single();
 
   if (!article || error) {
     return notFound();
   }
 
-  return <ArticleDetail article={article} mode="published" />;
+  if (!user || user.id !== article.author_id) {
+    redirect("/unauthorized");
+  }
+
+  return <ArticleDetail article={article} mode="preview" />;
 }
