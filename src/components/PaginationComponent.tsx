@@ -33,7 +33,9 @@ export default function PaginationComponent({
             onClick={() => onPageChange(currentPage - 1)}
             aria-disabled={currentPage === 1}
             className={
-              currentPage === 1 ? "pointer-events-none opacity-50" : undefined
+              currentPage === 1
+                ? "pointer-events-none opacity-50"
+                : "cursor-pointer"
             }
           />
         </PaginationItem>
@@ -42,6 +44,7 @@ export default function PaginationComponent({
         {pages.map((page) => (
           <PaginationItem key={page}>
             <PaginationLink
+              className="cursor-pointer"
               isActive={page === currentPage}
               onClick={() => onPageChange(page)}
             >
@@ -58,7 +61,7 @@ export default function PaginationComponent({
             className={
               currentPage === totalPages
                 ? "pointer-events-none opacity-50"
-                : undefined
+                : "cursor-pointer"
             }
           />
         </PaginationItem>
