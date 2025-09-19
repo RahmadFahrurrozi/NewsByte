@@ -16,12 +16,12 @@ const ACTIONS = [
     icon: <BiErrorAlt className="w-4 h-4" />,
     backgoundIcon: "bg-red-500/10 text-red-500",
   },
-  {
-    href: "/dashboard-user/my-articles/published-articles",
-    label: "Published Articles",
-    icon: <CheckCircle2 className="w-4 h-4" />,
-    backgoundIcon: "bg-green-500/10 text-green-500",
-  },
+  // {
+  //   href: "/dashboard-user/my-articles/published-articles",
+  //   label: "Published Articles",
+  //   icon: <CheckCircle2 className="w-4 h-4" />,
+  //   backgoundIcon: "bg-green-500/10 text-green-500",
+  // },
 ];
 
 export default function QuickAction() {
