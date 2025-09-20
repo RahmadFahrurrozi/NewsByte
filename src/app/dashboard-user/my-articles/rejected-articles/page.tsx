@@ -32,7 +32,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 
-interface Article {
+interface IRejectedArticle {
   id: number;
   title: string;
   author: string;
@@ -54,7 +54,7 @@ interface MonthlyData {
 }
 
 export default function RejectedArticlePages() {
-  const [articles, setArticles] = useState<Article[]>([]);
+  const [articles, setArticles] = useState<IRejectedArticle[]>([]);
   const [timeFilter, setTimeFilter] = useState<string>("month");
   const [loading, setLoading] = useState<boolean>(true);
 
