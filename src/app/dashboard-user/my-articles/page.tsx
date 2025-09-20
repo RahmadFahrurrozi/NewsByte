@@ -31,7 +31,6 @@ import {
 } from "@/components/ui/dialog";
 import { useArticleByAuthor } from "@/hooks/useGetArticleByAuthor";
 import { useAuth } from "@/contexts/AuthContextProvider";
-import { useEffect, useState } from "react";
 import { formatDateWithTime } from "@/utils/formatedDate";
 import ArticleListSkeleton from "@/components/ArticleSkeleton";
 import { IArticles } from "@/types/IArticles";
