@@ -7,7 +7,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Building2, Code, HeartHandshake, Icon, Landmark } from "lucide-react";
+import {
+  Building2,
+  Code,
+  GraduationCap,
+  HeartHandshake,
+  Landmark,
+  Atom,
+} from "lucide-react";
 
 interface ICategoriesSelectProps {
   value?: string;
@@ -19,6 +26,8 @@ const CATEGORIES = [
   { label: "Business", value: "Business", icon: Building2 },
   { label: "Technology", value: "Thechnology", icon: Code },
   { label: "Health", value: "Health", icon: HeartHandshake },
+  { label: "Science", value: "Science", icon: Atom },
+  { label: "Education", value: "Education", icon: GraduationCap },
 ];
 
 export default function CategoriesSelect({
