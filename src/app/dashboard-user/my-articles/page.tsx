@@ -11,6 +11,7 @@ import {
   Eye,
   PencilLine,
   Repeat,
+  X,
 } from "lucide-react";
 import PaginationComponent from "@/components/PaginationComponent";
 import getBadgeColorStatus from "@/utils/getColorStstus";
@@ -44,6 +45,7 @@ import QuickInfoCard from "@/components/MyArticle/QuickInfoCard";
 import { useSearchParams, useRouter } from "next/navigation";
 import ErrorState from "@/components/ErrorState";
 import { useMyArticlesFilters } from "@/hooks/useMyArticlesFilters";
+import { Input } from "@/components/ui/input";
 
 export default function MyarticlesPage() {
   const router = useRouter();
@@ -148,6 +150,27 @@ export default function MyarticlesPage() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <h2 className="text-lg md:text-xl font-semibold">All Article</h2>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 md:gap-2">
+                <div className="relative w-full max-w-md">
+                  <Input
+                    type="text"
+                    placeholder="Search article by title..."
+                    value={filters.search}
+                    onChange={(e) =>
+                      handleFilterChange("search", e.target.value)
+                    }
+                    className="pr-10"
+                  />
+                  {filters.search && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 size-8 cursor-pointer"
+                      onClick={() => setFilters({ ...filters, search: "" })}
+                    >
+                      <X className="size-4" />
+                    </Button>
+                  )}
+                </div>
                 {/* Category Filter */}
                 <Select
                   value={filters.category}
