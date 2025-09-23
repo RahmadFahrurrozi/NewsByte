@@ -24,13 +24,7 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import {
-  AlertCircle,
-  FileText,
-  Download,
-  Filter,
-  RefreshCw,
-} from "lucide-react";
+import { AlertCircle, FileText, Download, Filter } from "lucide-react";
 
 interface IRejectedArticle {
   id: number;
@@ -53,10 +47,44 @@ interface MonthlyData {
   approved: number;
 }
 
+// Skeleton Components
+const StatCardSkeleton = () => (
+  <Card>
+    <CardHeader className="pb-2">
+      <div className="h-4 bg-muted rounded w-3/4"></div>
+    </CardHeader>
+    <CardContent>
+      <div className="h-7 bg-muted rounded w-1/2 mb-2"></div>
+      <div className="h-3 bg-muted rounded w-2/3"></div>
+    </CardContent>
+  </Card>
+);
+
+const ChartSkeleton = () => (
+  <div className="h-80 bg-muted rounded-md animate-pulse"></div>
+);
+
+const ArticleItemSkeleton = () => (
+  <div className="flex items-center justify-between p-4 border rounded-lg">
+    <div className="flex items-start space-x-4">
+      <div className="bg-muted p-2 rounded-full h-9 w-9"></div>
+      <div className="space-y-2">
+        <div className="h-5 bg-muted rounded w-64"></div>
+        <div className="h-4 bg-muted rounded w-48"></div>
+        <div className="h-6 bg-muted rounded w-24"></div>
+      </div>
+    </div>
+    <div className="flex space-x-2">
+      <div className="h-9 bg-muted rounded w-16"></div>
+      <div className="h-9 bg-muted rounded w-24"></div>
+    </div>
+  </div>
+);
+
 export default function RejectedArticlePages() {
   const [articles, setArticles] = useState<IRejectedArticle[]>([]);
   const [timeFilter, setTimeFilter] = useState<string>("month");
-  const [loading, setLoading] = useState<boolean>(true);
+  const [isloading, setLoading] = useState<boolean>(true);
 
   // Data for charts
   const rejectionStats: RejectionStat[] = [
@@ -139,55 +167,72 @@ export default function RejectedArticlePages() {
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
-                Total Rejected
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-destructive">43</div>
-              <p className="text-xs text-muted-foreground">Last 30 days</p>
-            </CardContent>
-          </Card>
+          {isloading ? (
+            <>
+              <StatCardSkeleton />
+              <StatCardSkeleton />
+              <StatCardSkeleton />
+              <StatCardSkeleton />
+            </>
+          ) : (
+            <>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Total Rejected
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-destructive">43</div>
+                  <p className="text-xs text-muted-foreground">Last 30 days</p>
+                </CardContent>
+              </Card>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
-                Average Rejection Rate
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-amber-500">15%</div>
-              <p className="text-xs text-muted-foreground">
-                of total submissions
-              </p>
-            </CardContent>
-          </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Average Rejection Rate
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-amber-500">15%</div>
+                  <p className="text-xs text-muted-foreground">
+                    of total submissions
+                  </p>
+                </CardContent>
+              </Card>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Top Reason</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-primary">Irrelevance</div>
-              <p className="text-xs text-muted-foreground">Need attention</p>
-            </CardContent>
-          </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Top Reason
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-primary">
+                    Irrelevance
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Need attention
+                  </p>
+                </CardContent>
+              </Card>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
-                Resubmissions
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-green-500">8</div>
-              <p className="text-xs text-muted-foreground">
-                Successfully accepted
-              </p>
-            </CardContent>
-          </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Resubmissions
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-green-500">8</div>
+                  <p className="text-xs text-muted-foreground">
+                    Successfully accepted
+                  </p>
+                </CardContent>
+              </Card>
+            </>
+          )}
         </div>
 
         {/* Charts and Visualizations */}
@@ -209,25 +254,29 @@ export default function RejectedArticlePages() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={monthlyData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="month" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Bar
-                        dataKey="rejected"
-                        fill="var(--color-destructive)"
-                        name="Rejected Articles"
-                      />
-                      <Bar
-                        dataKey="approved"
-                        fill="oklch(76.5% 0.177 163.223)"
-                        name="Approved Articles"
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  {isloading ? (
+                    <ChartSkeleton />
+                  ) : (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={monthlyData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="month" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar
+                          dataKey="rejected"
+                          fill="var(--color-destructive)"
+                          name="Rejected Articles"
+                        />
+                        <Bar
+                          dataKey="approved"
+                          fill="oklch(76.5% 0.177 163.223)"
+                          name="Approved Articles"
+                        />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  )}
                 </CardContent>
               </Card>
 
@@ -239,28 +288,32 @@ export default function RejectedArticlePages() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={rejectionStats}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="count"
-                        nameKey="reason"
-                        label={({ name, percent }) =>
-                          `${name}: ${(percent * 100).toFixed(0)}%`
-                        }
-                      >
-                        {rejectionStats.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                    </PieChart>
-                  </ResponsiveContainer>
+                  {isloading ? (
+                    <ChartSkeleton />
+                  ) : (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={rejectionStats}
+                          cx="50%"
+                          cy="50%"
+                          labelLine={false}
+                          outerRadius={80}
+                          fill="#8884d8"
+                          dataKey="count"
+                          nameKey="reason"
+                          label={({ name, percent }) =>
+                            `${name}: ${(percent * 100).toFixed(0)}%`
+                          }
+                        >
+                          {rejectionStats.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -290,9 +343,13 @@ export default function RejectedArticlePages() {
             </div>
           </CardHeader>
           <CardContent>
-            {loading ? (
-              <div className="flex justify-center items-center h-40">
-                <RefreshCw className="h-8 w-8 animate-spin" />
+            {isloading ? (
+              <div className="space-y-4">
+                <ArticleItemSkeleton />
+                <ArticleItemSkeleton />
+                <ArticleItemSkeleton />
+                <ArticleItemSkeleton />
+                <ArticleItemSkeleton />
               </div>
             ) : (
               <div className="space-y-4">
