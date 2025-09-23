@@ -165,6 +165,8 @@ export default function MyarticlesPage() {
                     <SelectItem value="Business">Business</SelectItem>
                     <SelectItem value="Health">Health</SelectItem>
                     <SelectItem value="Politics">Politics</SelectItem>
+                    <SelectItem value="Science">Science</SelectItem>
+                    <SelectItem value="Education">Education</SelectItem>
                   </SelectContent>
                 </Select>
 
