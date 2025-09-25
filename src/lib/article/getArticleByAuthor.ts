@@ -1,4 +1,3 @@
-// lib/article/getArticleByAuthor.ts
 import { IArticles } from "@/types/IArticles";
 import { createClient } from "@/lib/supabase/client";
 import { getPagination } from "@/utils/getPagination";
@@ -16,15 +15,6 @@ interface GetArticleByAuthorResponse {
   stats: IArticleStats;
 }
 
-interface GetArticleByAuthorParams {
-  author_id: string;
-  page: number;
-  perPage: number;
-  category?: string;
-  status?: string;
-  sort?: string;
-}
-
 export async function getArticleByAuthor({
   author_id,
   page,
@@ -32,7 +22,8 @@ export async function getArticleByAuthor({
   category,
   status,
   sort = "desc",
-}: GetArticleByAuthorParams): Promise<GetArticleByAuthorResponse> {
+  search,
+}: IGetArticleParams): Promise<GetArticleByAuthorResponse> {
   const supabase = createClient();
   const { from, to } = getPagination(page, perPage);
 
@@ -40,6 +31,10 @@ export async function getArticleByAuthor({
     .from("articles")
     .select(`*, profiles(*)`, { count: "exact" })
     .eq("author_id", author_id);
+
+  if (search) {
+    query = query.ilike("title", `%${search}%`);
+  }
 
   if (category && category !== "all") {
     query = query.eq("categories", category);
@@ -71,6 +66,10 @@ export async function getArticleByAuthor({
     .eq("author_id", author_id)
     .eq("article_status", "approved");
 
+  if (search) {
+    approvedQuery = approvedQuery.ilike("title", `%${search}%`);
+  }
+
   if (category && category !== "all") {
     approvedQuery = approvedQuery.eq("categories", category);
   }
@@ -82,6 +81,10 @@ export async function getArticleByAuthor({
     .eq("author_id", author_id)
     .eq("article_status", "pending");
 
+  if (search) {
+    pendingQuery = pendingQuery.ilike("title", `%${search}%`);
+  }
+
   if (category && category !== "all") {
     pendingQuery = pendingQuery.eq("categories", category);
   }
@@ -92,6 +95,10 @@ export async function getArticleByAuthor({
     .select("*", { count: "exact", head: true })
     .eq("author_id", author_id)
     .eq("article_status", "rejected");
+
+  if (search) {
+    rejectedQuery = rejectedQuery.ilike("title", `%${search}%`);
+  }
 
   if (category && category !== "all") {
     rejectedQuery = rejectedQuery.eq("categories", category);

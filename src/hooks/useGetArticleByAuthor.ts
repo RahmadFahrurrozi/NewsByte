@@ -9,6 +9,7 @@ export function useArticleByAuthor(
     category?: string;
     status?: string;
     sort?: string;
+    search?: string;
   } = {}
 ) {
   return useQuery({

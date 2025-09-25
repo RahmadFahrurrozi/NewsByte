@@ -8,6 +8,7 @@ export function useMyArticlesFilters() {
     category: searchParams.get("category") || "all",
     status: searchParams.get("status") || "all",
     sort: searchParams.get("sort") || "desc",
+    search: searchParams.get("search") || "",
   });
 
   const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
@@ -17,9 +18,10 @@ export function useMyArticlesFilters() {
     const category = searchParams.get("category") || "all";
     const status = searchParams.get("status") || "all";
     const sort = searchParams.get("sort") || "desc";
+    const search = searchParams.get("search") || "";
     const pageParam = Number(searchParams.get("page")) || 1;
 
-    setFilters({ category, status, sort });
+    setFilters({ category, status, sort, search: filters.search });
     setPage(pageParam);
   }, [searchParams]);
 
@@ -28,6 +30,7 @@ export function useMyArticlesFilters() {
       category: "all",
       status: "all",
       sort: "desc",
+      search: "",
     });
     setPage(1);
   };
