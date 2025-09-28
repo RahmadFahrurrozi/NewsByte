@@ -53,7 +53,6 @@ export default function RootLayout({
                 />
                 <NavbarWrapper />
                 <main className="relative z-10">{children}</main>
-                <Footer />
               </div>
             </ThemeProvider>
             <Toaster position="top-right" richColors />

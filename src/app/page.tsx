@@ -7,12 +7,19 @@ import { Button } from "@/components/ui/button";
 import { getCategoryColor } from "@/constants/categoryColors";
 import { getApprovedArticles } from "@/lib/article/getApprovedArticles";
 import { IArticles } from "@/types/IArticles";
-import { ArrowRight, CalendarDays, User, TrendingUp } from "lucide-react";
+import {
+  ArrowRight,
+  CalendarDays,
+  User,
+  TrendingUp,
+  Section,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { stripHtml } from "@/utils/sanitizeContent";
 import { Features } from "@/components/features-10";
 import HeroSection from "@/components/HeroSection";
+import { Footer } from "@/components/footer-section";
 
 export default async function Home({
   searchParams,
@@ -150,6 +157,10 @@ export default async function Home({
           </article>
         ))}
       </div>
+
+      <section>
+        <Footer />
+      </section>
     </>
   );
 }
