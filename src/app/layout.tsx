@@ -6,7 +6,6 @@ import { ThemeProvider } from "@/contexts/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContextProvider";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
-import { Footer } from "@/components/footer-section";
 
 const poppins = Poppins({
   subsets: ["latin"],
