@@ -49,7 +49,7 @@ export default function ProfileSettingsPage() {
   };
 
   return (
-    <div className="px-4 py-6 sm:px-6 lg:px-8">
+    <div className="px-4 pb-6 sm:px-6 lg:px-8">
       <div className="flex flex-col gap-2 mb-6">
         <h1 className="text-3xl font-bold">Profile Settings</h1>
         <p className="text-muted-foreground">
