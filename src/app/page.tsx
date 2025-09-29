@@ -7,10 +7,19 @@ import { Button } from "@/components/ui/button";
 import { getCategoryColor } from "@/constants/categoryColors";
 import { getApprovedArticles } from "@/lib/article/getApprovedArticles";
 import { IArticles } from "@/types/IArticles";
-import { ArrowRight, CalendarDays, User } from "lucide-react";
+import {
+  ArrowRight,
+  CalendarDays,
+  User,
+  TrendingUp,
+  Section,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { stripHtml } from "@/utils/sanitizeContent";
+import { Features } from "@/components/features-10";
+import HeroSection from "@/components/HeroSection";
+import { Footer } from "@/components/footer-section";
 
 export default async function Home({
   searchParams,
@@ -19,33 +28,58 @@ export default async function Home({
 }) {
   const params = await searchParams;
   const page = Number(params.page) || 1;
-  const perPage = Number(params.perPage) || 5;
+  const perPage = Number(params.perPage) || 9;
   const { data: articles, error } = await getApprovedArticles(page, perPage);
 
   const isEmpty = !articles || articles.length === 0;
 
   if (error) {
-    console.log("error", error);
-    return (
-      console.error("Error loading news:", error), (<ErrorArticleClient />)
-    );
+    console.error("Error loading news:", error);
+    return <ErrorArticleClient />;
   }
 
   if (isEmpty) {
     return <EmptyArticleClient />;
   }
 
+  // Split articles for different sections
+  const featuredArticle = articles[0];
+  const trendingArticles = articles.slice(1, 4);
+  const recentArticles = articles.slice(0, 4);
+
   return (
-    <section>
-      {/* Section Header */}
-      <div className="flex items-center gap-2 mb-3 px-6">
-        <h2 className="text-2xl font-semibold">Recent News</h2>
-        <ArrowRight className="size-6 text-primary" />
+    <>
+      {/* Hero Section */}
+      <section className="relative flex flex-col items-center justify-center px-4">
+        <HeroSection />
+      </section>
+
+      {/* Features Section */}
+      <div className="container mx-auto py-12">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold tracking-tight mb-4">
+            Why Choose Our Platform
+          </h2>
+          <p className="text-base text-muted-foreground max-w-2xl mx-auto">
+            Discover the powerful features that make our news platform stand out
+            from the rest
+          </p>
+        </div>
+        <Features />
       </div>
 
       {/* News Grid */}
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 px-6">
-        {articles?.map((article: IArticles) => (
+      <section>
+        <div className="container mx-auto px-4 py-12">
+          <div className="flex items-center gap-3">
+            <TrendingUp className="h-5 w-5 text-foreground" />
+            <h2 className="text-2xl font-bold">Trending Now</h2>
+            <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent ml-4" />
+          </div>
+        </div>
+      </section>
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 container mx-auto px-4 pb-20">
+        {recentArticles?.map((article: IArticles) => (
           <article
             key={article.id}
             className="flex flex-col overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 bg-card"
@@ -123,6 +157,10 @@ export default async function Home({
           </article>
         ))}
       </div>
-    </section>
+
+      <section>
+        <Footer />
+      </section>
+    </>
   );
 }

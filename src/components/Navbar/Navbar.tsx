@@ -15,7 +15,7 @@ import { LoadingSpinner } from "../LoadingSpinner";
 const Navbar = () => {
   const { user, loading, userRole } = useAuth();
   return (
-    <nav className="flex items-center justify-between py-4 px-6 sticky top-0 w-full bg-background/60 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
+    <nav className="flex items-center justify-between py-4 px-6 sticky top-0 w-full bg-transparent backdrop-blur supports-[backdrop-filter]:bg-transparent z-50">
       <Link className="cursor-pointer" href={"/"}>
         <h2 className="font-bold text-3xl">Newsbyte</h2>
       </Link>
@@ -25,33 +25,33 @@ const Navbar = () => {
         <div>
           <p className="text-base">Category</p>
         </div>
-        <div className="flex gap-5 bg-neutral-800 text-sm text-background p-6 rounded-full">
+        <div className="flex gap-5 bg-background text-sm text-background p-6 rounded-full">
           <Link
-            className="hover:text-neutral-300 dark:text-foreground dark:hover:text-neutral-300 transition-all"
+            className="text-foreground hover:text-muted-foreground transition-all"
             href="/technologies"
           >
             Technologies
           </Link>
           <Link
-            className="hover:text-neutral-300 dark:text-foreground dark:hover:text-neutral-300 transition-all"
+            className="text-foreground hover:text-muted-foreground transition-all"
             href="/crypto"
           >
             Crypto
           </Link>
           <Link
-            className="hover:text-neutral-300 dark:text-foreground dark:hover:text-neutral-300 transition-all"
+            className="text-foreground hover:text-muted-foreground transition-all"
             href="/finance"
           >
             Finance
           </Link>
           <Link
-            className="hover:text-neutral-300 dark:text-foreground dark:hover:text-neutral-300 transition-all"
+            className="text-foreground hover:text-muted-foreground transition-all"
             href="/ekonomi"
           >
             Ekonomi
           </Link>
           <Link
-            className="hover:text-neutral-300 dark:text-foreground dark:hover:text-neutral-300 transition-all"
+            className="text-foreground hover:text-muted-foreground transition-all"
             href="/sports"
           >
             Sports

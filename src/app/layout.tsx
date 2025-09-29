@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   title: "Newsbyte",
   description:
     "Aplikasi berita ringkas dan cepat. Baca berita penting dari berbagai sumber hanya dalam satu aplikasi.",
+  icons: {
+    icon: "/window.svg",
+  },
 };
 
 export default function RootLayout({
@@ -35,8 +38,24 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <NavbarWrapper />
-              <main>{children}</main>
+              <div className="min-h-screen w-full relative bg-background">
+                <div
+                  className="absolute inset-0 z-0 dark:block hidden"
+                  style={{
+                    background:
+                      "radial-gradient(ellipse 80% 40% at 50% 0%, rgba(6, 182, 212, 0.25), transparent 70%), #000000",
+                  }}
+                />
+                <div
+                  className="absolute inset-0 z-0 dark:hidden block"
+                  style={{
+                    background:
+                      "radial-gradient(ellipse 80% 40% at 50% 0%, rgba(6, 182, 212, 0.15), transparent 90%), #ffffff",
+                  }}
+                />
+                <NavbarWrapper />
+                <main className="relative z-10">{children}</main>
+              </div>
             </ThemeProvider>
             <Toaster position="top-right" richColors />
           </ReactQueryProvider>

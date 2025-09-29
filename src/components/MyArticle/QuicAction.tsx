@@ -1,13 +1,26 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { CheckCircle2, Plus } from "lucide-react";
+import { CheckCircle2, DownloadIcon, Plus } from "lucide-react";
 import { BiErrorAlt } from "react-icons/bi";
 
-const ACTIONS = [
+interface QuickActionProps {
+  href: string;
+  label: string;
+  icon: React.ReactNode;
+  backgoundIcon: string;
+}
+
+const ACTIONS: QuickActionProps[] = [
   {
     href: "/dashboard-user/write-article",
     label: "Create New Article",
     icon: <Plus className="w-4 h-4" />,
+    backgoundIcon: "bg-foreground/5 text-primary",
+  },
+  {
+    href: "#",
+    label: "Download All Data",
+    icon: <DownloadIcon className="size-4" />,
     backgoundIcon: "bg-foreground/5 text-primary",
   },
   {
