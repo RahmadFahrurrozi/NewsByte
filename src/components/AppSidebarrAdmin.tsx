@@ -11,7 +11,6 @@ import { NavUser } from "@/components/NavUser";
 import { TeamSwitcher } from "@/components/team-switcher";
 import { sidebarAdmin } from "@/constants/dataSideBarUser";
 import { ProtectedRoute } from "@/contexts/ProtectedRoute";
-
 export function AppSidebarAdmin(props: React.ComponentProps<typeof Sidebar>) {
   return (
     <ProtectedRoute allowedRoles={["admin"]}>

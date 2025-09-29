@@ -1,4 +1,4 @@
-import { AppSidebarAdmin } from "@/components/AppSidebarAdmin";
+import { AppSidebarAdmin } from "@/components/AppSidebarrAdmin";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import DashboardHeader from "@/components/DashboardHeaderUser";
 
