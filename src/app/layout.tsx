@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   title: "Newsbyte",
   description:
     "Aplikasi berita ringkas dan cepat. Baca berita penting dari berbagai sumber hanya dalam satu aplikasi.",
+  icons: {
+    icon: "/window.svg",
+  },
 };
 
 export default function RootLayout({
