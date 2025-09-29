@@ -14,7 +14,7 @@ import {
   X,
 } from "lucide-react";
 import PaginationComponent from "@/components/PaginationComponent";
-import getBadgeColorStatus from "@/utils/getColorStstus";
+import { getStatusBadge, getStatusIcon } from "@/utils/getStatusArticle";
 import {
   Select,
   SelectContent,
@@ -253,13 +253,10 @@ export default function MyarticlesPage() {
                             <h3 className="font-medium truncate max-w-[200px] md:max-w-[400px]">
                               {article.title}
                             </h3>
-                            <Badge
-                              className={getBadgeColorStatus(
-                                article.article_status
-                              )}
-                            >
-                              {article.article_status}
-                            </Badge>
+                            <div className="flex gap-2 items-center">
+                              {getStatusIcon(article.article_status)}
+                              {getStatusBadge(article.article_status)}
+                            </div>
                           </div>
                           <p className="text-xs md:text-sm text-muted-foreground">
                             {article.article_status} on{" "}
