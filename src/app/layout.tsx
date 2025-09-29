@@ -53,7 +53,6 @@ export default function RootLayout({
                       "radial-gradient(ellipse 80% 40% at 50% 0%, rgba(6, 182, 212, 0.15), transparent 90%), #ffffff",
                   }}
                 />
-                <NavbarWrapper />
                 <main className="relative z-10">{children}</main>
               </div>
             </ThemeProvider>

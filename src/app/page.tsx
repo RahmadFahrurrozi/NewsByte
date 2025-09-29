@@ -20,6 +20,7 @@ import { stripHtml } from "@/utils/sanitizeContent";
 import { Features } from "@/components/features-10";
 import HeroSection from "@/components/HeroSection";
 import { Footer } from "@/components/footer-section";
+import NavbarWrapper from "@/components/Navbar/NavbarWrapper";
 
 export default async function Home({
   searchParams,
@@ -49,6 +50,7 @@ export default async function Home({
 
   return (
     <>
+      <NavbarWrapper />
       {/* Hero Section */}
       <section className="relative flex flex-col items-center justify-center px-4">
         <HeroSection />
