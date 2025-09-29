@@ -12,85 +12,35 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
 import { IUser } from "@/types/IUser";
+import { useUpdateProfile } from "@/hooks/useUpdateProfile";
+import { LoadingSpinner } from "./LoadingSpinner";
 
 // Definisikan tipe untuk props komponen
-interface AdminProfileClientProps {
+export interface AdminProfileClientProps {
   dataUser: IUser;
 }
 
 export default function AdminProfile({ dataUser }: AdminProfileClientProps) {
-  const [activeTab, setActiveTab] = useState("profile");
-  const [profile, setProfile] = useState({
-    name: dataUser.username,
-    email: dataUser.email,
-    image: dataUser.photo,
-  });
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setPreviewImage(URL.createObjectURL(file));
-      setProfile((prevProfile) => ({
-        ...prevProfile,
-        image: URL.createObjectURL(file),
-      }));
-      setImageFile(file);
-    }
-  };
-
-  const handleUpdateProfile = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-   
-    // Tambahkan logika untuk mengirim data ke API
-    try {
-      const formData = new FormData();
-      formData.append("username", profile.name ?? "admin");
-      if (imageFile) {
-        formData.append("photo", imageFile);
-      }
-
-      const response = await fetch("/api/admin/update-profile", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Gagal mengupdate profile!");
-      }
-
-      const result = await response.json();
-    } catch (error: unknown) {
-      if (error !== null && typeof error === "object" && "message" in error) {
-        // Gunakan as untuk memberi tahu TypeScript tentang tipe error
-        const errorMessage = (error as { message: string }).message;
-        console.error("Error mengupdate profile", errorMessage);
-      } else {
-        console.error("Error mengupdate profile", "An unknown error occurred.");
-      }
-    }
-  };
+  const { form, loading, profile, previewImage, handleSubmit } = useUpdateProfile({dataUser: dataUser});
+  const username = form.watch("username", dataUser.username);
 
   return (
-    <div className="flex justify-center items-start min-h-screen p-8 bg-black-100">
-      <Card className="w-full max-w-2xl bg-black shadow-lg rounded-xl overflow-hidden">
+    <div className="flex justify-center items-start min-h-screen p-8 bg-background">
+      <Card className="w-full max-w-2xl bg-background shadow-lg rounded-xl overflow-hidden">
         <div className="flex flex-col items-center p-6 border-b">
           <Image
-            src={previewImage || profile.image || "/admin.jpg"}
+            src={previewImage || profile.photo || "/admin.jpg"}
             alt="Foto Profil Admin"
             width={100}
             height={100}
             priority={false}
             className="w-16 h-16 mb-3 rounded-full object-cover mr-4"
           />
-          <h2 className="text-xl font-semibold">{profile.name}</h2>
+          <h2 className="text-xl font-semibold">{username}</h2>
         </div>
-        <Card className="border-none shadow-none bg-black">
+        <Card className="border-none shadow-none bg-background">
           <CardHeader>
             <CardTitle className="text-2xl font-bold">Update Your Personal Information</CardTitle>
             <CardDescription>
@@ -98,17 +48,17 @@ export default function AdminProfile({ dataUser }: AdminProfileClientProps) {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <form onSubmit={handleUpdateProfile} className="space-y-4">
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Username</Label>
                 <Input
                   id="name"
-                  value={profile.name}
-                  onChange={(e) =>
-                    setProfile({ ...profile, name: e.target.value })
-                  }
+                  {...form.register("username")}
                   required
                 />
+                {form.formState.errors.username && (
+                  <p>{form.formState.errors.username.message}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
@@ -120,8 +70,11 @@ export default function AdminProfile({ dataUser }: AdminProfileClientProps) {
                   id="image"
                   type="file"
                   accept="image/*"
-                  onChange={handleImageChange}
+                  {...form.register("photo")}
                 />
+                 {form.formState.errors.photo && (
+                  <p>{form.formState.errors.photo.message?.toString() || "File gambar tidak valid."}</p>
+                )}
                 {previewImage && (
                   <div className="mt-4">
                     <Label>Preview Picture</Label>
@@ -133,8 +86,12 @@ export default function AdminProfile({ dataUser }: AdminProfileClientProps) {
                   </div>
                 )}
               </div>
-              <Button type="submit" className="w-full">
-                Update Personal Information
+              <Button type={loading ? "button" : "submit"} className="w-full">
+                {loading ? (
+                  <LoadingSpinner />
+                ) : (
+                  <p>Update Personal Information</p>
+                )}
               </Button>
             </form>
           </CardContent>

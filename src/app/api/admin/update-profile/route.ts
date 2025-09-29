@@ -69,7 +69,7 @@ export async function POST(request: Request) {
 
     const { data, error } = await supabase.from("profiles").update({
         username: username,
-        photo: imageUrl
+        photo: imageUrl || oldPhoto.photo
     }).eq("id", user.id);
 
     if (error) {

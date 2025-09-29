@@ -1,4 +1,5 @@
 import { LoginFormValues } from "@/schemas/auth.schema";
+import { IUser } from "@/types/IUser";
 
 interface ILoginResponse {
   success: boolean;
