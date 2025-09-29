@@ -1,4 +1,5 @@
 import { LoginFormValues } from "@/schemas/auth.schema";
+import { IUser } from "@/types/IUser";
 
 interface ILoginResponse {
   success: boolean;
@@ -8,6 +9,7 @@ interface ILoginResponse {
   };
   message?: string;
   error?: string;
+  role: string;
 }
 
 export default async function loginUser(

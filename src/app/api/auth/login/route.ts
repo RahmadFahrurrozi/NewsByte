@@ -9,6 +9,7 @@ export async function POST(request: Request) {
       success: true,
       data: result,
       message: "User logged in successfully",
+      role: result.role
     });
   } catch (error: unknown) {
     if (error instanceof Error) {
