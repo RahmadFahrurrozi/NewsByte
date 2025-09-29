@@ -45,7 +45,7 @@ export default async function Home({
   // Split articles for different sections
   const featuredArticle = articles[0];
   const trendingArticles = articles.slice(1, 4);
-  const recentArticles = articles.slice(0, 4);
+  const recentArticles = articles.slice(0, 6);
 
   return (
     <>
