@@ -1,5 +1,3 @@
-//buat tes aja nanti ganti sesuai kebutuhan
-
 "use client";
 import {
   Sidebar,
@@ -11,7 +9,7 @@ import {
 import { NavMain } from "@/components/NavMain";
 import { NavUser } from "@/components/NavUser";
 import { TeamSwitcher } from "@/components/team-switcher";
-import { sidebarUser } from "@/constants/dataSideBarUser";
+import { sidebarAdmin } from "@/constants/dataSideBarUser";
 import { ProtectedRoute } from "@/contexts/ProtectedRoute";
 
 export function AppSidebarAdmin(props: React.ComponentProps<typeof Sidebar>) {
@@ -19,13 +17,13 @@ export function AppSidebarAdmin(props: React.ComponentProps<typeof Sidebar>) {
     <ProtectedRoute allowedRoles={["admin"]}>
       <Sidebar collapsible="icon" {...props}>
         <SidebarHeader>
-          <TeamSwitcher teams={sidebarUser.teams} />
+          <TeamSwitcher teams={sidebarAdmin.teams} />
         </SidebarHeader>
         <SidebarContent>
-          <NavMain items={sidebarUser.nav} />
+          <NavMain items={sidebarAdmin.nav} />
         </SidebarContent>
         <SidebarFooter>
-          <NavUser user={sidebarUser.user} />
+          <NavUser user={sidebarAdmin.user} />
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
