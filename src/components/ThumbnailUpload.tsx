@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -10,20 +10,27 @@ import { ImageIcon, Trash2 } from "lucide-react";
 
 interface ThumbnailUploadProps {
   value?: File | string | null;
-  onChange: (file: File | null) => void;
+  onChange: (file: File | string | null) => void;
 }
 
 export function ThumbnailUpload({ value, onChange }: ThumbnailUploadProps) {
-  const [preview, setPreview] = useState<string | null>(
-    value
-      ? typeof value === "string"
-        ? value // kalau string → langsung pakai URL
-        : URL.createObjectURL(value) // kalau File → bikin object URL
-      : null
-  );
-
+  const [preview, setPreview] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (!value) {
+      setPreview(null);
+    } else if (typeof value === "string") {
+      setPreview(value);
+    } else if (value instanceof File) {
+      const objectUrl = URL.createObjectURL(value);
+      setPreview(objectUrl);
+      return () => {
+        URL.revokeObjectURL(objectUrl);
+      };
+    }
+  }, [value]);
 
   const handleFile = (file: File) => {
     if (file && file.type.startsWith("image/")) {
@@ -32,7 +39,6 @@ export function ThumbnailUpload({ value, onChange }: ThumbnailUploadProps) {
         return;
       }
       onChange(file);
-      setPreview(URL.createObjectURL(file));
     }
   };
 
@@ -47,8 +53,12 @@ export function ThumbnailUpload({ value, onChange }: ThumbnailUploadProps) {
 
   const handleRemove = () => {
     onChange(null);
-    setPreview(null);
     if (inputRef.current) inputRef.current.value = "";
+  };
+
+  const handleChangeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    inputRef.current?.click();
   };
 
   return (
@@ -103,10 +113,7 @@ export function ThumbnailUpload({ value, onChange }: ThumbnailUploadProps) {
               variant="secondary"
               size="sm"
               className="bg-white/95 text-black hover:bg-white shadow-lg backdrop-blur-sm cursor-pointer"
-              onClick={(e) => {
-                e.stopPropagation();
-                inputRef.current?.click();
-              }}
+              onClick={handleChangeClick}
             >
               <ImageIcon className="w-4 h-4 mr-2" />
               Change
