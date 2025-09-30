@@ -16,6 +16,7 @@ import { editArticleByAuthor } from "@/lib/article/editArticleByAuthor";
 import { useAuth } from "@/contexts/AuthContextProvider";
 import { useRouter } from "next/navigation";
 import IEditArticle from "@/types/IEditArticle";
+import { useEffect } from "react";
 
 interface UseEditArticleProps {
   articleId: string;
@@ -44,12 +45,23 @@ export default function useEditArticle({
   const form = useForm<editArticleValues>({
     resolver: zodResolver(editArticleSchema),
     defaultValues: {
-      title: article?.title,
-      thumbnile: article?.thumbnile,
-      content: article?.content,
-      categories: article?.categories,
+      title: "",
+      thumbnile: "",
+      content: "",
+      categories: "",
     },
   });
+
+  useEffect(() => {
+    if (article && Object.keys(article).length > 0) {
+      form.reset({
+        title: article.title || "",
+        thumbnile: article.thumbnile || "",
+        content: article.content || "",
+        categories: article.categories || "",
+      });
+    }
+  }, [article, form]);
 
   const mutation = useMutation({
     mutationFn: editArticleByAuthor,
@@ -89,5 +101,7 @@ export default function useEditArticle({
     onSubmit,
     isLoading,
     isError,
+    article,
+    isDataReady: !!article,
   };
 }
