@@ -31,7 +31,7 @@ export default async function Home({
   const page = Number(params.page) || 1;
   const perPage = Number(params.perPage) || 9;
   const { data: articles, error } = await getApprovedArticles(page, perPage);
-
+  
   const isEmpty = !articles || articles.length === 0;
 
   if (error) {
