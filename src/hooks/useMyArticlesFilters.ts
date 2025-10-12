@@ -18,7 +18,6 @@ export function useMyArticlesFilters() {
     const category = searchParams.get("category") || "all";
     const status = searchParams.get("status") || "all";
     const sort = searchParams.get("sort") || "desc";
-    const search = searchParams.get("search") || "";
     const pageParam = Number(searchParams.get("page")) || 1;
 
     setFilters({ category, status, sort, search: filters.search });
