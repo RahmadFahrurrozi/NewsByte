@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const { data: roleUser, error: fetchError } = await supabase
+  const { data: roleUser } = await supabase
     .from("profiles")
     .select("role")
     .eq("id", user?.id)
