@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { IUserProfile } from "@/types/IUserProfile";
 
 interface IRegisterResponse {
   success: boolean;
