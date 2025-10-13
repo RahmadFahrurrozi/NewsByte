@@ -12,6 +12,7 @@ import {
   PencilLine,
   Repeat,
   X,
+  SearchIcon,
 } from "lucide-react";
 import PaginationComponent from "@/components/PaginationComponent";
 import { getStatusBadge, getStatusIcon } from "@/utils/getStatusArticle";
@@ -46,6 +47,8 @@ import { useSearchParams, useRouter } from "next/navigation";
 import ErrorState from "@/components/ErrorState";
 import { useMyArticlesFilters } from "@/hooks/useMyArticlesFilters";
 import { Input } from "@/components/ui/input";
+import { useState, useEffect } from "react";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 export default function MyarticlesPage() {
   const router = useRouter();
@@ -63,6 +66,14 @@ export default function MyarticlesPage() {
   } = useArticleByAuthor(authorId, page, perPage, filters);
 
   const isEmpty = !isLoading && articles?.data && articles.data.length === 0;
+
+  // State untuk nilai search sementara
+  const [tempSearch, setTempSearch] = useState(filters.search);
+
+  // Sync tempSearch dengan filters.search ketika filters berubah
+  useEffect(() => {
+    setTempSearch(filters.search);
+  }, [filters.search]);
 
   const handlePageChange = (newPage: number) => {
     const newParams = new URLSearchParams(searchParams.toString());
@@ -83,7 +94,34 @@ export default function MyarticlesPage() {
 
   const handleResetFilters = () => {
     resetFilters();
+    setTempSearch("");
     router.push("?", { scroll: false });
+  };
+
+  const handleSearch = () => {
+    const newFilters = { ...filters, search: tempSearch };
+    setFilters(newFilters);
+    const newParams = new URLSearchParams(searchParams.toString());
+
+    if (tempSearch) {
+      newParams.set("search", tempSearch);
+    } else {
+      newParams.delete("search");
+    }
+
+    newParams.set("page", "1");
+    router.push(`?${newParams.toString()}`, { scroll: false });
+    setPage(1);
+  };
+
+  const handleClearSearch = () => {
+    setTempSearch("");
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
   };
 
   const latestUpdatedArticle = articles?.data
@@ -150,27 +188,6 @@ export default function MyarticlesPage() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <h2 className="text-lg md:text-xl font-semibold">All Article</h2>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 md:gap-2">
-                <div className="relative w-full max-w-md">
-                  <Input
-                    type="text"
-                    placeholder="Search article by title..."
-                    value={filters.search}
-                    onChange={(e) =>
-                      handleFilterChange("search", e.target.value)
-                    }
-                    className="pr-10"
-                  />
-                  {filters.search && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 size-8 cursor-pointer"
-                      onClick={() => setFilters({ ...filters, search: "" })}
-                    >
-                      <X className="size-4" />
-                    </Button>
-                  )}
-                </div>
                 {/* Category Filter */}
                 <Select
                   value={filters.category}
@@ -234,6 +251,44 @@ export default function MyarticlesPage() {
                   <span>Reset Filter</span>
                 </Button>
               </div>
+            </div>
+            <div
+              className="flex justify-end gap-2 pr-2
+            "
+            >
+              <div className="relative w-full max-w-md">
+                <Input
+                  type="text"
+                  placeholder="Search article by title..."
+                  value={tempSearch}
+                  onChange={(e) => setTempSearch(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  className="pr-10"
+                />
+                {tempSearch && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 size-8 cursor-pointer"
+                    onClick={handleClearSearch}
+                  >
+                    <X className="size-4" />
+                  </Button>
+                )}
+              </div>
+              <Button
+                onClick={handleSearch}
+                variant={"secondary"}
+                disabled={isFetching}
+                className="cursor-pointer"
+              >
+                {isFetching ? (
+                  <LoadingSpinner />
+                ) : (
+                  <SearchIcon className="size-4" />
+                )}
+                <span>Search</span>
+              </Button>
             </div>
 
             {/* Article List */}
