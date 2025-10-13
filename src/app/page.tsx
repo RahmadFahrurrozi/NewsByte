@@ -7,13 +7,7 @@ import { Button } from "@/components/ui/button";
 import { getCategoryColor } from "@/constants/categoryColors";
 import { getApprovedArticles } from "@/lib/article/getApprovedArticles";
 import { IArticles } from "@/types/IArticles";
-import {
-  ArrowRight,
-  CalendarDays,
-  User,
-  TrendingUp,
-  Section,
-} from "lucide-react";
+import { ArrowRight, CalendarDays, User, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { stripHtml } from "@/utils/sanitizeContent";
@@ -75,7 +69,7 @@ export default async function Home({
         <div className="container mx-auto px-4 py-12">
           <div className="flex items-center gap-3">
             <TrendingUp className="h-5 w-5 text-foreground" />
-            <h2 className="text-2xl font-bold">Trending Now</h2>
+            <h2 className="text-2xl font-bold">Recent News</h2>
             <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent ml-4" />
           </div>
         </div>
