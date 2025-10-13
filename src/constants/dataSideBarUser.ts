@@ -92,9 +92,9 @@ export const sidebarAdmin = {
       icon: PencilLine,
     },
     {
-      title: "Approval Admin",
-      url: "/dashboard-admin/approval-admin",
+      title: "Approval Articles",
+      url: "/dashboard-admin/approval-articles",
       icon: BookOpen,
-    }
+    },
   ],
 };
