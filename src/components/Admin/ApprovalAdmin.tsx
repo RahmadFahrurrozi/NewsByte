@@ -17,89 +17,79 @@ import {
   DialogFooter,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { IArticles } from "@/types/IArticles";
-import { format } from "date-fns";
-import { id } from "date-fns/locale";
-import updateStatusArticleService from "@/services/updateStatusArticle";
-import { toast } from "sonner";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useApprovalArticle } from "@/hooks/useApprovalArticle";
+import { LoadingSpinner } from "../LoadingSpinner";
+import { formatDateWithTime } from "@/utils/formatedDate";
+import { SafeArticle } from "../SaveArticles";
 
 export interface ArticlePendingProps {
   data: IArticles[] | null;
   error: Error | null;
 }
 
-export default function ApprovalAdmin({ data, error }: ArticlePendingProps) {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingRejected, setIsLoadingRejected] = useState(false);
-
-  // 2. Buat fungsi handler yang akan dipanggil
-  const handleApproval = async (
-    articleId: string,
-    status: "approved" | "rejected"
-  ) => {
-    if(status == "approved") {
-      setIsLoading(true);
-    } else if(status == "rejected") {
-      setIsLoadingRejected(true);
-    }
-    try {
-      await updateStatusArticleService(articleId, status);
-      toast.success(
-        `Artikel berhasil di-${status === "approved" ? "setujui" : "tolak"}.`
-      );
-      router.refresh(); // Memuat ulang data dari server
-    } catch (err) {
-      let errorMessage = "Terjadi kesalahan saat memperbarui status"
-      if (err instanceof Error) {
-        // Jika err adalah objek Error, kita ambil pesannya
-        errorMessage = err.message;
-      }
-      toast.error(`${errorMessage}`);
-    } finally {
-      setIsLoading(false);
-      setIsLoadingRejected(false);
-    }
-  };
+export default function ApprovalAdmin({ data }: ArticlePendingProps) {
+  const { isLoading, isLoadingRejected, handleApproval, isProcessing } =
+    useApprovalArticle();
 
   return (
-    <div className="container mx-auto p-4 py-8 md:p-8">
-      <h1 className="text-2xl font-bold mb-6">Halaman Approval Admin</h1>
-
+    <div className="py-8 px-4">
+      <h1 className="text-2xl font-bold mb-6">Admin Approval Page</h1>
       <div className="border rounded-lg">
         <Table>
-          <TableCaption>A list of your recent invoices.</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">No</TableHead>
-              <TableHead>Title</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Author Name</TableHead>
-              <TableHead>Tanggal Upload</TableHead>
+              <TableHead className="border-r">No</TableHead>
+              <TableHead className="border-r">Title</TableHead>
+              <TableHead className="border-r">Category</TableHead>
+              <TableHead className="border-r">Author</TableHead>
+              <TableHead className="border-r">Upload Date</TableHead>
               <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {data?.map((article, index) => (
-              <TableRow key={index}>
-                <TableCell className="font-medium">{(index += 1)}</TableCell>
-                <TableCell>{article.title}</TableCell>
-                <TableCell>{article.categories}</TableCell>
-                <TableCell>{article.profiles.name}</TableCell>
-                <TableCell>
-                  {format(new Date(article.created_at), "dd MMMM yyyy", {
-                    locale: id,
-                  })}
+              <TableRow key={article.id}>
+                <TableCell className="border-r">{index + 1}</TableCell>
+                <TableCell className="max-w-[250px] border-r">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="truncate">{article.title}</div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{article.title}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </TableCell>
+                <TableCell className="border-r">{article.categories}</TableCell>
+                <TableCell className="border-r">
+                  {article.profiles.username}
+                </TableCell>
+                <TableCell className="border-r">
+                  {formatDateWithTime(article.created_at)}
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button variant="outline" size="sm">
-                          Lihat & Setujui
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="cursor-pointer"
+                          disabled={isProcessing(article.id)}
+                        >
+                          {isProcessing(article.id)
+                            ? "Processing..."
+                            : "View & Approve"}
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-3xl">
@@ -107,26 +97,49 @@ export default function ApprovalAdmin({ data, error }: ArticlePendingProps) {
                           <DialogTitle>{article.title}</DialogTitle>
                         </DialogHeader>
                         <div className="h-[450px] overflow-y-auto p-4 border rounded-md my-4">
-                          <p className="mb-4">{article.content}</p>
+                          <SafeArticle
+                            className="tiptap"
+                            content={article.content}
+                          />
                         </div>
                         <DialogFooter>
                           <Button
                             size="sm"
-                            variant="outline"
+                            variant="destructive"
+                            className="cursor-pointer"
                             onClick={() =>
                               handleApproval(article.id, "rejected")
                             }
+                            disabled={
+                              isLoadingRejected && isProcessing(article.id)
+                            }
                           >
-                            {isLoadingRejected ? "Menolak..." : "Tolak"}
+                            {isLoadingRejected && isProcessing(article.id) ? (
+                              <>
+                                <LoadingSpinner />
+                                <span>Rejecting...</span>
+                              </>
+                            ) : (
+                              "Reject"
+                            )}
                           </Button>
                           <Button
                             size="sm"
-                            variant="default"
+                            variant="ghost"
+                            className="cursor-pointer bg-emerald-500 text-white hover:bg-emerald-600"
                             onClick={() =>
                               handleApproval(article.id, "approved")
                             }
+                            disabled={isLoading && isProcessing(article.id)}
                           >
-                            {isLoading ? "Menyetujui..." : "Terima"}
+                            {isLoading && isProcessing(article.id) ? (
+                              <>
+                                <LoadingSpinner />
+                                <span>Approving...</span>
+                              </>
+                            ) : (
+                              "Approve"
+                            )}
                           </Button>
                         </DialogFooter>
                       </DialogContent>
