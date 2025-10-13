@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Save, Camera, User, Link2, Loader2, CheckCircle } from "lucide-react";
 import { useProfile } from "@/hooks/useUpdateUserProfile";
 import { formatDateWithTime } from "@/utils/formatedDate";
+import LoadingProfilePageSkeleton from "@/components/profilePageLoadingSkeleton";
 
 export default function ProfileSettingsPage() {
   const {
@@ -40,11 +41,7 @@ export default function ProfileSettingsPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
+    return <LoadingProfilePageSkeleton />;
   }
 
   if (error) {
