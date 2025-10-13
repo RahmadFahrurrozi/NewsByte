@@ -91,5 +91,10 @@ export const sidebarAdmin = {
       url: "/dashboard-admin/profile-admin",
       icon: PencilLine,
     },
+    {
+      title: "Approval Articles",
+      url: "/dashboard-admin/approval-articles",
+      icon: BookOpen,
+    },
   ],
 };

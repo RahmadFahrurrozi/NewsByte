@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import updateProfileService from "@/services/updateProfile";
 import { AdminProfileClientProps } from "@/components/AdminProfile";
-
+ 
 export interface IUpdateProfileResponse {
   success: boolean;
   updateProfileData: IUserProfile;
