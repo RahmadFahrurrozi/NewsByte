@@ -17,9 +17,38 @@ import { ThumbnailUpload } from "./ThumbnailUpload";
 import useEditArticle from "@/hooks/useEditArticle";
 import CategoriesSelect from "./CategoriesSelect";
 import { Card, CardContent } from "./ui/card";
+import { Skeleton } from "./ui/skeleton";
+import { useEffect, useState } from "react";
 
 export default function EditArticleForm({ articleId }: { articleId: string }) {
-  const { form, onSubmit, isLoading, isError } = useEditArticle({ articleId });
+  const { form, onSubmit, isLoading, isError, isDataReady } = useEditArticle({
+    articleId,
+  });
+  const [isFormReady, setIsFormReady] = useState(false);
+
+  useEffect(() => {
+    if (isDataReady && form.formState.defaultValues) {
+      const timer = setTimeout(() => {
+        setIsFormReady(true);
+      }, 300);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isDataReady, form]);
+
+  if (isLoading && !isDataReady) {
+    return (
+      <div className="space-y-4 p-6">
+        <Skeleton className="h-4 w-1/4" />
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-4 w-1/4" />
+        <Skeleton className="h-72 w-full" />
+        <Skeleton className="h-4 w-1/4" />
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-32 ml-auto" />
+      </div>
+    );
+  }
 
   if (isError) {
     return (
@@ -46,7 +75,11 @@ export default function EditArticleForm({ articleId }: { articleId: string }) {
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input placeholder="Title" {...field} />
+                <Input
+                  placeholder="Title"
+                  {...field}
+                  value={field.value || ""}
+                />
               </FormControl>
               <FormDescription>
                 This is the title of your article.
@@ -55,6 +88,7 @@ export default function EditArticleForm({ articleId }: { articleId: string }) {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="thumbnile"
@@ -76,6 +110,7 @@ export default function EditArticleForm({ articleId }: { articleId: string }) {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="content"
@@ -83,10 +118,14 @@ export default function EditArticleForm({ articleId }: { articleId: string }) {
             <FormItem>
               <FormLabel>Content</FormLabel>
               <FormControl>
-                <RichEditor
-                  value={field.value || ""}
-                  onChange={field.onChange}
-                />
+                {isFormReady ? (
+                  <RichEditor
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                  />
+                ) : (
+                  <Skeleton className="h-64 w-full" />
+                )}
               </FormControl>
               <FormDescription>
                 This is the content of your article.
@@ -94,6 +133,7 @@ export default function EditArticleForm({ articleId }: { articleId: string }) {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="categories"
@@ -101,10 +141,14 @@ export default function EditArticleForm({ articleId }: { articleId: string }) {
             <FormItem>
               <FormLabel>Categories</FormLabel>
               <FormControl>
-                <CategoriesSelect
-                  value={field.value}
-                  onChange={field.onChange}
-                />
+                {isFormReady ? (
+                  <CategoriesSelect
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                ) : (
+                  <Skeleton className="h-10 w-full" />
+                )}
               </FormControl>
               <FormDescription>
                 This is the categories of your article.
@@ -112,12 +156,13 @@ export default function EditArticleForm({ articleId }: { articleId: string }) {
             </FormItem>
           )}
         />
+
         <div className="flex justify-end items-center">
           <Button
             type="submit"
             variant={"outline"}
             className="cursor-pointer"
-            disabled={isLoading}
+            disabled={isLoading || !isFormReady}
           >
             {isLoading ? (
               <>
