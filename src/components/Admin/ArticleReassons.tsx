@@ -26,10 +26,15 @@ export default function ArticleReassons() {
   const { form, handleCancle, onSubmit } = useArticleReassons();
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center justify-start sm:flex-row p-4 sm:p-6 lg:p-8">
-      <div className="relative w-full max-w-1/2 flex flex-col items-center justify-center text-center px-4">
-        {/* Background gradient glow */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-accent/10 to-transparent blur-[90px] opacity-50" />
+    <div className="w-full min-h-screen flex flex-col gap-6 sm:gap-0 items-center justify-start sm:flex-row p-4 sm:p-6 lg:p-8">
+      <div className="relative w-full sm:max-w-1/2 h-full flex flex-col items-center justify-center text-center px-4">
+        {/* Centered Gradient Glow */}
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full blur-[200px] opacity-35 z-0"
+          style={{
+            background: `radial-gradient(circle at center, #8FFFB0 0%, transparent 70%)`,
+          }}
+        />
 
         {/* Hero Text */}
         <div className="relative z-10 mb-6">
@@ -75,8 +80,7 @@ export default function ArticleReassons() {
         </div>
       </div>
 
-      <div className="w-full max-w-1/2">
-        {/* Premium Header Section */}
+      <div className="w-full sm:max-w-1/2">
         <div className="mb-12">
           <div className="inline-block mb-4">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary/20 to-accent/20 border border-primary/30 backdrop-blur-sm">
