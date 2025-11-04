@@ -20,10 +20,38 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
-import { Book, MessageCircleMore, Sparkles } from "lucide-react";
+import {
+  ArrowLeft,
+  Book,
+  MessageCircleMore,
+  Sparkles,
+  Loader2,
+} from "lucide-react";
 
-export default function ArticleReassons() {
-  const { form, handleCancle, onSubmit } = useArticleReassons();
+interface ArticleReassonsProps {
+  articleId: string;
+}
+
+export default function ArticleReassons({ articleId }: ArticleReassonsProps) {
+  const { form, handleCancle, onSubmit, isLoading } =
+    useArticleReassons(articleId);
+
+  if (!articleId) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">Invalid Article</h2>
+          <p className="text-muted-foreground mb-4">
+            Article ID is missing. Please go back to the articles list.
+          </p>
+          <Button onClick={handleCancle}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Articles
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full min-h-screen flex flex-col gap-6 sm:gap-0 items-center justify-start sm:flex-row p-4 sm:p-6 lg:p-8">
@@ -86,7 +114,7 @@ export default function ArticleReassons() {
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary/20 to-accent/20 border border-primary/30 backdrop-blur-sm">
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
               <span className="text-sm font-medium text-primary">
-                Send Feedback
+                Reject Article #{articleId.slice(0, 8)}...
               </span>
             </div>
           </div>
@@ -104,7 +132,7 @@ export default function ArticleReassons() {
           <CardHeader className="pb-2">
             <div className="space-y-3">
               <CardTitle className="text-3xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent">
-                Share Your Insights
+                Rejection Feedback
               </CardTitle>
               <CardDescription className="text-base text-muted-foreground">
                 Provide detailed, constructive feedback that matters
@@ -124,15 +152,16 @@ export default function ArticleReassons() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-base font-semibold text-foreground mb-2.5 block">
-                        Review Title
+                        Reason Title
                       </FormLabel>
                       <FormControl>
                         <Input
                           id="title"
                           type="text"
-                          placeholder="Enter a compelling summary of your feedback..."
+                          placeholder="e.g., Insufficient Research, Poor Structure..."
                           className="h-12 bg-white/50 dark:bg-white/5 border-border focus:border-primary focus:ring-2 focus:ring-primary/30 text-foreground placeholder:text-muted-foreground/60 transition-all duration-300"
                           {...field}
+                          disabled={isLoading}
                         />
                       </FormControl>
                       <FormMessage />
@@ -146,14 +175,15 @@ export default function ArticleReassons() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-base font-semibold text-foreground mb-2.5 block">
-                        Detailed Feedback
+                        Detailed Explanation
                       </FormLabel>
                       <FormControl>
                         <Textarea
                           id="message"
-                          placeholder="Deliver specific, actionable insights and suggestions that drive meaningful improvement..."
+                          placeholder="Provide specific feedback on what needs improvement and suggestions for revision..."
                           className="min-h-[140px] resize-none bg-white/50 dark:bg-white/5 border-border focus:border-primary focus:ring-2 focus:ring-primary/30 text-foreground placeholder:text-muted-foreground/60 transition-all duration-300"
                           {...field}
+                          disabled={isLoading}
                         />
                       </FormControl>
                       <FormMessage />
@@ -166,15 +196,24 @@ export default function ArticleReassons() {
                     type="button"
                     variant="outline"
                     onClick={handleCancle}
+                    disabled={isLoading}
                     className="flex-1 h-12 border-border text-foreground hover:bg-muted/50 transition-all duration-300 bg-transparent"
                   >
                     Cancel
                   </Button>
                   <Button
                     type="submit"
-                    className="flex-1 h-12 bg-secondary-foreground to-accent text-primary-foreground"
+                    disabled={isLoading}
+                    className="flex-1 h-12 bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-all duration-300"
                   >
-                    Submit Review
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Rejecting Article...
+                      </>
+                    ) : (
+                      "Reject Article"
+                    )}
                   </Button>
                 </div>
               </form>
@@ -184,7 +223,8 @@ export default function ArticleReassons() {
 
         <div className="mt-10 text-center">
           <p className="text-sm text-muted-foreground">
-            ✨ Your feedback empowers authors to create exceptional content
+            ⚠️ This action cannot be undone. The article will be rejected and
+            the author will receive your feedback.
           </p>
         </div>
       </div>
