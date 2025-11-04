@@ -52,7 +52,7 @@ export interface ArticlePendingProps {
 }
 
 export default function ApprovalAdmin({ data }: ArticlePendingProps) {
-  const { isLoading, isLoadingRejected, handleApproval, isProcessing } =
+  const { isLoading, handleRejectWithReason, handleApprove, isProcessing } =
     useApprovalArticle();
 
   const getCategoryVariant = (category: string) => {
@@ -232,14 +232,12 @@ export default function ApprovalAdmin({ data }: ArticlePendingProps) {
                               size="sm"
                               variant="outline"
                               className="cursor-pointer border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
-                              onClick={() =>
-                                handleApproval(article.id, "rejected")
-                              }
-                              disabled={
-                                isLoadingRejected && isProcessing(article.id)
-                              }
+                              onClick={() => {
+                                handleRejectWithReason(article.id);
+                              }}
+                              disabled={isLoading && isProcessing(article.id)}
                             >
-                              {isLoadingRejected && isProcessing(article.id) ? (
+                              {isLoading && isProcessing(article.id) ? (
                                 <>
                                   <LoadingSpinner className="w-4 h-4 mr-2" />
                                   Rejecting...
@@ -254,9 +252,7 @@ export default function ApprovalAdmin({ data }: ArticlePendingProps) {
                             <Button
                               size="sm"
                               className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90"
-                              onClick={() =>
-                                handleApproval(article.id, "approved")
-                              }
+                              onClick={() => handleApprove(article.id)}
                               disabled={isLoading && isProcessing(article.id)}
                             >
                               {isLoading && isProcessing(article.id) ? (
