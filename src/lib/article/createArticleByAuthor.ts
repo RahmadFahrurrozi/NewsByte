@@ -8,7 +8,7 @@ export async function uploadThumbnail(file: File) {
   const fileExt = file.name.split(".").pop();
   const fileName = `${Date.now()}.${fileExt}`;
 
-  const { data, error: uploadError } = await supabase.storage
+  const { error: uploadError } = await supabase.storage
     .from("articles")
     .upload(fileName, file);
 
