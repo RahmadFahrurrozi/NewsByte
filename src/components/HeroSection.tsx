@@ -117,8 +117,8 @@ export default function HeroSection() {
         {/* Subtitle with Slide Animation */}
         <motion.div
           initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          variants={slideInLeft}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="mb-8 mt-6"
         >
           <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-4xl mx-auto">
