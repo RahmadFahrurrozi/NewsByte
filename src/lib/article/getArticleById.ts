@@ -9,5 +9,6 @@ export async function getArticleById(articleId: string) {
     .single();
 
   if (error) throw new Error(error.message);
+  console.log(data);
   return data;
 }
