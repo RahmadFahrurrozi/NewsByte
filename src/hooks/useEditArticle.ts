@@ -4,7 +4,6 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { getArticleById } from "@/lib/article/getArticleById";
 import {
   editArticleSchema,
   editArticleValues,
@@ -12,11 +11,12 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { editArticleByAuthor } from "@/lib/article/editArticleByAuthor";
+import { editArticleByAuthor } from "@/services/article/editArticleByAuthor";
 import { useAuth } from "@/contexts/AuthContextProvider";
 import { useRouter } from "next/navigation";
 import IEditArticle from "@/types/IEditArticle";
 import { useEffect } from "react";
+import { getArticleById } from "@/services/article/getArticleById";
 
 interface UseEditArticleProps {
   articleId: string;

@@ -1,4 +1,4 @@
-import { createClient } from "../supabase/client";
+import { createClient } from "../../lib/supabase/client";
 import { reassonsArtcleValues } from "@/schemas/reassonsArticle.schema";
 import { IReassonArticle } from "@/types/IReassonArticle";
 

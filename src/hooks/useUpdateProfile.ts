@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useForm } from "react-hook-form";
 import { IUserProfile } from "@/types/IUserProfile";
@@ -7,21 +7,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import updateProfileService from "@/services/updateProfile";
 import { AdminProfileClientProps } from "@/components/AdminProfile";
- 
+import updateProfileService from "@/services/updateProfile";
+
 export interface IUpdateProfileResponse {
   success: boolean;
   updateProfileData: IUserProfile;
   error?: string;
 }
 
-export function useUpdateProfile({ dataUser }: AdminProfileClientProps ) {
+export function useUpdateProfile({ dataUser }: AdminProfileClientProps) {
   const form = useForm<UpdateProfileForm>({
     resolver: zodResolver(updateProfile),
     defaultValues: {
-      username: dataUser.username || ""
-    }
+      username: dataUser.username || "",
+    },
   });
 
   const [loading, setLoading] = useState(false);
@@ -36,7 +36,7 @@ export function useUpdateProfile({ dataUser }: AdminProfileClientProps ) {
   const photoValue = form.watch("photo");
 
   useEffect(() => {
-    if(photoValue instanceof FileList && photoValue.length > 0) {
+    if (photoValue instanceof FileList && photoValue.length > 0) {
       const file = photoValue[0];
       const newPreviewUrl = URL.createObjectURL(file);
       setPreviewImage(newPreviewUrl);
@@ -58,13 +58,14 @@ export function useUpdateProfile({ dataUser }: AdminProfileClientProps ) {
       toast.success("update successfull!");
       window.location.href = window.location.pathname;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Update failed!";
+      const errorMessage =
+        error instanceof Error ? error.message : "Update failed!";
       toast.error(errorMessage);
       setErrorMessage(errorMessage);
     } finally {
       setLoading(false);
     }
-  }
-  
+  };
+
   return { form, loading, profile, previewImage, handleSubmit };
 }

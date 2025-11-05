@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { getArticleByAuthor } from "@/lib/article/getArticleByAuthor";
+import { getArticleByAuthor } from "@/services/article/getArticleByAuthor";
 
 export function useArticleByAuthor(
   authorId: string,

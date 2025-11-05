@@ -1,13 +1,13 @@
 "use client";
 
 import { registerSchema, RegisterFormValues } from "@/schemas/auth.schema";
-import regsiterUser from "@/services/register";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { IUserProfile } from "@/types/IUserProfile";
+import regsiterUser from "@/services/register";
 
 interface IRegisterResponse {
   success: boolean;

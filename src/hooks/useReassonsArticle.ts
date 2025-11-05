@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/contexts/AuthContextProvider";
-import { rejectArticleWithReasson } from "@/lib/article/reassonArticle";
+import { rejectArticleWithReasson } from "@/services/article/reassonArticle";
 import {
   reassonsArtcleSchema,
   reassonsArtcleValues,

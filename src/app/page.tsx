@@ -5,7 +5,6 @@ import ErrorArticleClient from "@/components/ErrorArticleClient";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getCategoryColor } from "@/constants/categoryColors";
-import { getApprovedArticles } from "@/lib/article/getApprovedArticles";
 import { IArticles } from "@/types/IArticles";
 import { ArrowRight, CalendarDays, User, TrendingUp } from "lucide-react";
 import Image from "next/image";
@@ -15,6 +14,7 @@ import { Features } from "@/components/features-10";
 import HeroSection from "@/components/HeroSection";
 import { Footer } from "@/components/footer-section";
 import NavbarWrapper from "@/components/Navbar/NavbarWrapper";
+import { getApprovedArticles } from "@/services/article/getApprovedArticles";
 
 export default async function Home({
   searchParams,
@@ -25,7 +25,7 @@ export default async function Home({
   const page = Number(params.page) || 1;
   const perPage = Number(params.perPage) || 9;
   const { data: articles, error } = await getApprovedArticles(page, perPage);
-  
+
   const isEmpty = !articles || articles.length === 0;
 
   if (error) {

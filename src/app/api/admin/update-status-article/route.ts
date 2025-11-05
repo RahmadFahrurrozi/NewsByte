@@ -1,4 +1,4 @@
-import { updateStatusArticle } from "@/lib/article/updateStatusArticle";
+import { updateStatusArticle } from "@/services/article/updateStatusArticle";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";

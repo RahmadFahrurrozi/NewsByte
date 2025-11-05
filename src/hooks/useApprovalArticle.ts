@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { approveArticle } from "@/lib/article/approvalArticle";
 import { toast } from "sonner";
+import { approveArticle } from "@/services/article/approvalArticle";
 
 interface UseArticleApprovalReturn {
   isLoading: boolean;

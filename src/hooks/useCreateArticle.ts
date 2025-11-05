@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContextProvider";
-import { createArticleByAuthor } from "@/lib/article/createArticleByAuthor";
+import { createArticleByAuthor } from "@/services/article/createArticleByAuthor";
 
 export default function useCreateArticle() {
   const queryClient = useQueryClient();

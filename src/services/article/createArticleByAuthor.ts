@@ -1,4 +1,4 @@
-import { createClient } from "../supabase/client";
+import { createClient } from "../../lib/supabase/client";
 import { slugify } from "@/utils/slugify";
 import ICreateArticle from "@/types/ICreateArticle";
 
