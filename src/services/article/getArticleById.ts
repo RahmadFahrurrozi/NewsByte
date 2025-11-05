@@ -1,4 +1,4 @@
-import { createClient } from "../supabase/client";
+import { createClient } from "../../lib/supabase/client";
 
 export async function getArticleById(articleId: string) {
   const supabase = createClient();
@@ -9,5 +9,6 @@ export async function getArticleById(articleId: string) {
     .single();
 
   if (error) throw new Error(error.message);
+  console.log(data);
   return data;
 }

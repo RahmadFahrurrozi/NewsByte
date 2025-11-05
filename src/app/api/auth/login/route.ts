@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import loginUser from "@/lib/auth/login";
+import loginUser from "@/services/auth/login";
 
 export async function POST(request: Request) {
   try {
@@ -9,7 +9,7 @@ export async function POST(request: Request) {
       success: true,
       data: result,
       message: "User logged in successfully",
-      role: result.role
+      role: result.role,
     });
   } catch (error: unknown) {
     if (error instanceof Error) {

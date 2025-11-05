@@ -1,4 +1,4 @@
-import { createClient } from "../supabase/server";
+import { createClient } from "../../lib/supabase/server";
 import { RegisterFormValues, registerSchema } from "@/schemas/auth.schema";
 
 export async function registerUser(payload: RegisterFormValues) {

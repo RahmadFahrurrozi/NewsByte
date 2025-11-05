@@ -1,5 +1,5 @@
 import IEditArticle from "@/types/IEditArticle";
-import { createClient } from "../supabase/client";
+import { createClient } from "../../lib/supabase/client";
 
 export async function editArticleByAuthor(
   articleDataEdit: IEditArticle & { article_id: string }

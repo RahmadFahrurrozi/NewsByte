@@ -1,4 +1,4 @@
-import { createClient } from "../supabase/client";
+import { createClient } from "../../lib/supabase/client";
 import { slugify } from "@/utils/slugify";
 import ICreateArticle from "@/types/ICreateArticle";
 
@@ -8,7 +8,7 @@ export async function uploadThumbnail(file: File) {
   const fileExt = file.name.split(".").pop();
   const fileName = `${Date.now()}.${fileExt}`;
 
-  const { data, error: uploadError } = await supabase.storage
+  const { error: uploadError } = await supabase.storage
     .from("articles")
     .upload(fileName, file);
 

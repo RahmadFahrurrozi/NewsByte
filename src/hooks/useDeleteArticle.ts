@@ -1,4 +1,4 @@
-import { deleteArticle } from "@/lib/article/deleteArticle";
+import { deleteArticle } from "@/services/article/deleteArticle";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 

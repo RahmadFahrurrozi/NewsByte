@@ -5,12 +5,12 @@ import { UserProfile, userProfileSchema } from "@/schemas/userProfile.schema";
 import {
   uploadProfilePicture,
   updatedUserProfiles,
-} from "@/lib/auth/updatedUserProfiles";
+} from "@/services/auth/updatedUserProfiles";
 import { toast } from "sonner";
 import { IUserProfile } from "@/types/IUserProfile";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect } from "react";
-import { getProfileData } from "@/lib/auth/getProfileData";
+import { getProfileData } from "@/services/auth/getProfileData";
 
 const supabase = createClient();
 

@@ -1,4 +1,4 @@
-import { createClient } from "../supabase/server";
+import { createClient } from "../../lib/supabase/server";
 import { LoginFormValues, loginSchema } from "@/schemas/auth.schema";
 
 export default async function loginUser(payload: LoginFormValues) {

@@ -1,16 +1,15 @@
+"use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import updateStatusArticleService from "@/services/updateStatusArticle";
 import { toast } from "sonner";
+import { approveArticle } from "@/services/article/approvalArticle";
 
 interface UseArticleApprovalReturn {
   isLoading: boolean;
-  isLoadingRejected: boolean;
   processingArticleId: string | null;
-  handleApproval: (
-    articleId: string,
-    status: "approved" | "rejected"
-  ) => Promise<void>;
+  handleApprove: (articleId: string) => Promise<void>;
+  handleRejectWithReason: (articleId: string) => void;
   isProcessing: (articleId: string) => boolean;
   reset: () => void;
 }
@@ -18,29 +17,17 @@ interface UseArticleApprovalReturn {
 export function useApprovalArticle(): UseArticleApprovalReturn {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingRejected, setIsLoadingRejected] = useState(false);
   const [processingArticleId, setProcessingArticleId] = useState<string | null>(
     null
   );
 
-  const handleApproval = async (
-    articleId: string,
-    status: "approved" | "rejected"
-  ) => {
-    if (status === "approved") {
-      setIsLoading(true);
-    } else {
-      setIsLoadingRejected(true);
-    }
+  const handleApprove = async (articleId: string) => {
+    setIsLoading(true);
     setProcessingArticleId(articleId);
 
     try {
-      await updateStatusArticleService(articleId, status);
-      toast.success(
-        `Successfully ${
-          status === "approved" ? "approved" : "rejected"
-        } article`
-      );
+      await approveArticle(articleId);
+      toast.success("Article approved successfully");
       router.refresh();
     } catch (err) {
       let errorMessage = "Something went wrong";
@@ -50,24 +37,26 @@ export function useApprovalArticle(): UseArticleApprovalReturn {
       toast.error(`${errorMessage}`);
     } finally {
       setIsLoading(false);
-      setIsLoadingRejected(false);
       setProcessingArticleId(null);
     }
+  };
+
+  const handleRejectWithReason = (articleId: string) => {
+    router.push(`/dashboard-admin/reassons-articles/${articleId}`);
   };
 
   const isProcessing = (articleId: string) => processingArticleId === articleId;
 
   const reset = () => {
     setIsLoading(false);
-    setIsLoadingRejected(false);
     setProcessingArticleId(null);
   };
 
   return {
     isLoading,
-    isLoadingRejected,
     processingArticleId,
-    handleApproval,
+    handleApprove,
+    handleRejectWithReason,
     isProcessing,
     reset,
   };

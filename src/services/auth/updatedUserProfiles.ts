@@ -1,4 +1,4 @@
-import { createClient } from "../supabase/client";
+import { createClient } from "../../lib/supabase/client";
 import { IUserProfile } from "@/types/IUserProfile";
 
 const supabase = createClient();
