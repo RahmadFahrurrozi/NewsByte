@@ -11,6 +11,7 @@ NewsByte started as a simple news portal and has evolved into a sophisticated **
 -  **Build a community-driven ecosystem where writers can grow their audience**
 -  **Support SEO-optimized articles for better online visibility**
 -  **Deliver modern UI & UX optimized for both desktop and mobile users**
+-  **Implement an article review & approval system for content moderation**
 
 ## Project Structure
 
