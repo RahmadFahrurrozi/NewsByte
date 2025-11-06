@@ -31,7 +31,7 @@ NewsByte started as a simple news portal and has evolved into a sophisticated **
 ├── 📂 lib/ # Utility libraries
 │ ├── utils.ts # Helper functions
 │ └── supabase.ts # Supabase client configuration
-├── 📂 services/ # API service layers
+├── 📂 services/ # business logic layer
 ├── 📂 schemas/ # Zod validation schemas
 ├── 📂 styles/ # Additional styles
 ├── 📂 types/ # TypeScript type definitions
