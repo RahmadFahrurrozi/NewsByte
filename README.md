@@ -1,49 +1,67 @@
-📰 NEWSBYTE — Project Documentation
-🏷️ Project Overview
+# NewsByte - Article Sharing Platform
 
-NewsByte is a modern web platform that initially started as a simple news portal, but has since evolved into an interactive article-sharing platform — inspired by Medium.
+## About The Project
 
-The platform allows users to write, publish, and explore articles across various categories such as technology, lifestyle, business, and more.
-It aims to empower writers and readers alike by providing an intuitive user interface, smart publishing tools, and community engagement features that make sharing knowledge effortless.
+NewsByte started as a simple news portal and has evolved into a sophisticated **Medium-inspired interactive article sharing platform**. We empower writers and readers by providing intuitive publishing tools and community engagement features.
+
+### Project Goals & Objectives
+
+-  **Provide a clean and distraction-free writing experience for authors**
+-  **Allow readers to easily discover high-quality content across categories**
+-  **Build a community-driven ecosystem where writers can grow their audience**
+-  **Support SEO-optimized articles for better online visibility**
+-  **Deliver modern UI & UX optimized for both desktop and mobile users**
+
+## Project Structure
+
+### newsbyte/
+```
+├── 📂 app/ # Next.js App Router
+│ ├── (auth)/ # Authentication route groups
+│ ├── (dashboard)/ # Dashboard route groups
+│ ├── api/ # API routes
+│ ├── globals.css # Global styles
+│ ├── layout.tsx # Root layout
+│ └── page.tsx # Home page
+├── 📂 components/ # Reusable React components
+│ ├── ui/ # shadcn/ui components
+├── 📂 contexts/ # React Context providers
+├── 📂 hooks/ # Custom React hooks
+├── 📂 lib/ # Utility libraries
+│ ├── utils.ts # Helper functions
+│ └── supabase.ts # Supabase client configuration
+├── 📂 services/ # API service layers
+├── 📂 schemas/ # Zod validation schemas
+├── 📂 styles/ # Additional styles
+├── 📂 types/ # TypeScript type definitions
+├── 📂 utils/ # Utility functions
+├── 📂 constants/ # Application constants
+├── 📂 providers/ # React providers
+├── 📂 public/ # Static assets (images, icons)
+├── 📂 middleware.ts # Next.js middleware
+├── 🔑 .env.local # Environment variables
+├── 📄 package.json # Dependencies and scripts
+└── ⚡ next.config.ts # Next.js configuration
+```
 
 
-🎯 Project Goals & Objectives
+## 🛠 Tech Stack
 
-Provide a clean and distraction-free writing experience for authors.
+### Frontend
+| Technology | Purpose |
+|------------|---------|
+| **Next.js** (App Router) | React framework with latest features |
+| **TypeScript** | Type safety and better developer experience |
+| **Tailwind CSS** | Utility-first CSS framework |
+| **shadcn/ui** | Reusable component library |
+| **React Hook Form** | Form state management |
+| **Zod** | Schema validation |
+| **Context API** | Global state management |
 
-Allow readers to easily discover high-quality content across categories.
-
-Build a community-driven ecosystem where writers can grow their audience.
-
-Support SEO-optimized articles for better online visibility.
-
-Encourage interaction and discussion between authors and readers.
-
-Deliver modern UI & UX optimized for both desktop and mobile users.
-
-⚙️ Tech Stack
-🧩 Frontend
-
-Framework: Next.js (TypeScript)
-
-Styling: Tailwind CSS
-
-UI Components: shadcn/ui, Magic UI, Aceternity UI
-
-Form Handling: React Hook Form + Zod Validation
-
-State Management: Context API
-
-Data Fetching & Caching: TanStack Query (React Query)
-
-Text Editor: TipTap (Rich Text Editor)
-
-⚙️ Backend
-
-Platform: Supabase
-
-Database: PostgreSQL
-
-Authentication: Supabase Auth
-
-Storage: Supabase Storage (for images & media)
+### Backend & Services
+| Service | Function |
+|---------|----------|
+| **Supabase** | Backend-as-a-Service platform |
+| **PostgreSQL** | Primary database |
+| **Supabase Auth** | Authentication service |
+| **Supabase Storage** | File storage |
