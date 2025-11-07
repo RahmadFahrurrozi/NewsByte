@@ -15,39 +15,6 @@ NewsByte started as a simple news portal and has evolved into a sophisticated **
 -  **Deliver modern UI & UX optimized for both desktop and mobile users**
 -  **Implement an article review & approval system for content moderation**
 
-## Project Structure
-
-### newsbyte/
-```
-├── 📂 app/ # Next.js App Router
-│ ├── (auth)/ # Authentication route groups
-│ ├── (dashboard)/ # Dashboard route groups
-│ ├── api/ # API routes
-│ ├── globals.css # Global styles
-│ ├── layout.tsx # Root layout
-│ └── page.tsx # Home page
-├── 📂 components/ # Reusable React components
-│ ├── ui/ # shadcn/ui components
-├── 📂 contexts/ # React Context providers
-├── 📂 hooks/ # Custom React hooks
-├── 📂 lib/ # Utility libraries
-│ ├── utils.ts # Helper functions
-│ └── supabase.ts # Supabase client configuration
-├── 📂 services/ # business logic layer
-├── 📂 schemas/ # Zod validation schemas
-├── 📂 styles/ # Additional styles
-├── 📂 types/ # TypeScript type definitions
-├── 📂 utils/ # Utility functions
-├── 📂 constants/ # Application constants
-├── 📂 providers/ # React providers
-├── 📂 public/ # Static assets (images, icons)
-├── 📂 middleware.ts # Next.js middleware
-├── 🔑 .env.local # Environment variables
-├── 📄 package.json # Dependencies and scripts
-└── ⚡ next.config.ts # Next.js configuration
-```
-
-
 ## 🛠 Tech Stack
 
 ### Frontend
