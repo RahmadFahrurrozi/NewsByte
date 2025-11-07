@@ -24,6 +24,8 @@ NewsByte started as a simple news portal and has evolved into a sophisticated **
 | **TypeScript** | Type safety and better developer experience |
 | **Tailwind CSS** | Utility-first CSS framework |
 | **shadcn/ui** | Reusable component library |
+| **Magic UI** | Animation and motion components for dynamic interactions |
+| **Lottie Animation** | Lightweight JSON-based animations for enhanced UI motion |
 | **React Hook Form** | Form state management |
 | **Zod** | Schema validation |
 | **Context API** | Global state management |
