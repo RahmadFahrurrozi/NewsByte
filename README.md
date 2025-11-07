@@ -1,5 +1,7 @@
 # NewsByte - Article Sharing Platform
 
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/fc40c79a-91e7-47dc-9142-f662116bc22b" />
+
 ## About The Project
 
 NewsByte started as a simple news portal and has evolved into a sophisticated **Medium-inspired interactive article sharing platform**. We empower writers and readers by providing intuitive publishing tools and community engagement features.
