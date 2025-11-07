@@ -27,6 +27,7 @@ NewsByte started as a simple news portal and has evolved into a sophisticated **
 | **React Hook Form** | Form state management |
 | **Zod** | Schema validation |
 | **Context API** | Global state management |
+| **Tanstack Query** | Data fetching management |
 
 ### Backend & Services
 | Service | Function |
