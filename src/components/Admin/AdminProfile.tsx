@@ -1,7 +1,5 @@
-// app/profile/page.tsx
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,15 +13,15 @@ import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { IUser } from "@/types/IUser";
 import { useUpdateProfile } from "@/hooks/useUpdateProfile";
-import { LoadingSpinner } from "./LoadingSpinner";
+import { LoadingSpinner } from "../LoadingSpinner";
 
-// Definisikan tipe untuk props komponen
 export interface AdminProfileClientProps {
   dataUser: IUser;
 }
 
 export default function AdminProfile({ dataUser }: AdminProfileClientProps) {
-  const { form, loading, profile, previewImage, handleSubmit } = useUpdateProfile({dataUser: dataUser});
+  const { form, loading, profile, previewImage, handleSubmit } =
+    useUpdateProfile({ dataUser: dataUser });
   const username = form.watch("username", dataUser.username);
 
   return (
@@ -42,20 +40,22 @@ export default function AdminProfile({ dataUser }: AdminProfileClientProps) {
         </div>
         <Card className="border-none shadow-none bg-background">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold">Update Your Personal Information</CardTitle>
+            <CardTitle className="text-2xl font-bold">
+              Update Your Personal Information
+            </CardTitle>
             <CardDescription>
-              You can change your username and profile photo. You cannot change your email address yet.
+              You can change your username and profile photo. You cannot change
+              your email address yet.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="space-y-4"
+            >
               <div className="space-y-2">
                 <Label htmlFor="name">Username</Label>
-                <Input
-                  id="name"
-                  {...form.register("username")}
-                  required
-                />
+                <Input id="name" {...form.register("username")} required />
                 {form.formState.errors.username && (
                   <p>{form.formState.errors.username.message}</p>
                 )}
@@ -72,8 +72,11 @@ export default function AdminProfile({ dataUser }: AdminProfileClientProps) {
                   accept="image/*"
                   {...form.register("photo")}
                 />
-                 {form.formState.errors.photo && (
-                  <p>{form.formState.errors.photo.message?.toString() || "File gambar tidak valid."}</p>
+                {form.formState.errors.photo && (
+                  <p>
+                    {form.formState.errors.photo.message?.toString() ||
+                      "File gambar tidak valid."}
+                  </p>
                 )}
                 {previewImage && (
                   <div className="mt-4">
