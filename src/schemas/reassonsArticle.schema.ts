@@ -8,8 +8,7 @@ export const reassonsArtcleSchema = z.object({
   message: z
     .string()
     .min(1, "Reasson message is required")
-    .min(10, "Reasson message must be at least 10 characters")
-    .max(500, "Reasson message must be less than 500 characters"),
+    .min(10, "Reasson message must be at least 10 characters"),
   reviewer: z.string().optional(),
 });
 
