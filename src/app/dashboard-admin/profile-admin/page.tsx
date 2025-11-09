@@ -1,5 +1,4 @@
-// app/profile/page.tsx
-import AdminProfile from "@/components/AdminProfile";
+import AdminProfile from "@/components/Admin/AdminProfile";
 import { getUser } from "@/services/auth/getUser";
 import { redirect } from "next/navigation";
 

@@ -12,7 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { ModeToggle } from "./ModeToggle";
 import getBreadcrumbTitleUser from "@/utils/getBreadcrumbTitleUser";
 
-export default function DashboardHeaderUser() {
+export default function DashboardHeader() {
   const pathname = usePathname();
   const titlePage = getBreadcrumbTitleUser(pathname);
 

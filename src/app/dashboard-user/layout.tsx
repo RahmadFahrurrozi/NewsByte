@@ -1,7 +1,7 @@
 import { AppSidebarUser } from "@/components/AppSidebarUser";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import DashboardHeaderUser from "@/components/DashboardHeaderUser";
 import { LoginSuccessToast } from "@/components/LoginSuccessToast";
+import DashboardHeader from "@/components/DashboardHeader";
 
 export default function DashboardLayout({
   children,
@@ -13,7 +13,7 @@ export default function DashboardLayout({
       <LoginSuccessToast />
       <AppSidebarUser />
       <SidebarInset>
-        <DashboardHeaderUser />
+        <DashboardHeader />
         <div className="flex flex-1 flex-col gap-4 pt-0">{children}</div>
       </SidebarInset>
     </SidebarProvider>
