@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { AdminProfileClientProps } from "@/components/AdminProfile";
+import { AdminProfileClientProps } from "@/components/Admin/AdminProfile";
 import updateProfileService from "@/services/updateProfile";
 
 export interface IUpdateProfileResponse {
