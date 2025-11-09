@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Textarea } from "../ui/textarea";
 import {
   ArrowLeft,
   Book,
@@ -27,6 +26,7 @@ import {
   Sparkles,
   Loader2,
 } from "lucide-react";
+import { RichEditor } from "../tiptap/simple/RichEditor";
 
 interface ArticleReassonsProps {
   articleId: string;
@@ -54,8 +54,8 @@ export default function ArticleReassons({ articleId }: ArticleReassonsProps) {
   }
 
   return (
-    <div className="w-full min-h-screen flex flex-col gap-6 sm:gap-0 items-center justify-start sm:flex-row p-4 sm:p-6 lg:p-8">
-      <div className="relative w-full sm:max-w-1/2 h-full flex flex-col items-center justify-center text-center px-4">
+    <div className="w-full min-h-screen flex flex-col gap-6 sm:gap-0 items-center sm:flex-row p-4 sm:p-6 lg:p-8">
+      <div className="relative w-full sm:max-w-1/2 h-full flex flex-col items-center justify-start text-center px-4">
         {/* Centered Gradient Glow */}
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full blur-[200px] opacity-35 z-0"
@@ -178,12 +178,9 @@ export default function ArticleReassons({ articleId }: ArticleReassonsProps) {
                         Detailed Explanation
                       </FormLabel>
                       <FormControl>
-                        <Textarea
-                          id="message"
-                          placeholder="Provide specific feedback on what needs improvement and suggestions for revision..."
-                          className="min-h-[140px] resize-none bg-white/50 dark:bg-white/5 border-border focus:border-primary focus:ring-2 focus:ring-primary/30 text-foreground placeholder:text-muted-foreground/60 transition-all duration-300"
-                          {...field}
-                          disabled={isLoading}
+                        <RichEditor
+                          value={field.value}
+                          onChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />
