@@ -22,6 +22,8 @@ export function useArticleByAuthor(
         ...filters,
       }),
     placeholderData: keepPreviousData,
+    staleTime: 10 * 60 * 1000,
+    gcTime: 20 * 60 * 1000,
     enabled: !!authorId,
   });
 }

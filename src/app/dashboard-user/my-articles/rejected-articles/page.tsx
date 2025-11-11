@@ -25,6 +25,11 @@ import {
   Cell,
 } from "recharts";
 import { AlertCircle, FileText, Download, Filter } from "lucide-react";
+import {
+  useGetRejectedArticles,
+  useGetTotalRejectedCount,
+} from "@/hooks/useGetRejectedArticle";
+import { IArticles } from "@/types/IArticles";
 
 interface IRejectedArticle {
   id: number;
@@ -81,18 +86,124 @@ const ArticleItemSkeleton = () => (
   </div>
 );
 
+// Component untuk Article List dengan TanStack Query
+const RejectedArticlesList = () => {
+  const { data, isLoading, isError, error, refetch } = useGetRejectedArticles();
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        <ArticleItemSkeleton />
+        <ArticleItemSkeleton />
+        <ArticleItemSkeleton />
+        <ArticleItemSkeleton />
+        <ArticleItemSkeleton />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div className="flex items-center">
+          <div className="text-red-600">
+            <AlertCircle className="h-5 w-5" />
+          </div>
+          <div className="ml-3">
+            <h3 className="text-sm font-medium text-red-800">
+              Error loading articles
+            </h3>
+            <p className="text-sm text-red-600 mt-1">
+              {error?.message || "Something went wrong"}
+            </p>
+            <button
+              onClick={() => refetch()}
+              className="mt-2 text-sm text-red-800 hover:text-red-900 underline"
+            >
+              Try again
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const articles = data?.data || [];
+
+  if (articles.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <div className="bg-muted p-3 rounded-full w-12 h-12 mx-auto mb-4 flex items-center justify-center">
+          <FileText className="h-6 w-6 text-muted-foreground" />
+        </div>
+        <h3 className="text-lg font-medium text-foreground mb-2">
+          No rejected articles
+        </h3>
+        <p className="text-muted-foreground">
+          There are no articles that have been rejected yet.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {articles.map((article: IArticles) => (
+        <div
+          key={article.id}
+          className="flex items-center justify-between p-4 border rounded-lg"
+        >
+          <div className="flex items-start space-x-4">
+            <div className="bg-destructive/10 p-2 rounded-full">
+              <AlertCircle className="h-5 w-5 text-destructive" />
+            </div>
+            <div>
+              <h3 className="font-semibold">{article.title}</h3>
+              <p className="text-sm text-muted-foreground">
+                by {article.profiles?.username || "Unknown"} •{" "}
+                {new Date(article.created_at).toLocaleDateString()}
+              </p>
+              <Badge
+                variant="outline"
+                className="mt-2 bg-destructive/10 text-destructive"
+              >
+                Rejected
+              </Badge>
+            </div>
+          </div>
+          <div className="flex space-x-2">
+            <Button variant="outline" size="sm">
+              Details
+            </Button>
+            <Button size="sm">
+              <FileText className="mr-2 h-4 w-4" />
+              View Article
+            </Button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 export default function RejectedArticlePages() {
-  const [articles, setArticles] = useState<IRejectedArticle[]>([]);
   const [timeFilter, setTimeFilter] = useState<string>("month");
-  const [isloading, setLoading] = useState<boolean>(true);
+  const [isloading, setLoading] = useState(true);
+
+  const {
+    data: statsData,
+    isLoading: statsLoading,
+    isError: statsError,
+    error: statsErrorDetails,
+  } = useGetTotalRejectedCount();
 
   // Data for charts
   const rejectionStats: RejectionStat[] = [
-    { reason: "Content Quality", count: 12, color: "#3A86FF" }, // Bright blue
-    { reason: "Plagiarism", count: 8, color: "#FF006E" }, // Magenta
-    { reason: "Irrelevant Topic", count: 15, color: "#8338EC" }, // Purple
-    { reason: "Wrong Format", count: 5, color: "#FB5607" }, // Orange
-    { reason: "Other", count: 3, color: "#FFBE0B" }, // Yellow
+    { reason: "Content Quality", count: 12, color: "#3A86FF" },
+    { reason: "Plagiarism", count: 8, color: "#FF006E" },
+    { reason: "Irrelevant Topic", count: 15, color: "#8338EC" },
+    { reason: "Wrong Format", count: 5, color: "#FB5607" },
+    { reason: "Other", count: 3, color: "#FFBE0B" },
   ];
 
   const monthlyData: MonthlyData[] = [
@@ -104,53 +215,13 @@ export default function RejectedArticlePages() {
     { month: "Jun", rejected: 9, approved: 51 },
   ];
 
-  // Fetch article data (simulation)
+  // Simulasi loading untuk bagian statistik dan chart
   useEffect(() => {
-    setTimeout(() => {
-      setArticles([
-        {
-          id: 1,
-          title: "The Impact of AI Technology in Modern Education",
-          author: "Ahmad Santoso",
-          date: "May 15, 2023",
-          reason: "Content Quality",
-          status: "Rejected",
-        },
-        {
-          id: 2,
-          title: "Digital Marketing Strategies for SMEs",
-          author: "Dewi Lestari",
-          date: "April 22, 2023",
-          reason: "Irrelevant Topic",
-          status: "Rejected",
-        },
-        {
-          id: 3,
-          title: "Analysis of Fintech Development in Indonesia",
-          author: "Rizky Pratama",
-          date: "April 10, 2023",
-          reason: "Plagiarism",
-          status: "Rejected",
-        },
-        {
-          id: 4,
-          title: "Hydroponic Plant Cultivation Techniques",
-          author: "Sari Wijaya",
-          date: "March 5, 2023",
-          reason: "Wrong Format",
-          status: "Rejected",
-        },
-        {
-          id: 5,
-          title: "Innovations in Environmentally Friendly Technology",
-          author: "Budi Hartono",
-          date: "February 28, 2023",
-          reason: "Content Quality",
-          status: "Rejected",
-        },
-      ]);
+    const timer = setTimeout(() => {
       setLoading(false);
     }, 1500);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -167,13 +238,17 @@ export default function RejectedArticlePages() {
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          {isloading ? (
+          {statsLoading ? (
             <>
               <StatCardSkeleton />
               <StatCardSkeleton />
               <StatCardSkeleton />
               <StatCardSkeleton />
             </>
+          ) : statsError ? (
+            <div className="col-span-4 text-center py-4 text-red-500">
+              Error loading statistics: {statsErrorDetails.message}
+            </div>
           ) : (
             <>
               <Card>
@@ -183,7 +258,9 @@ export default function RejectedArticlePages() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-destructive">43</div>
+                  <div className="text-2xl font-bold text-destructive">
+                    {statsData?.data?.totalRejected || 0}
+                  </div>
                   <p className="text-xs text-muted-foreground">Last 30 days</p>
                 </CardContent>
               </Card>
@@ -320,7 +397,7 @@ export default function RejectedArticlePages() {
           </TabsContent>
         </Tabs>
 
-        {/* Rejected Articles List */}
+        {/* Rejected Articles List dengan TanStack Query */}
         <Card>
           <CardHeader>
             <div className="flex justify-between items-center">
@@ -343,51 +420,7 @@ export default function RejectedArticlePages() {
             </div>
           </CardHeader>
           <CardContent>
-            {isloading ? (
-              <div className="space-y-4">
-                <ArticleItemSkeleton />
-                <ArticleItemSkeleton />
-                <ArticleItemSkeleton />
-                <ArticleItemSkeleton />
-                <ArticleItemSkeleton />
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {articles.map((article) => (
-                  <div
-                    key={article.id}
-                    className="flex items-center justify-between p-4 border rounded-lg"
-                  >
-                    <div className="flex items-start space-x-4">
-                      <div className="bg-destructive/10 p-2 rounded-full">
-                        <AlertCircle className="h-5 w-5 text-destructive" />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold">{article.title}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          by {article.author} • {article.date}
-                        </p>
-                        <Badge
-                          variant="outline"
-                          className="mt-2 bg-destructive/10 text-destructive"
-                        >
-                          {article.reason}
-                        </Badge>
-                      </div>
-                    </div>
-                    <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">
-                        Details
-                      </Button>
-                      <Button size="sm">
-                        <FileText className="mr-2 h-4 w-4" />
-                        View Article
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            <RejectedArticlesList />
           </CardContent>
         </Card>
       </div>
