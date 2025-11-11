@@ -25,7 +25,10 @@ import {
   Cell,
 } from "recharts";
 import { AlertCircle, FileText, Download, Filter } from "lucide-react";
-import { useGetRejectedArticles } from "@/hooks/useGetRejectedArticle";
+import {
+  useGetRejectedArticles,
+  useGetTotalRejectedCount,
+} from "@/hooks/useGetRejectedArticle";
 import { IArticles } from "@/types/IArticles";
 
 interface IRejectedArticle {
@@ -185,7 +188,14 @@ const RejectedArticlesList = () => {
 
 export default function RejectedArticlePages() {
   const [timeFilter, setTimeFilter] = useState<string>("month");
-  const [isloading, setLoading] = useState<boolean>(true);
+  const [isloading, setLoading] = useState(true);
+
+  const {
+    data: statsData,
+    isLoading: statsLoading,
+    isError: statsError,
+    error: statsErrorDetails,
+  } = useGetTotalRejectedCount();
 
   // Data for charts
   const rejectionStats: RejectionStat[] = [
@@ -228,13 +238,17 @@ export default function RejectedArticlePages() {
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          {isloading ? (
+          {statsLoading ? (
             <>
               <StatCardSkeleton />
               <StatCardSkeleton />
               <StatCardSkeleton />
               <StatCardSkeleton />
             </>
+          ) : statsError ? (
+            <div className="col-span-4 text-center py-4 text-red-500">
+              Error loading statistics: {statsErrorDetails.message}
+            </div>
           ) : (
             <>
               <Card>
@@ -244,7 +258,9 @@ export default function RejectedArticlePages() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-destructive">43</div>
+                  <div className="text-2xl font-bold text-destructive">
+                    {statsData?.data?.totalRejected || 0}
+                  </div>
                   <p className="text-xs text-muted-foreground">Last 30 days</p>
                 </CardContent>
               </Card>
