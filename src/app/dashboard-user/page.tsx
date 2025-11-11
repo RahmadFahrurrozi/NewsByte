@@ -155,13 +155,6 @@ export default function ArticleDashboard() {
 
   const stats = articleData?.stats || { approved: 0, pending: 0, rejected: 0 };
 
-  // Data for charts - Warna lebih kontras
-  const statusStats: StatusStat[] = [
-    { status: "Published", count: 125, color: "#16a34a" }, // Green-600
-    { status: "Pending", count: 42, color: "#ea580c" }, // Orange-600
-    { status: "Rejected", count: 18, color: "#dc2626" }, // Red-600
-  ];
-
   const monthlyData: MonthlyData[] = [
     { month: "Jan", published: 18, pending: 7, rejected: 3 },
     { month: "Feb", published: 22, pending: 5, rejected: 2 },
