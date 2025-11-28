@@ -151,7 +151,7 @@ export default function ProfileSettingsPage() {
                 <Avatar className="h-32 w-32">
                   <AvatarImage src={avatarUrl} alt={profile.name} />
                   <AvatarFallback className="text-2xl">
-                    {profile.name
+                    {(profile.name || 'User')
                       .split(" ")
                       .map((n: string) => n[0])
                       .join("")
@@ -201,6 +201,7 @@ export default function ProfileSettingsPage() {
                 <p className="text-xs text-muted-foreground text-center">
                   Recommended: Square image, at least 200x200 pixels
                 </p>
+                
               </div>
             </CardContent>
           </Card>
